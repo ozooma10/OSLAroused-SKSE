@@ -53,8 +53,6 @@ namespace Serialization
 				return false;
 			}
 		}
-
-		logger::info("{} - {} actor form data saved", GetType(), numRecords);
 		return true;
 	}
 
@@ -83,8 +81,6 @@ namespace Serialization
 			serializationInterface->ReadRecordData(value);
 			m_Data[formId] = value;
 		}
-
-		logger::info("{} - {} actor form data loaded", GetType(), m_Data.size());
 		return true;
 	}
 
@@ -124,7 +120,7 @@ namespace Serialization
 			logger::critical("Failed to save Arousal Last Check Time Data Data");
 		}
 
-		logger::info("OSLArousal Saved");
+		logger::info("OSLArousal Data Saved");
 	}
 
 	void LoadCallback(SKSE::SerializationInterface* serializationInterface)
@@ -134,7 +130,7 @@ namespace Serialization
 		std::uint32_t length;
 		while (serializationInterface->GetNextRecordInfo(type, version, length)) {
 			if (version != kSerializationVersion) {
-				logger::critical("Loaded data has incorrect version. Recieved ({}) - Expected ({}) for Data Key ({})", version, kSerializationVersion, DecodeTypeCode(type));
+				logger::critical("Loaded data has incorrect version. Recieved ({}) - Expected ({}) for Data Key ({})"sv, version, kSerializationVersion, DecodeTypeCode(type));
 				continue;
 			}
 
@@ -143,7 +139,7 @@ namespace Serialization
 				{
 					auto arousalData = ArousalData::GetSingleton();
 					if (!arousalData->Load(serializationInterface)) {
-						logger::critical("Failed to Load Arousal Data");
+						logger::critical("Failed to Load Arousal Data"sv);
 					}
 				}
 				break;
@@ -151,7 +147,7 @@ namespace Serialization
 				{
 					auto multiplierData = MultiplierData::GetSingleton();
 					if (!multiplierData->Load(serializationInterface)) {
-						logger::critical("Failed to Load Multipler Data");
+						logger::critical("Failed to Load Multipler Data"sv);
 					}
 				}
 				break;
@@ -159,15 +155,17 @@ namespace Serialization
 				{
 					auto lastCheckData = LastCheckTimeData::GetSingleton();
 					if (!lastCheckData->Load(serializationInterface)) {
-						logger::critical("Failed to Load LastCheckTime Data");
+						logger::critical("Failed to Load LastCheckTime Data"sv);
 					}
 				}
 				break;
 			default:
-				logger::critical("Unrecognized Record Type: {}", DecodeTypeCode(type));
+				logger::critical("Unrecognized Record Type: {}"sv, DecodeTypeCode(type));
 				break;
 			}
 		}
+
+		logger::info("OSLArousal Data loaded");
 	}
 
 	void RevertCallback(SKSE::SerializationInterface*)

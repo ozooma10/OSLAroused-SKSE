@@ -11,10 +11,12 @@ void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 	Settings::GetSingleton()->SetPlayerNudityCheckEnabled(newVal);
 	if (newVal) {
 		//starts Poller if stopped
-		WorldChecks::g_PlayerNakedUpdateLoopTicker.Start();
+		WorldChecks::NakedArousalTicker::GetSingleton()->Start();
+		logger::trace("Starting PlayerNakedUpdateLoop...");
 	} else {
 		//Stops Poller if running
-		WorldChecks::g_PlayerNakedUpdateLoopTicker.Stop();
+		WorldChecks::NakedArousalTicker::GetSingleton()->Stop();
+		logger::trace("Stopping PlayerNakedUpdateLoop...");
 	}
 }
 

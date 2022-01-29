@@ -16,14 +16,14 @@ namespace
 		*path /= fmt::format("{}.log"sv, Plugin::NAME);
 		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path->string(), true);
 
-		const auto level = spdlog::level::info;
+		const auto level = spdlog::level::trace;
 
 		auto log = std::make_shared<spdlog::logger>("global log"s, std::move(sink));
 		log->set_level(level);
 		log->flush_on(level);
 
 		spdlog::set_default_logger(std::move(log));
-		spdlog::set_pattern("%g(%#): [%^%l%$] %v"s);
+		spdlog::set_pattern("[%H:%M:%S] [%^%l%$] %v"s);
 	}
 
 	void MessageHandler(SKSE::MessagingInterface::Message* message)

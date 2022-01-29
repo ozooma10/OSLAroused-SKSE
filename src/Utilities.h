@@ -18,7 +18,8 @@ namespace Utilities
 		Ticker(std::function<void()> onTick, std::chrono::milliseconds interval) :
 			m_OnTick(onTick),
 			m_Interval(interval),
-			m_Running(false)
+			m_Running(false),
+			m_ThreadActive(false)
 		{}
 
 		void Start() {
@@ -26,8 +27,11 @@ namespace Utilities
 				return;
 			}
 			m_Running = true;
-			std::thread tickerThread(&Ticker::RunLoop, this);
-			tickerThread.detach();
+			logger::trace("Start Called with thread active state of: {}", m_ThreadActive);
+			if (!m_ThreadActive) {
+				std::thread tickerThread(&Ticker::RunLoop, this);
+				tickerThread.detach();
+			}
 		}
 
 		void Stop() {
@@ -42,6 +46,7 @@ namespace Utilities
 
 	private:
 		void RunLoop() {
+			m_ThreadActive = true;
 			while (m_Running) {
 				std::thread runnerThread(m_OnTick);
 				runnerThread.detach();
@@ -51,11 +56,13 @@ namespace Utilities
 				m_IntervalMutex.unlock();
 				std::this_thread::sleep_for(interval);
 			}
+			m_ThreadActive = false;
 		}
 
 		std::function<void()> m_OnTick;
 		std::chrono::milliseconds m_Interval;
 
+		std::atomic<bool> m_ThreadActive;
 		std::atomic<bool> m_Running;
 		std::mutex m_IntervalMutex;
 	};
