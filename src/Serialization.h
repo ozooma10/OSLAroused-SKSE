@@ -3,13 +3,13 @@
 
 namespace Serialization
 {
-	typedef std::map<uint64_t, float> FormFloatData;
+	typedef std::map<RE::FormID, float> FormFloatData;
 
 	class BaseData
 	{
 	public:
-		float GetData(uint64_t formId);
-		void SetData(uint64_t formId, float value);
+		float GetData(RE::FormID formId);
+		void SetData(RE::FormID formId, float value);
 
 		virtual const char* GetType() = 0;
 

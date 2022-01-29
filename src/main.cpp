@@ -32,6 +32,7 @@ namespace
 		case SKSE::MessagingInterface::kDataLoaded:
 			RuntimeEvents::OnEquipEvent::RegisterEvent();
 			logger::info("OnEquipEvent Registered...");
+
 			break;
 		}
 	}

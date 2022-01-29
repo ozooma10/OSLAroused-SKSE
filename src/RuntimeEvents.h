@@ -1,4 +1,5 @@
 #pragma once
+#include <Utilities.h>
 
 namespace RuntimeEvents
 {
@@ -17,4 +18,17 @@ namespace RuntimeEvents
 			return true;
 		}
 	};
+}
+
+namespace WorldChecks
+{
+	void PlayerNakedUpdateLoop();
+	static Utilities::Ticker g_PlayerNakedUpdateLoopTicker(std::function<void()>(PlayerNakedUpdateLoop), std::chrono::milliseconds(5000));
+
+	/*
+	static Utilities::Ticker* GetPlayerNakedTickerSingleton()
+	{
+		static Utilities::Ticker playerNakedUpdateLoopTickerSingleton(std::function<void()>(PlayerNakedUpdateLoop), std::chrono::milliseconds(5000));
+		return &playerNakedUpdateLoopTickerSingleton;
+	}*/
 }

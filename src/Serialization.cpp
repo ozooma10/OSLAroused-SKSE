@@ -4,7 +4,7 @@
 
 namespace Serialization
 {
-	float BaseData::GetData(uint64_t formId)
+	float BaseData::GetData(RE::FormID formId)
 	{
 		Locker locker(m_Lock);
 
@@ -15,7 +15,7 @@ namespace Serialization
 		return 0.f;
 	}
 
-	void BaseData::SetData(uint64_t formId, float value)
+	void BaseData::SetData(RE::FormID formId, float value)
 	{
 		Locker locker(m_Lock);
 		m_Data[formId] = value;
@@ -68,18 +68,20 @@ namespace Serialization
 		Locker locker(m_Lock);
 		m_Data.clear();
 
-		RE::FormID formID;
+		RE::FormID formId;
 		float value;
-
+		
 		for (auto i = 0; i < recordDataSize; i++) {
-			serializationInterface->ReadRecordData(formID);
-			if (!serializationInterface->ResolveFormID(formID, formID)) {
-				logger::error("Failed to resolve formID {}"sv, formID);
+			serializationInterface->ReadRecordData(formId);
+			//Ensure form still exists
+			RE::FormID fixedId;
+			if (!serializationInterface->ResolveFormID(formId, fixedId)) {
+				logger::error("Failed to resolve formID {} {}"sv, formId, fixedId);
 				continue;
 			}
 
 			serializationInterface->ReadRecordData(value);
-			m_Data[formID] = value;
+			m_Data[formId] = value;
 		}
 
 		logger::info("{} - {} actor form data loaded", GetType(), m_Data.size());
