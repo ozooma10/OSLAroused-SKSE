@@ -8,6 +8,13 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Hooks.cpp"
 	"${SOURCE_DIR}/RuntimeEvents.h"
 	"${SOURCE_DIR}/RuntimeEvents.cpp"
+	"${SOURCE_DIR}/Papyrus.h"
+	"${SOURCE_DIR}/Papyrus.cpp"
+	"${SOURCE_DIR}/ArousalManager.h"
+	"${SOURCE_DIR}/ArousalManager.cpp"
+	"${SOURCE_DIR}/Serialization.h"
+	"${SOURCE_DIR}/Serialization.cpp"
+	"${SOURCE_DIR}/Utilities.h"
  )
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})

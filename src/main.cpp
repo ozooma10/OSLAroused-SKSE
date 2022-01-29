@@ -1,6 +1,8 @@
 #include "Hooks.h"
 
 #include "RuntimeEvents.h"
+#include "Papyrus.h"
+#include "Serialization.h"
 
 namespace
 {
@@ -54,7 +56,15 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 
 	SKSE::Init(a_skse);
 
-	//Hooks::ActorEquipHook::InstallHook();
+	const auto papyrus = SKSE::GetPapyrusInterface();
+	papyrus->Register(Papyrus::RegisterFunctions);
+
+	const auto serialization = SKSE::GetSerializationInterface();
+	serialization->SetUniqueID(Serialization::kArousalDataKey);
+	serialization->SetSaveCallback(Serialization::SaveCallback);
+	serialization->SetLoadCallback(Serialization::LoadCallback);
+	serialization->SetRevertCallback(Serialization::RevertCallback);
+
 	auto messagingInterface = SKSE::GetMessagingInterface();
 	if (!messagingInterface->RegisterListener(MessageHandler)) {
 		return false;
