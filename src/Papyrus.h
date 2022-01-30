@@ -23,6 +23,8 @@ namespace Papyrus
 
 	float GetExposure(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+
+	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 

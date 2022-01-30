@@ -119,6 +119,15 @@ float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRe
 	return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
 }
 
+void Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+{
+	if (!actorRef) {
+		return;
+	}
+	value = std::clamp(value, 0.f, 100.f);
+	Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, value);
+}
+
 float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
 	return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
@@ -140,6 +149,8 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	vm->RegisterFunction("GetExposure", "OSLArousedNative", GetExposure);
 	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
+
+	vm->RegisterFunction("SetTimeRate", "OSLArousedNative", SetTimeRate);
 	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
 
 	return true;
