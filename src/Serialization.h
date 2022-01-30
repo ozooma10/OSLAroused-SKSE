@@ -57,6 +57,21 @@ namespace Serialization
 		}
 	};
 
+	class TimeRateData final : public BaseData
+	{
+	public:
+		static TimeRateData* GetSingleton()
+		{
+			static TimeRateData singleton;
+			return &singleton;
+		}
+
+		const char* GetType() override
+		{
+			return "TimeRate";
+		}
+	};
+
 	class LastCheckTimeData final : public BaseData
 	{
 	public:
@@ -72,11 +87,27 @@ namespace Serialization
 		}
 	};
 
+	class LastOrgasmTimeData final : public BaseData
+	{
+	public:
+		static LastOrgasmTimeData* GetSingleton()
+		{
+			static LastOrgasmTimeData singleton;
+			return &singleton;
+		}
+
+		const char* GetType() override
+		{
+			return "LastOrgasmTime";
+		}
+	};
 
 	constexpr std::uint32_t kSerializationVersion = 1;
 	constexpr std::uint32_t kArousalDataKey = 'OSLA';
 	constexpr std::uint32_t kMultiplerDataKey = 'OSLM';
+	constexpr std::uint32_t kTimeRateDataKey = 'OSLT';
 	constexpr std::uint32_t kLastCheckTimeDataKey = 'OSLC';
+	constexpr std::uint32_t kLastOrgasmTimeDataKey = 'OSLO';
 
 	std::string DecodeTypeCode(std::uint32_t typeCode);
 

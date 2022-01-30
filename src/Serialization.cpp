@@ -115,9 +115,19 @@ namespace Serialization
 			logger::critical("Failed to save Arousal Multipler Data");
 		}
 
+		const auto timeRateData = TimeRateData::GetSingleton();
+		if (!timeRateData->Save(serializationInterface, kTimeRateDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Time Rate Data");
+		}
+
 		const auto lastCheckData = LastCheckTimeData::GetSingleton();
 		if (!lastCheckData->Save(serializationInterface, kLastCheckTimeDataKey, kSerializationVersion)) {
-			logger::critical("Failed to save Arousal Last Check Time Data Data");
+			logger::critical("Failed to save Arousal Last Check Time Data");
+		}
+
+		const auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
+		if (!lastOrgasmData->Save(serializationInterface, kLastOrgasmTimeDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Last Orgasm Time Data");
 		}
 
 		logger::info("OSLArousal Data Saved");
@@ -151,11 +161,27 @@ namespace Serialization
 					}
 				}
 				break;
+			case kTimeRateDataKey:
+				{
+					auto timeRateData = TimeRateData::GetSingleton();
+					if (!timeRateData->Load(serializationInterface)) {
+						logger::critical("Failed to Load TimeRate Data"sv);
+					}
+				}
+				break;
 			case kLastCheckTimeDataKey:
 				{
 					auto lastCheckData = LastCheckTimeData::GetSingleton();
 					if (!lastCheckData->Load(serializationInterface)) {
 						logger::critical("Failed to Load LastCheckTime Data"sv);
+					}
+				}
+				break;
+			case kLastOrgasmTimeDataKey:
+				{
+					auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
+					if (!lastOrgasmData->Load(serializationInterface)) {
+						logger::critical("Failed to Load lastOrgasmData Data"sv);
 					}
 				}
 				break;
