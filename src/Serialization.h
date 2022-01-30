@@ -8,7 +8,7 @@ namespace Serialization
 	class BaseData
 	{
 	public:
-		float GetData(RE::FormID formId);
+		float GetData(RE::FormID formId, float missing = 0.f);
 		void SetData(RE::FormID formId, float value);
 
 		virtual const char* GetType() = 0;

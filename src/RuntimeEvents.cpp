@@ -37,8 +37,6 @@ void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod)
 
 void WorldChecks::PlayerNakedUpdateLoop()
 {
-	logger::trace("PlayerNakedUpdateLoop Called");
-
 	//If nudity check not enabled return
 	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
 		return;

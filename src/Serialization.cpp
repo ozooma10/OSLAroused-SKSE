@@ -4,7 +4,7 @@
 
 namespace Serialization
 {
-	float BaseData::GetData(RE::FormID formId)
+	float BaseData::GetData(RE::FormID formId, float missing)
 	{
 		Locker locker(m_Lock);
 
@@ -12,7 +12,7 @@ namespace Serialization
 			return m_Data[formId];
 		}
 
-		return 0.f;
+		return missing;
 	}
 
 	void BaseData::SetData(RE::FormID formId, float value)

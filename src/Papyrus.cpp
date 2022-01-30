@@ -20,6 +20,29 @@ void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 	}
 }
 
+void Papyrus::UpdateArousalMode(RE::StaticFunctionTag*, int newArousalMode)
+{
+	Settings::ArousalMode newMode;
+	switch (newArousalMode) {
+	case 0:
+		newMode = Settings::ArousalMode::kSexlabAroused;
+		break;
+	case 1:
+		newMode = Settings::ArousalMode::kOAroused;
+		break;
+	default:
+		return;
+	}
+
+	Settings::GetSingleton()->SetArousalMode(newMode);
+	logger::trace("Arousal Mode Updated...");
+}
+
+void Papyrus::UpdateDefaultArousalMultiplier(RE::StaticFunctionTag*, float newMultiplier)
+{
+	Settings::GetSingleton()->SetDefaultArousalMultiplier(newMultiplier);
+}
+
 float Papyrus::GetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
 	return ArousalManager::GetArousal(actorRef);
@@ -68,6 +91,39 @@ void Papyrus::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, 
 	Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, value);
 }
 
+float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
+}
+
+float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	//If we are in sla mode get exposure, otherwise just return arousal
+	if (Settings::GetSingleton()->GetArousalMode() == Settings::ArousalMode::kSexlabAroused) {
+		float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
+		auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+		Serialization::LastCheckTimeData::GetSingleton()->SetData(actorRef->formID, curTime);
+		return ArousalManager::GetSexlabExposure(actorRef, curTime - lastCheckTime);
+	}
+
+	return ArousalManager::GetArousal(actorRef);
+}
+
+float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID);
+	if (lastOrgasmTime < 0) {
+		lastOrgasmTime = 0;
+	}
+
+	return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
+}
+
+float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
+}
+
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
@@ -80,6 +136,12 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("ModifyArousalMultiple", "OSLArousedNative", ModifyArousalMultiple);
 
 	vm->RegisterFunction("SetArousalMultiplier", "OSLArousedNative", SetArousalMultiplier);
+	vm->RegisterFunction("GetArousalMultiplier", "OSLArousedNative", GetArousalMultiplier);
+
+	vm->RegisterFunction("GetExposure", "OSLArousedNative", GetExposure);
+	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
+	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
+
 	return true;
 }
 
