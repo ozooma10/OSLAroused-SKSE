@@ -27,7 +27,12 @@ namespace Papyrus
 	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
+	void SetPlayerInSexScene(RE::StaticFunctionTag* base, bool bInScene);
 
+	//Debug Functions
+	void DumpArousalData(RE::StaticFunctionTag* base);
+	void ClearSecondaryArousalData(RE::StaticFunctionTag* base);
+	void ClearAllArousalData(RE::StaticFunctionTag* base);
 
 	bool RegisterFunctions(RE::BSScript::IVirtualMachine* vm);
 

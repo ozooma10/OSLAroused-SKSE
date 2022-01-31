@@ -28,7 +28,7 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 		}
 	}
 
-	logger::info("EquipEvent for Player: - Item: {} - Slot: {}", equipEvent->baseObject, equipEvent->equipped);
+	//logger::info("EquipEvent for Player: - Item: {} - Slot: {}", equipEvent->baseObject, equipEvent->equipped);
 
 	return RE::BSEventNotifyControl::kContinue;
 }
@@ -41,6 +41,12 @@ void WorldChecks::PlayerNakedUpdateLoop()
 	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
 		return;
 	}
+
+	//If player in sex scene, return (Handled in the Sex Framework Adapter)
+	if (Settings::GetSingleton()->GetPlayerInSexScene()) {
+		return;
+	}
+
 	float curHours = RE::Calendar::GetSingleton()->GetHoursPassed();
 
 	float elapsedGameTimeSinceLastCheck = std::clamp(curHours - WorldChecks::NakedArousalTicker::GetSingleton()->LastNakedPollGameTime, 0.f, 1.f);

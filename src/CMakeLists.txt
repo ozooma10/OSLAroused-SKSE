@@ -16,6 +16,7 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Serialization.cpp"
 	"${SOURCE_DIR}/Utilities.h"
 	"${SOURCE_DIR}/Settings.h"
+	"${SOURCE_DIR}/Debug.h"
  )
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})

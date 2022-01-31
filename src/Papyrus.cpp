@@ -3,6 +3,7 @@
 #include "Serialization.h"
 #include "RuntimeEvents.h"
 #include "Settings.h"
+#include "Debug.h"
 
 #define BIND(a_method, ...) a_vm->RegisterFunction(#a_method##sv, obj, a_method __VA_OPT__(, ) __VA_ARGS__)
 
@@ -133,6 +134,26 @@ float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
 	return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
 }
 
+void Papyrus::SetPlayerInSexScene(RE::StaticFunctionTag*, bool bInScene)
+{
+	Settings::GetSingleton()->SetPlayerInSexScene(bInScene);
+}
+
+void Papyrus::DumpArousalData(RE::StaticFunctionTag*)
+{
+	Debug::DumpAllArousalData();
+}
+
+void Papyrus::ClearSecondaryArousalData(RE::StaticFunctionTag*)
+{
+	Debug::ClearSecondaryArousalData();
+}
+
+void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
+{
+	Debug::ClearAllArousalData();
+}
+
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
@@ -152,6 +173,13 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	vm->RegisterFunction("SetTimeRate", "OSLArousedNative", SetTimeRate);
 	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
+
+	vm->RegisterFunction("SetPlayerInSexScene", "OSLArousedNative", SetPlayerInSexScene);
+
+	vm->RegisterFunction("DumpArousalData", "OSLArousedNative", DumpArousalData);
+	vm->RegisterFunction("ClearSecondaryArousalData", "OSLArousedNative", ClearSecondaryArousalData);
+	vm->RegisterFunction("ClearAllArousalData", "OSLArousedNative", ClearAllArousalData);
+
 
 	return true;
 }

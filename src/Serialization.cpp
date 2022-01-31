@@ -90,6 +90,16 @@ namespace Serialization
 		m_Data.clear();
 	}
 
+	void BaseData::DumpToLog()
+	{
+		Locker locker(m_Lock);
+
+		for (const auto& [formId, value] : m_Data) {
+			logger::info("Dump Row From {} - FormID: {} - value: {}", GetType(), formId, value);
+		}
+		logger::info("{} Rows Dumped For Type {}", m_Data.size(), GetType());
+	}
+
 	std::string DecodeTypeCode(std::uint32_t typeCode)
 	{
 		constexpr std::size_t SIZE = sizeof(std::uint32_t);

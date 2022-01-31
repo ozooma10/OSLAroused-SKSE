@@ -19,6 +19,8 @@ namespace Serialization
 
 		void Clear();
 
+		void DumpToLog();
+
 	protected:
 		FormFloatData m_Data;
 
