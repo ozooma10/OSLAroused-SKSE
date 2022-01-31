@@ -26,6 +26,18 @@ public:
 		return m_EnablePlayerNudityCheck;
 	}
 
+	void SetHourlyNudityArousalModifier(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_HourlyNudityArousalModifier = newVal;
+	}
+	float GetHourlyNudityArousalModifier() const
+	{
+		Locker locker(m_Lock);
+		return m_HourlyNudityArousalModifier;
+	}
+
+
 	void SetArousalMode(ArousalMode newVal)
 	{
 		Locker locker(m_Lock);
@@ -70,6 +82,8 @@ public:
 
 private:
 	bool m_EnablePlayerNudityCheck = true;
+	
+	float m_HourlyNudityArousalModifier = 20.f;
 
 	ArousalMode m_CurrentArousalMode = ArousalMode::kSexlabAroused;
 

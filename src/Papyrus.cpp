@@ -21,6 +21,11 @@ void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 	}
 }
 
+void Papyrus::UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag*, float newVal)
+{
+	Settings::GetSingleton()->SetHourlyNudityArousalModifier(newVal);
+}
+
 void Papyrus::UpdateArousalMode(RE::StaticFunctionTag*, int newArousalMode)
 {
 	logger::trace("UpdateArousalMode: {}", newArousalMode);
@@ -158,7 +163,9 @@ void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
 
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
+	
 	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
+	vm->RegisterFunction("UpdateHourlyNudityArousalModifier", "OSLArousedNative", UpdateHourlyNudityArousalModifier);
 	vm->RegisterFunction("UpdateArousalMode", "OSLArousedNative", UpdateArousalMode);
 	vm->RegisterFunction("UpdateDefaultArousalMultiplier", "OSLArousedNative", UpdateDefaultArousalMultiplier);
 

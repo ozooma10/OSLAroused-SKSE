@@ -4,6 +4,8 @@ namespace Papyrus
 {
 	void UpdatePlayerNudityCheck(RE::StaticFunctionTag* base, bool newVal);
 
+	void UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag* base, float newVal);
+
 	void UpdateArousalMode(RE::StaticFunctionTag* base, int newArousalMode);
 
 	void UpdateDefaultArousalMultiplier(RE::StaticFunctionTag* base, float newMultiplier);
@@ -18,7 +20,6 @@ namespace Papyrus
 	void ModifyArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs, float value);
 
 	void SetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-
 	float GetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	float GetExposure(RE::StaticFunctionTag* base, RE::Actor* actorRef);

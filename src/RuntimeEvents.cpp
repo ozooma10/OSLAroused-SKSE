@@ -50,7 +50,7 @@ void WorldChecks::PlayerNakedUpdateLoop()
 	float curHours = RE::Calendar::GetSingleton()->GetHoursPassed();
 
 	float elapsedGameTimeSinceLastCheck = std::clamp(curHours - WorldChecks::NakedArousalTicker::GetSingleton()->LastNakedPollGameTime, 0.f, 1.f);
-	//logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check", elapsedGameTimeSinceLastCheck);
+	logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check", elapsedGameTimeSinceLastCheck);
 
 	//wait until some percievable amount of time has passed
 	if (elapsedGameTimeSinceLastCheck <= 0.025) {
@@ -72,9 +72,7 @@ void WorldChecks::PlayerNakedUpdateLoop()
 	//Same dist from OAroused
 	//@TODO: Make configurable?
 	const float ScanDistance = 5120.f;
-
-	const float hourlyArousalMod = 20.f;
-	float arousalMod = hourlyArousalMod * elapsedGameTimeSinceLastCheck;
+	float arousalMod = Settings::GetSingleton()->GetHourlyNudityArousalModifier() * elapsedGameTimeSinceLastCheck;
 
 	//Increase the arousal of any nearby npcs
 	ModifyArousalOfSpecators(player, ScanDistance, arousalMod);
