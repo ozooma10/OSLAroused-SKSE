@@ -23,6 +23,8 @@ void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 
 void Papyrus::UpdateArousalMode(RE::StaticFunctionTag*, int newArousalMode)
 {
+	logger::trace("UpdateArousalMode: {}", newArousalMode);
+
 	Settings::ArousalMode newMode;
 	switch (newArousalMode) {
 	case 0:
@@ -157,6 +159,8 @@ void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
+	vm->RegisterFunction("UpdateArousalMode", "OSLArousedNative", UpdateArousalMode);
+	vm->RegisterFunction("UpdateDefaultArousalMultiplier", "OSLArousedNative", UpdateDefaultArousalMultiplier);
 
 	vm->RegisterFunction("GetArousal", "OSLArousedNative", GetArousal);
 	vm->RegisterFunction("GetArousalMultiple", "OSLArousedNative", GetArousalMultiple);

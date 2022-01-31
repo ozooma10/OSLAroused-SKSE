@@ -16,7 +16,7 @@ namespace ArousalManager
 		RE::FormID actorFormId = actorRef->formID;
 
 		const auto LastCheckTimeData = LastCheckTimeData::GetSingleton();
-		auto lastCheckTime = LastCheckTimeData->GetData(actorFormId);
+		auto lastCheckTime = LastCheckTimeData->GetData(actorFormId, 0.f);
 		float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
 		float timePassed = curTime - lastCheckTime;
 
@@ -47,6 +47,8 @@ namespace ArousalManager
 
 	void ModifyArousal(RE::Actor* actorRef, float modValue)
 	{
+		logger::trace("ModifyArousal: {}  by {}", actorRef->GetDisplayFullName(), modValue);
+
 		if (modValue > 0) {
 			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID);
 		}
@@ -69,6 +71,7 @@ namespace ArousalManager
 	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed)
 	{
 		RE::FormID actorFormId = actorRef->formID;
+		logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorFormId, lastCheckTime, timePassed);
 
 		float newArousal = 0.f;
 		//If never calc or old, regen
@@ -90,6 +93,8 @@ namespace ArousalManager
 
 	float GetSexlabArousal(RE::Actor* actorRef, float timePassed)
 	{
+		logger::trace("GetSexlabArousal timePass {}", timePassed);
+
 		if (!actorRef) {
 			return -2;
 		}
