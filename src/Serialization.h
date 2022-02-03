@@ -72,6 +72,15 @@ namespace Serialization
 			}
 		}
 
+		void RemoveData(RE::FormID formId, RE::FormID subFormId)
+		{
+			Locker locker(m_Lock);
+			
+			if (const auto it = m_Data.find(formId); it != m_Data.end()) {
+				it->second.erase(subFormId);
+			}
+		}
+
 		virtual void DumpToLog() override
 		{
 			logger::info("{} Rows Not Dumped For List Type {}", m_Data.size(), GetType());

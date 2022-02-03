@@ -154,6 +154,15 @@ bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BG
 	return Utilities::Keywords::AddKeyword(form, keyword);
 }
 
+bool Papyrus::RemoveKeywordFromForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BGSKeyword* keyword)
+{
+	if (!form || !keyword) {
+		return false;
+	}
+
+	return Utilities::Keywords::RemoveKeyword(form, keyword);
+}
+
 void Papyrus::DumpArousalData(RE::StaticFunctionTag*)
 {
 	Debug::DumpAllArousalData();
@@ -197,12 +206,12 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	//Keyword
 	vm->RegisterFunction("AddKeywordToForm", "OSLArousedNative", AddKeywordToForm);
+	vm->RegisterFunction("RemoveKeywordFromForm", "OSLArousedNative", RemoveKeywordFromForm);
 
 	//Debug
 	vm->RegisterFunction("DumpArousalData", "OSLArousedNative", DumpArousalData);
 	vm->RegisterFunction("ClearSecondaryArousalData", "OSLArousedNative", ClearSecondaryArousalData);
 	vm->RegisterFunction("ClearAllArousalData", "OSLArousedNative", ClearAllArousalData);
-
 
 	return true;
 }

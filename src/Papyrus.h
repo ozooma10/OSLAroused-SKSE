@@ -32,6 +32,7 @@ namespace Papyrus
 
 	//Keyword Management
 	bool AddKeywordToForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
+	bool RemoveKeywordFromForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
 
 	//Debug Functions
 	void DumpArousalData(RE::StaticFunctionTag* base);
