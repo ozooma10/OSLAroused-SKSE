@@ -3,6 +3,7 @@
 #include "RuntimeEvents.h"
 #include "Papyrus.h"
 #include "Serialization.h"
+#include "Utilities.h"
 
 namespace
 {
@@ -33,6 +34,11 @@ namespace
 			RuntimeEvents::OnEquipEvent::RegisterEvent();
 			logger::info("OnEquipEvent Registered...");
 
+
+			break;
+		case SKSE::MessagingInterface::kPostLoadGame:
+			//Distribute Keywords
+			Utilities::Keywords::DistributeKeywords();
 			break;
 		}
 	}

@@ -149,12 +149,9 @@ bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BG
 	if (!form || !keyword) {
 		return false;
 	}
-	const auto keywordForm = form->As<RE::BGSKeywordForm>();
-	if (!keywordForm) {
-		return false;
-	}
+	
 
-	return Utilities::Keywords::AddKeyword(keywordForm, keyword);
+	return Utilities::Keywords::AddKeyword(form, keyword);
 }
 
 void Papyrus::DumpArousalData(RE::StaticFunctionTag*)

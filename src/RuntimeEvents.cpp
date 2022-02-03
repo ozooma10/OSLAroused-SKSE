@@ -50,7 +50,7 @@ void WorldChecks::PlayerNakedUpdateLoop()
 	float curHours = RE::Calendar::GetSingleton()->GetHoursPassed();
 
 	float elapsedGameTimeSinceLastCheck = std::clamp(curHours - WorldChecks::NakedArousalTicker::GetSingleton()->LastNakedPollGameTime, 0.f, 1.f);
-	logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check", elapsedGameTimeSinceLastCheck);
+	//logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check", elapsedGameTimeSinceLastCheck);
 
 	//wait until some percievable amount of time has passed
 	if (elapsedGameTimeSinceLastCheck <= 0.025) {

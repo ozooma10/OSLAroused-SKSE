@@ -71,6 +71,8 @@ namespace Utilities
 	//Keyword logic based off powerof3's CommonLibSSE implementation
 	namespace Keywords
 	{
-		bool AddKeyword(RE::BGSKeywordForm* keywordForm, RE::BGSKeyword* keyword);
+		bool AddKeyword(RE::TESForm* keywordForm, RE::BGSKeyword* keyword);
+
+		void DistributeKeywords();
 	}
 }

@@ -19,25 +19,25 @@ namespace Serialization
 	bool BaseData<T>::Save(SKSE::SerializationInterface* serializationInterface)
 	{
 		assert(serializationInterface);
-		//Locker locker(m_Lock);
+		Locker locker(m_Lock);
 
-		//const auto numRecords = m_Data.size();
-		//if (!serializationInterface->WriteRecordData(numRecords)) {
-		//	logger::error("Failed to save {} data records", numRecords);
-		//	return false;
-		//}
+		const auto numRecords = m_Data.size();
+		if (!serializationInterface->WriteRecordData(numRecords)) {
+			logger::error("Failed to save {} data records", numRecords);
+			return false;
+		}
 
-		//for (const auto& [formId, value] : m_Data) {
-		//	if (!serializationInterface->WriteRecordData(formId)) {
-		//		logger::error("Failed to save data for FormID: ({:X})", formId);
-		//		return false;
-		//	}
+		for (const auto& [formId, value] : m_Data) {
+			if (!serializationInterface->WriteRecordData(formId)) {
+				logger::error("Failed to save data for FormID: ({:X})", formId);
+				return false;
+			}
 
-		//	if (!serializationInterface->WriteRecordData(value)) {
-		//		logger::error("Failed to save data for value: ({})", value);
-		//		return false;
-		//	}
-		//}
+			if (!serializationInterface->WriteRecordData(value)) {
+				logger::error("Failed to save value data for form: {}", formId);
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -46,27 +46,27 @@ namespace Serialization
 	{
 		assert(serializationInterface);
 		
-		//std::size_t recordDataSize;
-		//serializationInterface->ReadRecordData(recordDataSize);
+		std::size_t recordDataSize;
+		serializationInterface->ReadRecordData(recordDataSize);
 
-		//Locker locker(m_Lock);
-		//m_Data.clear();
+		Locker locker(m_Lock);
+		m_Data.clear();
 
-		//RE::FormID formId;
-		//T value;
-		//
-		//for (auto i = 0; i < recordDataSize; i++) {
-		//	serializationInterface->ReadRecordData(formId);
-		//	//Ensure form still exists
-		//	RE::FormID fixedId;
-		//	if (!serializationInterface->ResolveFormID(formId, fixedId)) {
-		//		logger::error("Failed to resolve formID {} {}"sv, formId, fixedId);
-		//		continue;
-		//	}
+		RE::FormID formId;
+		T value;
+		
+		for (auto i = 0; i < recordDataSize; i++) {
+			serializationInterface->ReadRecordData(formId);
+			//Ensure form still exists
+			RE::FormID fixedId;
+			if (!serializationInterface->ResolveFormID(formId, fixedId)) {
+				logger::error("Failed to resolve formID {} {}"sv, formId, fixedId);
+				continue;
+			}
 
-		//	serializationInterface->ReadRecordData(value);
-		//	m_Data[formId] = value;
-		//}
+			serializationInterface->ReadRecordData(value);
+			m_Data[formId] = value;
+		}
 		return true;
 	}
 
@@ -124,6 +124,7 @@ namespace Serialization
 	{
 		assert(serializationInterface);
 
+
 		std::size_t recordDataSize;
 		serializationInterface->ReadRecordData(recordDataSize);
 
@@ -131,7 +132,7 @@ namespace Serialization
 		m_Data.clear();
 
 		RE::FormID formId;
-		float subFormIdCount;
+		std::size_t subFormIdCount;
 		RE::FormID subFormId;
 
 		for (auto i = 0; i < recordDataSize; i++) {
@@ -143,11 +144,11 @@ namespace Serialization
 				continue;
 			}
 
-			std::vector<RE::FormID> subFormIds;
+			std::set<RE::FormID> subFormIds;
 			serializationInterface->ReadRecordData(subFormIdCount);
-			for (auto subFormIndex = 0; i < subFormIdCount; subFormIndex++) {
+			for (auto subFormIndex = 0; subFormIndex < subFormIdCount; subFormIndex++) {
 				serializationInterface->ReadRecordData(subFormId);
-				subFormIds.push_back(subFormId);
+				subFormIds.insert(subFormId);
 			}
 			m_Data[formId] = subFormIds;
 		}
@@ -156,15 +157,12 @@ namespace Serialization
 
 	std::string DecodeTypeCode(std::uint32_t typeCode)
 	{
-		constexpr std::size_t SIZE = sizeof(std::uint32_t);
-
-		std::string sig;
-		sig.resize(SIZE);
-		char* iter = reinterpret_cast<char*>(&typeCode);
-		for (std::size_t i = 0, j = SIZE - 2; i < SIZE - 1; ++i, --j) {
-			sig[j] = iter[i];
-		}
-		return sig;
+		char buf[4];
+		buf[3] = char(typeCode);
+		buf[2] = char(typeCode >> 8);
+		buf[1] = char(typeCode >> 16);
+		buf[0] = char(typeCode >> 24);
+		return std::string(buf, buf + 4);
 	}
 
 	void SaveCallback(SKSE::SerializationInterface* serializationInterface)
@@ -207,7 +205,11 @@ namespace Serialization
 		std::uint32_t type;
 		std::uint32_t version;
 		std::uint32_t length;
+		logger::info("OSLArousal Load Start");
+
 		while (serializationInterface->GetNextRecordInfo(type, version, length)) {
+			logger::info("Trying Load for {}", DecodeTypeCode(type));
+
 			if (version != kSerializationVersion) {
 				logger::critical("Loaded data has incorrect version. Recieved ({}) - Expected ({}) for Data Key ({})"sv, version, kSerializationVersion, DecodeTypeCode(type));
 				continue;

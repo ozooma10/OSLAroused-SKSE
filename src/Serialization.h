@@ -30,14 +30,7 @@ namespace Serialization
 
 		void Clear();
 
-		void DumpToLog()
-		{
-			Locker locker(m_Lock);
-			for (const auto& [formId, value] : m_Data) {
-				logger::info("Dump Row From {} - FormID: {} - value: {}", GetType(), formId, value);
-			}
-			logger::info("{} Rows Dumped For Type {}", m_Data.size(), GetType());
-		}
+		virtual void DumpToLog() = 0;
 
 	protected:
 		std::map<RE::FormID, T> m_Data;
@@ -47,15 +40,45 @@ namespace Serialization
 		mutable Lock m_Lock;
 	};
 
-	class BaseFormArrayData : public BaseData<std::vector<RE::FormID>>
+	class BaseFormFloat : public BaseData<float>
+	{
+	public:
+		virtual void DumpToLog() override
+		{
+			Locker locker(m_Lock);
+			for (const auto& [formId, value] : m_Data) {
+				logger::info("Dump Row From {} - FormID: {} - value: {}", GetType(), formId, value);
+			}
+			logger::info("{} Rows Dumped For Type {}", m_Data.size(), GetType());
+		}
+	};
+
+	class BaseFormArrayData : public BaseData<std::set<RE::FormID>>
 	{
 	public:
 		virtual bool Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version) override;
 		virtual bool Save(SKSE::SerializationInterface* serializationInterface) override;
 		virtual bool Load(SKSE::SerializationInterface* serializationInterface) override;
+
+		std::map<RE::FormID, std::set<RE::FormID>> GetData() const { return m_Data; }
+
+		void AppendData(RE::FormID formId, RE::FormID subFormId)
+		{
+			Locker locker(m_Lock);
+			if (const auto it = m_Data.find(formId); it != m_Data.end()) {
+				it->second.insert(subFormId);
+			} else {
+				m_Data[formId] = { subFormId };
+			}
+		}
+
+		virtual void DumpToLog() override
+		{
+			logger::info("{} Rows Not Dumped For List Type {}", m_Data.size(), GetType());
+		}
 	};
 
-	class ArousalData final : public BaseData<float>
+	class ArousalData final : public BaseFormFloat
 	{
 	public:
 		static ArousalData* GetSingleton()
@@ -70,7 +93,7 @@ namespace Serialization
 		}
 	};
 
-	class MultiplierData final : public BaseData<float>
+	class MultiplierData final : public BaseFormFloat
 	{
 	public:
 		static MultiplierData* GetSingleton()
@@ -85,7 +108,7 @@ namespace Serialization
 		}
 	};
 
-	class TimeRateData final : public BaseData<float>
+	class TimeRateData final : public BaseFormFloat
 	{
 	public:
 		static TimeRateData* GetSingleton()
@@ -100,7 +123,7 @@ namespace Serialization
 		}
 	};
 
-	class LastCheckTimeData final : public BaseData<float>
+	class LastCheckTimeData final : public BaseFormFloat
 	{
 	public:
 		static ArousalData* GetSingleton()
@@ -115,7 +138,7 @@ namespace Serialization
 		}
 	};
 
-	class LastOrgasmTimeData final : public BaseData<float>
+	class LastOrgasmTimeData final : public BaseFormFloat
 	{
 	public:
 		static LastOrgasmTimeData* GetSingleton()
