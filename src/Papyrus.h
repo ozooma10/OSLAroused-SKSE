@@ -30,6 +30,9 @@ namespace Papyrus
 
 	void SetPlayerInSexScene(RE::StaticFunctionTag* base, bool bInScene);
 
+	//Keyword Management
+	bool AddKeywordToForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
+
 	//Debug Functions
 	void DumpArousalData(RE::StaticFunctionTag* base);
 	void ClearSecondaryArousalData(RE::StaticFunctionTag* base);

@@ -15,6 +15,7 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Serialization.h"
 	"${SOURCE_DIR}/Serialization.cpp"
 	"${SOURCE_DIR}/Utilities.h"
+	"${SOURCE_DIR}/Utilities.cpp"
 	"${SOURCE_DIR}/Settings.h"
 	"${SOURCE_DIR}/Debug.h"
  )

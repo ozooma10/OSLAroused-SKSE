@@ -3,33 +3,59 @@
 
 namespace Serialization
 {
-	typedef std::map<RE::FormID, float> FormFloatData;
-
+	template <typename T>
 	class BaseData
 	{
 	public:
-		float GetData(RE::FormID formId, float missing = 0.f);
-		void SetData(RE::FormID formId, float value);
+		float GetData(RE::FormID formId, T missing)
+		{
+			Locker locker(m_Lock);
+			if (auto idx = m_Data.find(formId) != m_Data.end()) {
+				return m_Data[formId];
+			}
+			return missing;
+		}
+
+		void SetData(RE::FormID formId, T value)
+		{
+			Locker locker(m_Lock);
+			m_Data[formId] = value;
+		}
 
 		virtual const char* GetType() = 0;
 
-		bool Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version);
-		bool Save(SKSE::SerializationInterface* serializationInterface);
-		bool Load(SKSE::SerializationInterface* serializationInterface);
+		virtual bool Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version);
+		virtual bool Save(SKSE::SerializationInterface* serializationInterface);
+		virtual bool Load(SKSE::SerializationInterface* serializationInterface);
 
 		void Clear();
 
-		void DumpToLog();
+		void DumpToLog()
+		{
+			Locker locker(m_Lock);
+			for (const auto& [formId, value] : m_Data) {
+				logger::info("Dump Row From {} - FormID: {} - value: {}", GetType(), formId, value);
+			}
+			logger::info("{} Rows Dumped For Type {}", m_Data.size(), GetType());
+		}
 
 	protected:
-		FormFloatData m_Data;
+		std::map<RE::FormID, T> m_Data;
 
 		using Lock = std::recursive_mutex;
 		using Locker = std::lock_guard<Lock>;
 		mutable Lock m_Lock;
 	};
 
-	class ArousalData final : public BaseData
+	class BaseFormArrayData : public BaseData<std::vector<RE::FormID>>
+	{
+	public:
+		virtual bool Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version) override;
+		virtual bool Save(SKSE::SerializationInterface* serializationInterface) override;
+		virtual bool Load(SKSE::SerializationInterface* serializationInterface) override;
+	};
+
+	class ArousalData final : public BaseData<float>
 	{
 	public:
 		static ArousalData* GetSingleton()
@@ -44,7 +70,7 @@ namespace Serialization
 		}
 	};
 
-	class MultiplierData final : public BaseData
+	class MultiplierData final : public BaseData<float>
 	{
 	public:
 		static MultiplierData* GetSingleton()
@@ -59,7 +85,7 @@ namespace Serialization
 		}
 	};
 
-	class TimeRateData final : public BaseData
+	class TimeRateData final : public BaseData<float>
 	{
 	public:
 		static TimeRateData* GetSingleton()
@@ -74,7 +100,7 @@ namespace Serialization
 		}
 	};
 
-	class LastCheckTimeData final : public BaseData
+	class LastCheckTimeData final : public BaseData<float>
 	{
 	public:
 		static ArousalData* GetSingleton()
@@ -89,7 +115,7 @@ namespace Serialization
 		}
 	};
 
-	class LastOrgasmTimeData final : public BaseData
+	class LastOrgasmTimeData final : public BaseData<float>
 	{
 	public:
 		static LastOrgasmTimeData* GetSingleton()
@@ -104,12 +130,28 @@ namespace Serialization
 		}
 	};
 
+	class ArmorKeywordData final : public BaseFormArrayData
+	{
+	public:
+		static ArmorKeywordData* GetSingleton()
+		{
+			static ArmorKeywordData singleton;
+			return &singleton;
+		}
+
+		const char* GetType() override
+		{
+			return "ArmorKeywords";
+		}
+	};
+
 	constexpr std::uint32_t kSerializationVersion = 1;
 	constexpr std::uint32_t kArousalDataKey = 'OSLA';
 	constexpr std::uint32_t kMultiplerDataKey = 'OSLM';
 	constexpr std::uint32_t kTimeRateDataKey = 'OSLT';
 	constexpr std::uint32_t kLastCheckTimeDataKey = 'OSLC';
 	constexpr std::uint32_t kLastOrgasmTimeDataKey = 'OSLO';
+	constexpr std::uint32_t kArmorKeywordDataKey = 'OSLK';
 
 	std::string DecodeTypeCode(std::uint32_t typeCode);
 

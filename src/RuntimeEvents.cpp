@@ -18,7 +18,7 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 	if (!equipmentForm) {
 		return RE::BSEventNotifyControl::kContinue;
 	}
-
+	
 	//If you have uneequipped body armor, start the naked poller if not already started
 	if (equipmentForm->IsArmor()) {
 		const auto armor = equipmentForm->As<RE::TESObjectARMO>();

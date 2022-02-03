@@ -50,10 +50,10 @@ namespace ArousalManager
 		logger::trace("ModifyArousal: {}  by {}", actorRef->GetDisplayFullName(), modValue);
 
 		if (modValue > 0) {
-			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID);
+			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, 0.f);
 		}
 
-		SetArousal(actorRef, ArousalData::GetSingleton()->GetData(actorRef->formID) + modValue);
+		SetArousal(actorRef, ArousalData::GetSingleton()->GetData(actorRef->formID, 0.f) + modValue);
 	}
 
 	float GetActorTimeRate(RE::Actor* actorRef, float timeSinceLastOrgasm)
@@ -83,8 +83,8 @@ namespace ArousalManager
 				MultiplierData::GetSingleton()->SetData(actorFormId, randomMultiplier);
 			}
 		} else {
-			float currentArousal = ArousalData::GetSingleton()->GetData(actorFormId);
-			float arousalMultiplier = MultiplierData::GetSingleton()->GetData(actorFormId);
+			float currentArousal = ArousalData::GetSingleton()->GetData(actorFormId, 0.f);
+			float arousalMultiplier = MultiplierData::GetSingleton()->GetData(actorFormId, 0.f);
 			newArousal = currentArousal + ((timePassed * 25.f) * arousalMultiplier);
 		}
 

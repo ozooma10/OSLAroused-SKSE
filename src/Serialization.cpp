@@ -4,24 +4,8 @@
 
 namespace Serialization
 {
-	float BaseData::GetData(RE::FormID formId, float missing)
-	{
-		Locker locker(m_Lock);
-
-		if (auto idx = m_Data.find(formId) != m_Data.end()) {
-			return m_Data[formId];
-		}
-
-		return missing;
-	}
-
-	void BaseData::SetData(RE::FormID formId, float value)
-	{
-		Locker locker(m_Lock);
-		m_Data[formId] = value;
-	}
-
-	bool BaseData::Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version)
+	template <typename T>
+	bool BaseData<T>::Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version)
 	{
 		if (!serializationInterface->OpenRecord(type, version)) {
 			logger::error("Failed to open record for Data Serialization!");
@@ -31,7 +15,79 @@ namespace Serialization
 		return Save(serializationInterface);
 	}
 
-	bool BaseData::Save(SKSE::SerializationInterface* serializationInterface)
+	template <typename T>
+	bool BaseData<T>::Save(SKSE::SerializationInterface* serializationInterface)
+	{
+		assert(serializationInterface);
+		//Locker locker(m_Lock);
+
+		//const auto numRecords = m_Data.size();
+		//if (!serializationInterface->WriteRecordData(numRecords)) {
+		//	logger::error("Failed to save {} data records", numRecords);
+		//	return false;
+		//}
+
+		//for (const auto& [formId, value] : m_Data) {
+		//	if (!serializationInterface->WriteRecordData(formId)) {
+		//		logger::error("Failed to save data for FormID: ({:X})", formId);
+		//		return false;
+		//	}
+
+		//	if (!serializationInterface->WriteRecordData(value)) {
+		//		logger::error("Failed to save data for value: ({})", value);
+		//		return false;
+		//	}
+		//}
+		return true;
+	}
+
+	template <typename T>
+	bool BaseData<T>::Load(SKSE::SerializationInterface* serializationInterface)
+	{
+		assert(serializationInterface);
+		
+		//std::size_t recordDataSize;
+		//serializationInterface->ReadRecordData(recordDataSize);
+
+		//Locker locker(m_Lock);
+		//m_Data.clear();
+
+		//RE::FormID formId;
+		//T value;
+		//
+		//for (auto i = 0; i < recordDataSize; i++) {
+		//	serializationInterface->ReadRecordData(formId);
+		//	//Ensure form still exists
+		//	RE::FormID fixedId;
+		//	if (!serializationInterface->ResolveFormID(formId, fixedId)) {
+		//		logger::error("Failed to resolve formID {} {}"sv, formId, fixedId);
+		//		continue;
+		//	}
+
+		//	serializationInterface->ReadRecordData(value);
+		//	m_Data[formId] = value;
+		//}
+		return true;
+	}
+
+	template <typename T>
+	void BaseData<T>::Clear()
+	{
+		Locker locker(m_Lock);
+		m_Data.clear();
+	}
+
+	bool BaseFormArrayData::Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version)
+	{
+		if (!serializationInterface->OpenRecord(type, version)) {
+			logger::error("Failed to open record for Data Serialization!");
+			return false;
+		}
+
+		return Save(serializationInterface);
+	}
+
+	bool BaseFormArrayData::Save(SKSE::SerializationInterface* serializationInterface)
 	{
 		assert(serializationInterface);
 		Locker locker(m_Lock);
@@ -42,24 +98,32 @@ namespace Serialization
 			return false;
 		}
 
-		for (const auto& [formId, value] : m_Data) {
+		for (const auto& [formId, formList] : m_Data) {
 			if (!serializationInterface->WriteRecordData(formId)) {
 				logger::error("Failed to save data for FormID: ({:X})", formId);
 				return false;
 			}
 
-			if (!serializationInterface->WriteRecordData(value)) {
-				logger::error("Failed to save data for value: ({})", value);
+			const auto numForms = formList.size();
+			if (!serializationInterface->WriteRecordData(numForms)) {
+				logger::error("Failed to save {} sub form list records", numForms);
 				return false;
+			}
+
+			for (const auto& subFormId : formList) {
+				if (!serializationInterface->WriteRecordData(subFormId)) {
+					logger::error("Failed to save data for sub FormID: ({})", subFormId);
+					return false;
+				}
 			}
 		}
 		return true;
 	}
 
-	bool BaseData::Load(SKSE::SerializationInterface* serializationInterface)
+	bool BaseFormArrayData::Load(SKSE::SerializationInterface* serializationInterface)
 	{
 		assert(serializationInterface);
-		
+
 		std::size_t recordDataSize;
 		serializationInterface->ReadRecordData(recordDataSize);
 
@@ -67,8 +131,9 @@ namespace Serialization
 		m_Data.clear();
 
 		RE::FormID formId;
-		float value;
-		
+		float subFormIdCount;
+		RE::FormID subFormId;
+
 		for (auto i = 0; i < recordDataSize; i++) {
 			serializationInterface->ReadRecordData(formId);
 			//Ensure form still exists
@@ -78,26 +143,15 @@ namespace Serialization
 				continue;
 			}
 
-			serializationInterface->ReadRecordData(value);
-			m_Data[formId] = value;
+			std::vector<RE::FormID> subFormIds;
+			serializationInterface->ReadRecordData(subFormIdCount);
+			for (auto subFormIndex = 0; i < subFormIdCount; subFormIndex++) {
+				serializationInterface->ReadRecordData(subFormId);
+				subFormIds.push_back(subFormId);
+			}
+			m_Data[formId] = subFormIds;
 		}
 		return true;
-	}
-
-	void BaseData::Clear()
-	{
-		Locker locker(m_Lock);
-		m_Data.clear();
-	}
-
-	void BaseData::DumpToLog()
-	{
-		Locker locker(m_Lock);
-
-		for (const auto& [formId, value] : m_Data) {
-			logger::info("Dump Row From {} - FormID: {} - value: {}", GetType(), formId, value);
-		}
-		logger::info("{} Rows Dumped For Type {}", m_Data.size(), GetType());
 	}
 
 	std::string DecodeTypeCode(std::uint32_t typeCode)
@@ -138,6 +192,11 @@ namespace Serialization
 		const auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
 		if (!lastOrgasmData->Save(serializationInterface, kLastOrgasmTimeDataKey, kSerializationVersion)) {
 			logger::critical("Failed to save Last Orgasm Time Data");
+		}
+
+		const auto armorKeywordData = ArmorKeywordData::GetSingleton();
+		if (!armorKeywordData->Save(serializationInterface, kArmorKeywordDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Armor Keyword Data");
 		}
 
 		logger::info("OSLArousal Data Saved");
@@ -192,6 +251,14 @@ namespace Serialization
 					auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
 					if (!lastOrgasmData->Load(serializationInterface)) {
 						logger::critical("Failed to Load lastOrgasmData Data"sv);
+					}
+				}
+				break;
+			case kArmorKeywordDataKey:
+				{
+					auto armorKeywordData = ArmorKeywordData::GetSingleton();
+					if (!armorKeywordData->Load(serializationInterface)) {
+						logger::critical("Failed to Load armorKeywordData Data"sv);
 					}
 				}
 				break;

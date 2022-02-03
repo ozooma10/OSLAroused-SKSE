@@ -5,8 +5,6 @@
 #include "Settings.h"
 #include "Debug.h"
 
-#define BIND(a_method, ...) a_vm->RegisterFunction(#a_method##sv, obj, a_method __VA_OPT__(, ) __VA_ARGS__)
-
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {
 	Settings::GetSingleton()->SetPlayerNudityCheckEnabled(newVal);
@@ -119,7 +117,7 @@ float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* actorRef)
 
 float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
-	float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID);
+	float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
 	if (lastOrgasmTime < 0) {
 		lastOrgasmTime = 0;
 	}
@@ -144,6 +142,19 @@ float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
 void Papyrus::SetPlayerInSexScene(RE::StaticFunctionTag*, bool bInScene)
 {
 	Settings::GetSingleton()->SetPlayerInSexScene(bInScene);
+}
+
+bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BGSKeyword* keyword)
+{
+	if (!form || !keyword) {
+		return false;
+	}
+	const auto keywordForm = form->As<RE::BGSKeywordForm>();
+	if (!keywordForm) {
+		return false;
+	}
+
+	return Utilities::Keywords::AddKeyword(keywordForm, keyword);
 }
 
 void Papyrus::DumpArousalData(RE::StaticFunctionTag*)
@@ -187,6 +198,10 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	vm->RegisterFunction("SetPlayerInSexScene", "OSLArousedNative", SetPlayerInSexScene);
 
+	//Keyword
+	vm->RegisterFunction("AddKeywordToForm", "OSLArousedNative", AddKeywordToForm);
+
+	//Debug
 	vm->RegisterFunction("DumpArousalData", "OSLArousedNative", DumpArousalData);
 	vm->RegisterFunction("ClearSecondaryArousalData", "OSLArousedNative", ClearSecondaryArousalData);
 	vm->RegisterFunction("ClearAllArousalData", "OSLArousedNative", ClearAllArousalData);

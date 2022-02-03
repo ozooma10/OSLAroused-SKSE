@@ -1,6 +1,6 @@
 #pragma once
-#include <random>
 
+#include <random>
 
 namespace Utilities
 {
@@ -66,4 +66,11 @@ namespace Utilities
 		std::atomic<bool> m_Running;
 		std::mutex m_IntervalMutex;
 	};
+
+	
+	//Keyword logic based off powerof3's CommonLibSSE implementation
+	namespace Keywords
+	{
+		bool AddKeyword(RE::BGSKeywordForm* keywordForm, RE::BGSKeyword* keyword);
+	}
 }
