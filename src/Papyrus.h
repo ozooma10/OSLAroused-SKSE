@@ -46,7 +46,7 @@ namespace Papyrus
 
 	namespace Events
 	{
-		void SendPlayerArousalUpdatedEvent(float newVal);
+		void SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newVal);
 
 		void SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked);
 	}

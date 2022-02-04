@@ -20,7 +20,9 @@ namespace ArousalManager
 		float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
 		float timePassed = curTime - lastCheckTime;
 
-		if (bUpdateState) {
+
+		//If set to update state, or we have never checked (last check time is 0), then update the lastchecktime
+		if (bUpdateState || lastCheckTime == 0.f) {
 			LastCheckTimeData->SetData(actorFormId, curTime);
 		}
 
@@ -40,9 +42,7 @@ namespace ArousalManager
 
 		ArousalData::GetSingleton()->SetData(actorRef->formID, value);
 
-		if (actorRef->IsPlayerRef()) {
-			Papyrus::Events::SendPlayerArousalUpdatedEvent(value);
-		}
+		Papyrus::Events::SendActorArousalUpdatedEvent(actorRef, value);
 
 		return value;
 	}
@@ -52,10 +52,10 @@ namespace ArousalManager
 		logger::trace("ModifyArousal: {}  by {}", actorRef->GetDisplayFullName(), modValue);
 
 		if (modValue > 0) {
-			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, 0.f);
+			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
 		}
 
-		return SetArousal(actorRef, ArousalData::GetSingleton()->GetData(actorRef->formID, 0.f) + modValue);
+		return SetArousal(actorRef, GetArousal(actorRef, false) + modValue);
 	}
 
 	float GetActorTimeRate(RE::Actor* actorRef, float timeSinceLastOrgasm)
@@ -73,7 +73,7 @@ namespace ArousalManager
 	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState)
 	{
 		RE::FormID actorFormId = actorRef->formID;
-		logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorFormId, lastCheckTime, timePassed);
+		logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorRef->GetDisplayFullName(), lastCheckTime, timePassed);
 
 		float newArousal = 0.f;
 		//If never calc or old, regen

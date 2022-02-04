@@ -243,9 +243,9 @@ void SendModEvent(RE::BSFixedString eventName, float numArg, RE::TESForm* sender
 	modCallback->SendEvent(&modEvent);
 }
 
-void Papyrus::Events::SendPlayerArousalUpdatedEvent(float newVal)
+void Papyrus::Events::SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newVal)
 {
-	SendModEvent("OSLA_PlayerArousalUpdated", newVal, nullptr);
+	SendModEvent("OSLA_ActorArousalUpdated", newVal, actorRef);
 }
 
 void Papyrus::Events::SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked)
