@@ -65,6 +65,11 @@ std::vector<float> Papyrus::GetArousalMultiple(RE::StaticFunctionTag*, RE::refer
 	return results;
 }
 
+float Papyrus::GetArousalNoSideEffects(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return ArousalManager::GetArousal(actorRef, false);
+}
+
 float Papyrus::SetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
 {
 	return ArousalManager::SetArousal(actorRef, value);
@@ -139,6 +144,11 @@ float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
 	return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
 }
 
+bool Papyrus::IsActorNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Utilities::Actor::IsNaked(actorRef);
+}
+
 void Papyrus::SetPlayerInSexScene(RE::StaticFunctionTag*, bool bInScene)
 {
 	Settings::GetSingleton()->SetPlayerInSexScene(bInScene);
@@ -150,7 +160,6 @@ bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BG
 		return false;
 	}
 	
-
 	return Utilities::Keywords::AddKeyword(form, keyword);
 }
 
@@ -180,14 +189,17 @@ void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
 
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
-	
+	//OSLAroused Settings
 	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
 	vm->RegisterFunction("UpdateHourlyNudityArousalModifier", "OSLArousedNative", UpdateHourlyNudityArousalModifier);
 	vm->RegisterFunction("UpdateArousalMode", "OSLArousedNative", UpdateArousalMode);
 	vm->RegisterFunction("UpdateDefaultArousalMultiplier", "OSLArousedNative", UpdateDefaultArousalMultiplier);
-
+	
+	//General State
 	vm->RegisterFunction("GetArousal", "OSLArousedNative", GetArousal);
 	vm->RegisterFunction("GetArousalMultiple", "OSLArousedNative", GetArousalMultiple);
+	vm->RegisterFunction("GetArousalNoSideEffects", "OSLArousedNative", GetArousalNoSideEffects);
+
 	vm->RegisterFunction("SetArousal", "OSLArousedNative", SetArousal);
 	vm->RegisterFunction("SetArousalMultiple", "OSLArousedNative", SetArousalMultiple);
 	vm->RegisterFunction("ModifyArousal", "OSLArousedNative", ModifyArousal);
@@ -202,6 +214,8 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("SetTimeRate", "OSLArousedNative", SetTimeRate);
 	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
 
+	//Actor State
+	vm->RegisterFunction("IsActorNaked", "OSLArousedNative", IsActorNaked);
 	vm->RegisterFunction("SetPlayerInSexScene", "OSLArousedNative", SetPlayerInSexScene);
 
 	//Keyword

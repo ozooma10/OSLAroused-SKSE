@@ -2,16 +2,16 @@
 
 namespace Papyrus
 {
+	//OSLAroused Settings
 	void UpdatePlayerNudityCheck(RE::StaticFunctionTag* base, bool newVal);
-
 	void UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag* base, float newVal);
-
 	void UpdateArousalMode(RE::StaticFunctionTag* base, int newArousalMode);
-
 	void UpdateDefaultArousalMultiplier(RE::StaticFunctionTag* base, float newMultiplier);
 
+	//General State
 	float GetArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 	std::vector<float> GetArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs);
+	float GetArousalNoSideEffects(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	float SetArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	void SetArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs, float value);
@@ -27,6 +27,9 @@ namespace Papyrus
 
 	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+
+	//Actor State
+	bool IsActorNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	void SetPlayerInSexScene(RE::StaticFunctionTag* base, bool bInScene);
 

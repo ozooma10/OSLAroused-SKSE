@@ -76,7 +76,7 @@ void WorldChecks::PlayerNakedUpdateLoop()
 
 	auto player = RE::PlayerCharacter::GetSingleton();
 	//Check if player is naked (no chest)
-	if (!player || player->GetWornArmor(RE::BGSBipedObjectForm::BipedObjectSlot::kBody) != nullptr) 
+	if (!player || !Utilities::Actor::IsNaked(player)) 
 	{
 		//Player wearing armor, dont check
 		logger::trace("PlayerNakedUpdateLoop Stopped because Armor Worn");

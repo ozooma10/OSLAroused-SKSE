@@ -77,4 +77,11 @@ namespace Utilities
 
 		void DistributeKeywords();
 	}
+
+	namespace Actor
+	{
+		inline bool IsNaked(RE::Actor* actorRef) {
+			return actorRef->GetWornArmor(RE::BGSBipedObjectForm::BipedObjectSlot::kBody) == nullptr;
+		}
+	}
 }

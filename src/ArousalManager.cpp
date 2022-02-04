@@ -8,10 +8,10 @@ using namespace Serialization;
 
 namespace ArousalManager
 {
-	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed);
+	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState);
 	float GetSexlabArousal(RE::Actor* actorRef, float timePassed);
 
-	float GetArousal(RE::Actor* actorRef)
+	float GetArousal(RE::Actor* actorRef, bool bUpdateState)
 	{
 		RE::FormID actorFormId = actorRef->formID;
 
@@ -20,13 +20,15 @@ namespace ArousalManager
 		float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
 		float timePassed = curTime - lastCheckTime;
 
-		LastCheckTimeData->SetData(actorFormId, curTime);
+		if (bUpdateState) {
+			LastCheckTimeData->SetData(actorFormId, curTime);
+		}
 
 		switch (Settings::GetSingleton()->GetArousalMode()) {
 		case Settings::ArousalMode::kSexlabAroused:
 			return GetSexlabArousal(actorRef, timePassed);
 		case Settings::ArousalMode::kOAroused:
-			return GetOArousedArousal(actorRef, lastCheckTime, timePassed);
+			return GetOArousedArousal(actorRef, lastCheckTime, timePassed, bUpdateState);
 		}
 
 		return 0.f;
@@ -68,13 +70,14 @@ namespace ArousalManager
 		return timeRate;
 	}
 
-	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed)
+	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState)
 	{
 		RE::FormID actorFormId = actorRef->formID;
 		logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorFormId, lastCheckTime, timePassed);
 
 		float newArousal = 0.f;
 		//If never calc or old, regen
+		//NOTE: if bUpdateState is false (which should be rare), can cause wild fluctuations in npc arousal since randomized state is never commited to state.
 		if (lastCheckTime <= 0.0f || timePassed > 3.f) {
 			newArousal = Utilities::GenerateRandomFloat(0.f, 75.f);
 
@@ -88,7 +91,11 @@ namespace ArousalManager
 			newArousal = currentArousal + ((timePassed * 25.f) * arousalMultiplier);
 		}
 
-		return SetArousal(actorRef, newArousal);
+		if (bUpdateState) {
+			return SetArousal(actorRef, newArousal);
+		} else {
+			return newArousal;	
+		}
 	}
 
 	float GetSexlabArousal(RE::Actor* actorRef, float timePassed)
