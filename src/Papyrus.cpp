@@ -65,9 +65,9 @@ std::vector<float> Papyrus::GetArousalMultiple(RE::StaticFunctionTag*, RE::refer
 	return results;
 }
 
-void Papyrus::SetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::SetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
 {
-	ArousalManager::SetArousal(actorRef, value);
+	return ArousalManager::SetArousal(actorRef, value);
 }
 
 void Papyrus::SetArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*> actorRefs, float value)
@@ -77,9 +77,9 @@ void Papyrus::SetArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE:
 	}
 }
 
-void Papyrus::ModifyArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::ModifyArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
 {
-	ArousalManager::ModifyArousal(actorRef, value);
+	return ArousalManager::ModifyArousal(actorRef, value);
 }
 
 void Papyrus::ModifyArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*> actorRefs, float value)
