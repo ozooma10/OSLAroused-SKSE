@@ -38,15 +38,4 @@ namespace WorldChecks
 
 		float LastNakedPollGameTime = RE::Calendar::GetSingleton()->GetHoursPassed();
 	};
-
-
-	
-
-	
-	/*
-	static Utilities::Ticker* GetPlayerNakedTickerSingleton()
-	{
-		static Utilities::Ticker playerNakedUpdateLoopTickerSingleton(std::function<void()>(PlayerNakedUpdateLoop), std::chrono::milliseconds(5000));
-		return &playerNakedUpdateLoopTickerSingleton;
-	}*/
 }

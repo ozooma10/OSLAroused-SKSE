@@ -216,15 +216,25 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	return true;
 }
 
-void Papyrus::Events::SendPlayerArousalUpdatedEvent(float newVal)
+void SendModEvent(RE::BSFixedString eventName, float numArg, RE::TESForm* sender)
 {
-	SKSE::ModCallbackEvent playerArousalUpdatedEvent{
-		"OSLA_PlayerArousalUpdated",
+	SKSE::ModCallbackEvent modEvent{
+		eventName,
 		RE::BSFixedString(),
-		newVal,
-		nullptr
+		numArg,
+		sender
 	};
 
 	auto modCallback = SKSE::GetModCallbackEventSource();
-	modCallback->SendEvent(&playerArousalUpdatedEvent);
+	modCallback->SendEvent(&modEvent);
+}
+
+void Papyrus::Events::SendPlayerArousalUpdatedEvent(float newVal)
+{
+	SendModEvent("OSLA_PlayerArousalUpdated", newVal, nullptr);
+}
+
+void Papyrus::Events::SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked)
+{
+	SendModEvent("OSLA_ActorNakedUpdated", newNaked ? 1.f : 0.f, actorRef);
 }

@@ -1,16 +1,12 @@
 #include "RuntimeEvents.h"
 #include "Settings.h"
 #include "ArousalManager.h"
+#include "Papyrus.h"
 
 RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TESEquipEvent* equipEvent, RE::BSTEventSource<RE::TESEquipEvent>*)
 {
-	//If nudity check No need to check for armor events
-	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
-		return RE::BSEventNotifyControl::kContinue;
-	}
-
-	//We want to check for case of player removing body armor to start poller
-	if (!equipEvent || equipEvent->equipped || !equipEvent->actor || !equipEvent->actor->IsPlayerRef()) {
+	if (!equipEvent || !equipEvent->actor || !equipEvent->baseObject) {
+		//Something wrong with this event dont handle
 		return RE::BSEventNotifyControl::kContinue;
 	}
 
@@ -18,17 +14,36 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 	if (!equipmentForm) {
 		return RE::BSEventNotifyControl::kContinue;
 	}
-	
-	//If you have uneequipped body armor, start the naked poller if not already started
+
+	bool changedBody = false;
+
+	//First we want to check for nudity status (And send event if changed)
 	if (equipmentForm->IsArmor()) {
 		const auto armor = equipmentForm->As<RE::TESObjectARMO>();
 		if (armor && armor->HasPartOf(RE::BGSBipedObjectForm::BipedObjectSlot::kBody)) {
-			logger::info("YOU HAVE EQUIPPED BODY SLOT: {}", equipEvent->equipped);
-			WorldChecks::NakedArousalTicker::GetSingleton()->Start();
+			changedBody = true;
+			//This is body armor so send Change of naked state based on if equipped or not
+			Papyrus::Events::SendActorNakedUpdatedEvent(static_cast<RE::Actor*>(equipEvent->actor.get()), !equipEvent->equipped);
 		}
 	}
 
-	//logger::info("EquipEvent for Player: - Item: {} - Slot: {}", equipEvent->baseObject, equipEvent->equipped);
+	//Now we check if we should start the naked player poller (only do this if this event is tied to player and they changed body slot)
+	
+	//We want to check for case of player removing body armor to start poller
+	if (!changedBody || !equipEvent->actor->IsPlayerRef()) {
+		return RE::BSEventNotifyControl::kContinue;
+	}
+
+	//If nudity check No need to check for armor events
+	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
+		return RE::BSEventNotifyControl::kContinue;
+	}
+
+	//If you have uneequipped body armor, start the naked poller if not already started
+	if (!equipEvent->equipped) {
+		logger::info("YOU HAVE UNEQUIPPED BODY SLOT: {}", equipEvent->equipped);
+		WorldChecks::NakedArousalTicker::GetSingleton()->Start();
+	}
 
 	return RE::BSEventNotifyControl::kContinue;
 }
