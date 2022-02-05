@@ -8,15 +8,6 @@
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {
 	Settings::GetSingleton()->SetPlayerNudityCheckEnabled(newVal);
-	if (newVal) {
-		//starts Poller if stopped
-		WorldChecks::NakedArousalTicker::GetSingleton()->Start();
-		logger::trace("Starting PlayerNakedUpdateLoop...");
-	} else {
-		//Stops Poller if running
-		WorldChecks::NakedArousalTicker::GetSingleton()->Stop();
-		logger::trace("Stopping PlayerNakedUpdateLoop...");
-	}
 }
 
 void Papyrus::UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag*, float newVal)

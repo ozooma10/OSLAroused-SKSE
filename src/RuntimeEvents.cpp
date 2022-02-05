@@ -2,6 +2,7 @@
 #include "Settings.h"
 #include "ArousalManager.h"
 #include "Papyrus.h"
+#include "SceneManager.h"
 
 RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TESEquipEvent* equipEvent, RE::BSTEventSource<RE::TESEquipEvent>*)
 {
@@ -27,44 +28,39 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 		}
 	}
 
-	//Now we check if we should start the naked player poller (only do this if this event is tied to player and they changed body slot)
-	
-	//We want to check for case of player removing body armor to start poller
-	if (!changedBody || !equipEvent->actor->IsPlayerRef()) {
-		return RE::BSEventNotifyControl::kContinue;
-	}
-
-	//If nudity check No need to check for armor events
-	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
-		return RE::BSEventNotifyControl::kContinue;
-	}
-
-	//If you have uneequipped body armor, start the naked poller if not already started
-	if (!equipEvent->equipped) {
-		logger::info("YOU HAVE UNEQUIPPED BODY SLOT: {}", equipEvent->equipped);
-		WorldChecks::NakedArousalTicker::GetSingleton()->Start();
-	}
-
 	return RE::BSEventNotifyControl::kContinue;
 }
 
-void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod);
+void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod, std::vector<RE::Actor*> blacklist = std::vector<RE::Actor*>());
 
-void WorldChecks::PlayerNakedUpdateLoop()
+void HandleAdultScenes(std::vector<SceneManager::SceneData> activeScenes, float elapsedGameTime)
 {
-	//If nudity check not enabled return
-	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
-		return;
-	}
+	float scanDistance = Settings::GetSingleton()->GetScanDistance();
+	float participantHourMod = Settings::GetSingleton()->GetHourlySceneParticipantArousalModifier();
+	float viewerHourMod = Settings::GetSingleton()->GetHourlySceneViewerArousalModifier();
 
-	//If player in sex scene, return (Handled in the Sex Framework Adapter)
-	if (Settings::GetSingleton()->GetPlayerInSexScene()) {
-		return;
-	}
+	for (const auto scene : activeScenes) {
+		if (scene.Participants.size() <= 0) {
+			logger::warn("HandleAdultScenes: Skipping sceneid: {} no participants found", scene.SceneId);
+			continue;
+		}
 
+		//@TODO: Be more particular about active animation
+		float arousalMod = participantHourMod * elapsedGameTime;
+		for (const auto actorRef : scene.Participants) {
+			ArousalManager::ModifyArousal(actorRef, arousalMod);
+		}
+
+		float viewerMod = viewerHourMod * elapsedGameTime;
+		ModifyArousalOfSpecators(scene.Participants[0], scanDistance, viewerMod, scene.Participants);
+	}
+}
+
+void WorldChecks::ArousalUpdateLoop()
+{
 	float curHours = RE::Calendar::GetSingleton()->GetHoursPassed();
 
-	float elapsedGameTimeSinceLastCheck = std::clamp(curHours - WorldChecks::NakedArousalTicker::GetSingleton()->LastNakedPollGameTime, 0.f, 1.f);
+	float elapsedGameTimeSinceLastCheck = std::clamp(curHours - WorldChecks::AurousalUpdateTicker::GetSingleton()->LastUpdatePollGameTime, 0.f, 1.f);
 	//logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check", elapsedGameTimeSinceLastCheck);
 
 	//wait until some percievable amount of time has passed
@@ -72,17 +68,22 @@ void WorldChecks::PlayerNakedUpdateLoop()
 		return;
 	}
 
-	WorldChecks::NakedArousalTicker::GetSingleton()->LastNakedPollGameTime = curHours;
+	WorldChecks::AurousalUpdateTicker::GetSingleton()->LastUpdatePollGameTime = curHours;
 
-	auto player = RE::PlayerCharacter::GetSingleton();
-	//Check if player is naked (no chest)
-	if (!player || !Utilities::Actor::IsNaked(player)) 
-	{
-		//Player wearing armor, dont check
-		logger::trace("PlayerNakedUpdateLoop Stopped because Armor Worn");
-		WorldChecks::NakedArousalTicker::GetSingleton()->Stop();
+	const auto activeScenes = SceneManager::GetSingleton()->GetAllScenes();
+	logger::trace("ArousalUpdateLoop: Currently {} active scenes", activeScenes.size());
+	if (activeScenes.size() > 0) {
+		HandleAdultScenes(activeScenes, elapsedGameTimeSinceLastCheck);
+		//We dont want to run additional nudity checks if any active scenes, as checks and arousal propogation are done in scene handling
 		return;
 	}
+
+	//If nudity check not enabled return
+	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
+		return;
+	}
+
+	auto player = RE::PlayerCharacter::GetSingleton();
 
 	//Same dist from OAroused
 	//@TODO: Make configurable?
@@ -93,9 +94,9 @@ void WorldChecks::PlayerNakedUpdateLoop()
 	ModifyArousalOfSpecators(player, ScanDistance, arousalMod);
 }
 
-void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod)
+void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod, std::vector<RE::Actor*> blacklist)
 {
-	//logger::trace("ModifyArousalOfSpecators: Modifying Suroundings of {}  within {}  by {}", source->GetDisplayFullName(), radius, arousalMod);
+	logger::trace("ModifyArousalOfSpecators: Modifying Suroundings of {}  within {}  by {}", source->GetDisplayFullName(), radius, arousalMod);
 	if (!source || !source->parentCell) {
 		logger::warn("ModifyArousalOfSpecators - source can not be null");
 		return;
@@ -112,7 +113,7 @@ void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod)
 	source->parentCell->ForEachReferenceInRange(sourceLocation, radius, [&](RE::TESObjectREFR& ref) {
 		auto refBase = ref.GetBaseObject();
 		auto actor = ref.As<RE::Actor>();
-		if (actor && actor != source && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC)))) {
+		if (actor && actor != source && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC))) && std::find(blacklist.begin(), blacklist.end(), actor) == blacklist.end()) {
 			//If Actor is super close or detects the source, increase arousal
 			if (sourceLocation.GetSquaredDistance(ref.GetPosition()) < forceDetectDistance || actor->RequestDetectionLevel(source, RE::DETECTION_PRIORITY::kNormal) > 0) {
 				ArousalManager::ModifyArousal(actor, arousalMod);

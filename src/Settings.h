@@ -37,6 +37,38 @@ public:
 		return m_HourlyNudityArousalModifier;
 	}
 
+	void SetHourlySceneParticipantArousalModifier(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_HourlySceneParticipantArousalModifier = newVal;
+	}
+	float GetHourlySceneParticipantArousalModifier() const
+	{
+		Locker locker(m_Lock);
+		return m_HourlySceneParticipantArousalModifier;
+	}
+
+	void SetHourlySceneViewerArousalModifier(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_HourlySceneViewerArousalModifier = newVal;
+	}
+	float GetHourlySceneViewerArousalModifier() const
+	{
+		Locker locker(m_Lock);
+		return m_HourlySceneViewerArousalModifier;
+	}
+
+	void SetScanDistance(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_ScanDistance = newVal;
+	}
+	float GetScanDistance() const
+	{
+		Locker locker(m_Lock);
+		return m_ScanDistance;
+	}
 
 	void SetArousalMode(ArousalMode newVal)
 	{
@@ -84,6 +116,11 @@ private:
 	bool m_EnablePlayerNudityCheck = true;
 	
 	float m_HourlyNudityArousalModifier = 20.f;
+
+	float m_HourlySceneParticipantArousalModifier = 20.f;
+	float m_HourlySceneViewerArousalModifier = 20.f;
+
+	float m_ScanDistance = 5120.f;
 
 	ArousalMode m_CurrentArousalMode = ArousalMode::kSexlabAroused;
 

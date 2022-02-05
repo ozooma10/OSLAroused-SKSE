@@ -27,6 +27,12 @@ namespace
 		spdlog::set_pattern("[%H:%M:%S] [%^%l%$] %v"s);
 	}
 
+	void OnGameLoaded()
+	{
+		logger::info("OnGameLoaded Function Called...");
+		WorldChecks::AurousalUpdateTicker::GetSingleton()->Start();
+	}
+
 	void MessageHandler(SKSE::MessagingInterface::Message* message)
 	{
 		switch (message->type) {
@@ -34,11 +40,15 @@ namespace
 			RuntimeEvents::OnEquipEvent::RegisterEvent();
 			logger::info("OnEquipEvent Registered...");
 
-
+			break;
+		case SKSE::MessagingInterface::kNewGame:
+			OnGameLoaded();
 			break;
 		case SKSE::MessagingInterface::kPostLoadGame:
 			//Distribute Keywords
 			Utilities::Keywords::DistributeKeywords();
+
+			OnGameLoaded();
 			break;
 		}
 	}

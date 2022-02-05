@@ -22,20 +22,20 @@ namespace RuntimeEvents
 
 namespace WorldChecks
 {
-	void PlayerNakedUpdateLoop();
+	void ArousalUpdateLoop();
 
-	class NakedArousalTicker : public Utilities::Ticker
+	class AurousalUpdateTicker : public Utilities::Ticker
 	{
 	public:
-		NakedArousalTicker(std::chrono::milliseconds interval) :
-			Utilities::Ticker(std::function<void()>(PlayerNakedUpdateLoop), interval) {}
+		AurousalUpdateTicker(std::chrono::milliseconds interval) :
+			Utilities::Ticker(std::function<void()>(ArousalUpdateLoop), interval) {}
 
-		static NakedArousalTicker* GetSingleton()
+		static AurousalUpdateTicker* GetSingleton()
 		{
-			static NakedArousalTicker singleton(std::chrono::milliseconds(15000));
+			static AurousalUpdateTicker singleton(std::chrono::milliseconds(15000));
 			return &singleton;
 		}
 
-		float LastNakedPollGameTime = RE::Calendar::GetSingleton()->GetHoursPassed();
+		float LastUpdatePollGameTime = RE::Calendar::GetSingleton()->GetHoursPassed();
 	};
 }
