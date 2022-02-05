@@ -179,6 +179,11 @@ bool Papyrus::RemoveKeywordFromForm(RE::StaticFunctionTag*, RE::TESForm* form, R
 	return Utilities::Keywords::RemoveKeyword(form, keyword);
 }
 
+float Papyrus::GenerateRandomFloat(RE::StaticFunctionTag*, float min, float max)
+{
+	return Utilities::GenerateRandomFloat(min, max);
+}
+
 void Papyrus::DumpArousalData(RE::StaticFunctionTag*)
 {
 	Debug::DumpAllArousalData();
@@ -232,6 +237,9 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("AddKeywordToForm", "OSLArousedNative", AddKeywordToForm);
 	vm->RegisterFunction("RemoveKeywordFromForm", "OSLArousedNative", RemoveKeywordFromForm);
 
+	//Utilities
+	vm->RegisterFunction("GenerateRandomFloat", "OSLArousedNative", GenerateRandomFloat);
+	
 	//Debug
 	vm->RegisterFunction("DumpArousalData", "OSLArousedNative", DumpArousalData);
 	vm->RegisterFunction("ClearSecondaryArousalData", "OSLArousedNative", ClearSecondaryArousalData);

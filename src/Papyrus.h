@@ -40,6 +40,9 @@ namespace Papyrus
 	bool AddKeywordToForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
 	bool RemoveKeywordFromForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
 
+	//Utilities
+	float GenerateRandomFloat(RE::StaticFunctionTag* base, float min, float max);
+
 	//Debug Functions
 	void DumpArousalData(RE::StaticFunctionTag* base);
 	void ClearSecondaryArousalData(RE::StaticFunctionTag* base);

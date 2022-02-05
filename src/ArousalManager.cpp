@@ -73,7 +73,7 @@ namespace ArousalManager
 	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState)
 	{
 		RE::FormID actorFormId = actorRef->formID;
-		logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorRef->GetDisplayFullName(), lastCheckTime, timePassed);
+		//logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorRef->GetDisplayFullName(), lastCheckTime, timePassed);
 
 		float newArousal = 0.f;
 		//If never calc or old, regen
