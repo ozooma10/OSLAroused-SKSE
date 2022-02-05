@@ -161,6 +161,11 @@ void Papyrus::RemoveScene(RE::StaticFunctionTag*, bool bIsOstim, int sceneId)
 	SceneManager::GetSingleton()->RemoveScene(bIsOstim ? SceneManager::SceneFramework::kOStim : SceneManager::SceneFramework::kSexLab, sceneId);
 }
 
+void Papyrus::RegisterActorOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef)
+{
+	Serialization::LastOrgasmTimeData::GetSingleton()->SetData(actorRef->formID, RE::Calendar::GetSingleton()->GetCurrentGameTime());
+}
+
 bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BGSKeyword* keyword)
 {
 	if (!form || !keyword) {
@@ -232,6 +237,8 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	vm->RegisterFunction("RegisterSceneStart", "OSLArousedNative", RegisterSceneStart);
 	vm->RegisterFunction("RemoveScene", "OSLArousedNative", RemoveScene);
+
+	vm->RegisterFunction("RegisterActorOrgasm", "OSLArousedNative", RegisterActorOrgasm);
 
 	//Keyword
 	vm->RegisterFunction("AddKeywordToForm", "OSLArousedNative", AddKeywordToForm);

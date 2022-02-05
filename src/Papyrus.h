@@ -23,6 +23,7 @@ namespace Papyrus
 	float GetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	float GetExposure(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+
 	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
@@ -35,6 +36,8 @@ namespace Papyrus
 
 	void RegisterSceneStart(RE::StaticFunctionTag* base, bool bIsOstim, int sceneId, RE::reference_array<RE::Actor*> actorRefs);
 	void RemoveScene(RE::StaticFunctionTag* base, bool bIsOstim, int sceneId);
+
+	void RegisterActorOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	//Keyword Management
 	bool AddKeywordToForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
