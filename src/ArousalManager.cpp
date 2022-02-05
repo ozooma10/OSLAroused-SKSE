@@ -9,7 +9,7 @@ using namespace Serialization;
 namespace ArousalManager
 {
 	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState);
-	float GetSexlabArousal(RE::Actor* actorRef, float timePassed);
+	float GetSexlabArousal(RE::Actor* actorRef, float timePassed, bool bUpdateState);
 
 	float GetArousal(RE::Actor* actorRef, bool bUpdateState)
 	{
@@ -28,7 +28,7 @@ namespace ArousalManager
 
 		switch (Settings::GetSingleton()->GetArousalMode()) {
 		case Settings::ArousalMode::kSexlabAroused:
-			return GetSexlabArousal(actorRef, timePassed);
+			return GetSexlabArousal(actorRef, timePassed, bUpdateState);
 		case Settings::ArousalMode::kOAroused:
 			return GetOArousedArousal(actorRef, lastCheckTime, timePassed, bUpdateState);
 		}
@@ -55,7 +55,15 @@ namespace ArousalManager
 			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
 		}
 
-		return SetArousal(actorRef, GetArousal(actorRef, false) + modValue);
+		//If we are in sl mode operate on exposure rather then arousal
+		if (Settings::GetSingleton()->GetArousalMode() == Settings::ArousalMode::kSexlabAroused) {
+			const auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+			modValue += GetSexlabExposure(actorRef, RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastCheckTime, false);
+		} else {
+			modValue += GetArousal(actorRef, false);
+		}
+
+		return SetArousal(actorRef, modValue);
 	}
 
 	float GetActorTimeRate(RE::Actor* actorRef, float timeSinceLastOrgasm)
@@ -98,7 +106,7 @@ namespace ArousalManager
 		}
 	}
 
-	float GetSexlabArousal(RE::Actor* actorRef, float timePassed)
+	float GetSexlabArousal(RE::Actor* actorRef, float timePassed, bool bUpdateState)
 	{
 		logger::trace("GetSexlabArousal timePass {}", timePassed);
 
@@ -109,12 +117,12 @@ namespace ArousalManager
 		float lastOrgasmTime = LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
 		float daysSinceLastOrgasm = RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
 
-		float arousal = (daysSinceLastOrgasm * GetActorTimeRate(actorRef, daysSinceLastOrgasm)) + GetSexlabExposure(actorRef, timePassed);
+		float arousal = (daysSinceLastOrgasm * GetActorTimeRate(actorRef, daysSinceLastOrgasm)) + GetSexlabExposure(actorRef, timePassed, bUpdateState);
 
 		return arousal;
 	}
 
-	float GetSexlabExposure(RE::Actor* actorRef, float timePassed)
+	float GetSexlabExposure(RE::Actor* actorRef, float timePassed, bool bUpdateState)
 	{
 		RE::FormID actorFormId = actorRef->formID;
 
@@ -132,6 +140,10 @@ namespace ArousalManager
 		}
 
 		//We store exposure, arousal is calculated
-		return SetArousal(actorRef, newExposure);
+		if (bUpdateState) {
+			return SetArousal(actorRef, newExposure);
+		} else {
+			return newExposure;
+		}
 	}
 }
