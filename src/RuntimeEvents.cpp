@@ -61,14 +61,13 @@ void WorldChecks::ArousalUpdateLoop()
 	float curHours = RE::Calendar::GetSingleton()->GetHoursPassed();
 
 	float elapsedGameTimeSinceLastCheck = std::clamp(curHours - WorldChecks::AurousalUpdateTicker::GetSingleton()->LastUpdatePollGameTime, 0.f, 1.f);
-	//logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check", elapsedGameTimeSinceLastCheck);
-
-	//wait until some percievable amount of time has passed
-	if (elapsedGameTimeSinceLastCheck <= 0.025) {
-		return;
-	}
+	//logger::trace("PlayerNakedUpdateLoop: {} Game Hours have elapsed since last check {}", elapsedGameTimeSinceLastCheck, curHours);
 
 	WorldChecks::AurousalUpdateTicker::GetSingleton()->LastUpdatePollGameTime = curHours;
+
+	if (elapsedGameTimeSinceLastCheck <= 0) {
+		return;
+	}
 
 	const auto activeScenes = SceneManager::GetSingleton()->GetAllScenes();
 	logger::trace("ArousalUpdateLoop: Currently {} active scenes", activeScenes.size());
@@ -84,6 +83,10 @@ void WorldChecks::ArousalUpdateLoop()
 	}
 
 	auto player = RE::PlayerCharacter::GetSingleton();
+
+	if (!Utilities::Actor::IsNaked(player)) {
+		return;
+	}
 
 	//Same dist from OAroused
 	//@TODO: Make configurable?

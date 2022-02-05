@@ -33,6 +33,9 @@ namespace Papyrus
 
 	void SetPlayerInSexScene(RE::StaticFunctionTag* base, bool bInScene);
 
+	void RegisterSceneStart(RE::StaticFunctionTag* base, bool bIsOstim, int sceneId, RE::reference_array<RE::Actor*> actorRefs);
+	void RemoveScene(RE::StaticFunctionTag* base, bool bIsOstim, int sceneId);
+
 	//Keyword Management
 	bool AddKeywordToForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);
 	bool RemoveKeywordFromForm(RE::StaticFunctionTag* base, RE::TESForm* form, RE::BGSKeyword* keyword);

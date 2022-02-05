@@ -4,6 +4,7 @@
 #include "RuntimeEvents.h"
 #include "Settings.h"
 #include "Debug.h"
+#include "SceneManager.h"
 
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {
@@ -145,6 +146,21 @@ void Papyrus::SetPlayerInSexScene(RE::StaticFunctionTag*, bool bInScene)
 	Settings::GetSingleton()->SetPlayerInSexScene(bInScene);
 }
 
+void Papyrus::RegisterSceneStart(RE::StaticFunctionTag*, bool bIsOstim, int sceneId, RE::reference_array<RE::Actor*> actorRefs)
+{
+	SceneManager::SceneData sceneData {
+		bIsOstim ? SceneManager::SceneFramework::kOStim : SceneManager::SceneFramework::kSexLab,
+		sceneId,
+		actorRefs
+	};
+	SceneManager::GetSingleton()->RegisterScene(sceneData);
+}
+
+void Papyrus::RemoveScene(RE::StaticFunctionTag*, bool bIsOstim, int sceneId)
+{
+	SceneManager::GetSingleton()->RemoveScene(bIsOstim ? SceneManager::SceneFramework::kOStim : SceneManager::SceneFramework::kSexLab, sceneId);
+}
+
 bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BGSKeyword* keyword)
 {
 	if (!form || !keyword) {
@@ -208,6 +224,9 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	//Actor State
 	vm->RegisterFunction("IsActorNaked", "OSLArousedNative", IsActorNaked);
 	vm->RegisterFunction("SetPlayerInSexScene", "OSLArousedNative", SetPlayerInSexScene);
+
+	vm->RegisterFunction("RegisterSceneStart", "OSLArousedNative", RegisterSceneStart);
+	vm->RegisterFunction("RemoveScene", "OSLArousedNative", RemoveScene);
 
 	//Keyword
 	vm->RegisterFunction("AddKeywordToForm", "OSLArousedNative", AddKeywordToForm);
