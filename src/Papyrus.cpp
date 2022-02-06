@@ -141,11 +141,6 @@ bool Papyrus::IsActorNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
 	return Utilities::Actor::IsNaked(actorRef);
 }
 
-void Papyrus::SetPlayerInSexScene(RE::StaticFunctionTag*, bool bInScene)
-{
-	Settings::GetSingleton()->SetPlayerInSexScene(bInScene);
-}
-
 void Papyrus::RegisterSceneStart(RE::StaticFunctionTag*, bool bIsOstim, int sceneId, RE::reference_array<RE::Actor*> actorRefs)
 {
 	SceneManager::SceneData sceneData {
@@ -233,7 +228,6 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	//Actor State
 	vm->RegisterFunction("IsActorNaked", "OSLArousedNative", IsActorNaked);
-	vm->RegisterFunction("SetPlayerInSexScene", "OSLArousedNative", SetPlayerInSexScene);
 
 	vm->RegisterFunction("RegisterSceneStart", "OSLArousedNative", RegisterSceneStart);
 	vm->RegisterFunction("RemoveScene", "OSLArousedNative", RemoveScene);

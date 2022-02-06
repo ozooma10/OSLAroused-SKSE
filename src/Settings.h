@@ -101,17 +101,6 @@ public:
 		return m_DefaultArousalMultiplier;
 	}
 
-	void SetPlayerInSexScene(bool newVal)
-	{
-		Locker locker(m_Lock);
-		m_PlayerInSexScene = newVal;
-	}
-	float GetPlayerInSexScene() const
-	{
-		Locker locker(m_Lock);
-		return m_PlayerInSexScene;
-	}
-
 private:
 	bool m_EnablePlayerNudityCheck = true;
 	
@@ -128,8 +117,6 @@ private:
 	float m_DecayRate = 2.f;
 
 	float m_DefaultArousalMultiplier = 2.f;
-
-	bool m_PlayerInSexScene = false;
 
 	mutable Lock m_Lock;
 };

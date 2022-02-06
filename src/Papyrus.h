@@ -32,8 +32,6 @@ namespace Papyrus
 	//Actor State
 	bool IsActorNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
-	void SetPlayerInSexScene(RE::StaticFunctionTag* base, bool bInScene);
-
 	void RegisterSceneStart(RE::StaticFunctionTag* base, bool bIsOstim, int sceneId, RE::reference_array<RE::Actor*> actorRefs);
 	void RemoveScene(RE::StaticFunctionTag* base, bool bIsOstim, int sceneId);
 
