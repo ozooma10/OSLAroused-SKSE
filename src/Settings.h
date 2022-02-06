@@ -5,12 +5,6 @@ using Locker = std::lock_guard<Lock>;
 class Settings
 {
 public:
-	enum class ArousalMode
-	{
-		kSexlabAroused,
-		kOAroused
-	};
-
 	static Settings* GetSingleton()
 	{
 		static Settings singleton;
@@ -70,17 +64,6 @@ public:
 		return m_ScanDistance;
 	}
 
-	void SetArousalMode(ArousalMode newVal)
-	{
-		Locker locker(m_Lock);
-		m_CurrentArousalMode = newVal;
-	}
-	ArousalMode GetArousalMode() const
-	{
-		Locker locker(m_Lock);
-		return m_CurrentArousalMode;
-	}
-
 	void SetDecayRate(float newRate) {
 		Locker locker(m_Lock);
 		m_DecayRate = newRate;
@@ -110,8 +93,6 @@ private:
 	float m_HourlySceneViewerArousalModifier = 20.f;
 
 	float m_ScanDistance = 5120.f;
-
-	ArousalMode m_CurrentArousalMode = ArousalMode::kSexlabAroused;
 
 	//In SLA mode, this is the number of days to remove 1/3rd of Exposure and time rate
 	float m_DecayRate = 2.f;

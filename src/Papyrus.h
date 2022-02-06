@@ -5,7 +5,6 @@ namespace Papyrus
 	//OSLAroused Settings
 	void UpdatePlayerNudityCheck(RE::StaticFunctionTag* base, bool newVal);
 	void UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag* base, float newVal);
-	void UpdateArousalMode(RE::StaticFunctionTag* base, int newArousalMode);
 	void UpdateDefaultArousalMultiplier(RE::StaticFunctionTag* base, float newMultiplier);
 
 	//General State

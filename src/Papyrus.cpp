@@ -16,26 +16,6 @@ void Papyrus::UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag*, float ne
 	Settings::GetSingleton()->SetHourlyNudityArousalModifier(newVal);
 }
 
-void Papyrus::UpdateArousalMode(RE::StaticFunctionTag*, int newArousalMode)
-{
-	logger::trace("UpdateArousalMode: {}", newArousalMode);
-
-	Settings::ArousalMode newMode;
-	switch (newArousalMode) {
-	case 0:
-		newMode = Settings::ArousalMode::kSexlabAroused;
-		break;
-	case 1:
-		newMode = Settings::ArousalMode::kOAroused;
-		break;
-	default:
-		return;
-	}
-
-	Settings::GetSingleton()->SetArousalMode(newMode);
-	logger::trace("Arousal Mode Updated...");
-}
-
 void Papyrus::UpdateDefaultArousalMultiplier(RE::StaticFunctionTag*, float newMultiplier)
 {
 	Settings::GetSingleton()->SetDefaultArousalMultiplier(newMultiplier);
@@ -102,14 +82,10 @@ float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef)
 float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
 	//If we are in sla mode get exposure, otherwise just return arousal
-	if (Settings::GetSingleton()->GetArousalMode() == Settings::ArousalMode::kSexlabAroused) {
-		float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
-		auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-		Serialization::LastCheckTimeData::GetSingleton()->SetData(actorRef->formID, curTime);
-		return ArousalManager::GetSexlabExposure(actorRef, curTime - lastCheckTime);
-	}
-
-	return ArousalManager::GetArousal(actorRef);
+	float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
+	auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+	Serialization::LastCheckTimeData::GetSingleton()->SetData(actorRef->formID, curTime);
+	return ArousalManager::GetSexlabExposure(actorRef, curTime - lastCheckTime);
 }
 
 float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRef)
@@ -204,7 +180,6 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	//OSLAroused Settings
 	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
 	vm->RegisterFunction("UpdateHourlyNudityArousalModifier", "OSLArousedNative", UpdateHourlyNudityArousalModifier);
-	vm->RegisterFunction("UpdateArousalMode", "OSLArousedNative", UpdateArousalMode);
 	vm->RegisterFunction("UpdateDefaultArousalMultiplier", "OSLArousedNative", UpdateDefaultArousalMultiplier);
 	
 	//General State

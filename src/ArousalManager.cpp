@@ -26,14 +26,7 @@ namespace ArousalManager
 			LastCheckTimeData->SetData(actorFormId, curTime);
 		}
 
-		switch (Settings::GetSingleton()->GetArousalMode()) {
-		case Settings::ArousalMode::kSexlabAroused:
-			return GetSexlabArousal(actorRef, timePassed, bUpdateState);
-		case Settings::ArousalMode::kOAroused:
-			return GetOArousedArousal(actorRef, lastCheckTime, timePassed, bUpdateState);
-		}
-
-		return 0.f;
+		return GetSexlabArousal(actorRef, timePassed, bUpdateState);
 	}
 
 	float SetArousal(RE::Actor* actorRef, float value)
@@ -56,12 +49,8 @@ namespace ArousalManager
 		}
 
 		//If we are in sl mode operate on exposure rather then arousal
-		if (Settings::GetSingleton()->GetArousalMode() == Settings::ArousalMode::kSexlabAroused) {
-			const auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-			modValue += GetSexlabExposure(actorRef, RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastCheckTime, false);
-		} else {
-			modValue += GetArousal(actorRef, false);
-		}
+		const auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+		modValue += GetSexlabExposure(actorRef, RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastCheckTime, false);
 
 		return SetArousal(actorRef, modValue);
 	}
