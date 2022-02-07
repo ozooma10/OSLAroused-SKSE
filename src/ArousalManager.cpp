@@ -103,10 +103,7 @@ namespace ArousalManager
 			return -2;
 		}
 
-		float lastOrgasmTime = LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-		float daysSinceLastOrgasm = RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
-
-		float arousal = (daysSinceLastOrgasm * GetActorTimeRate(actorRef, daysSinceLastOrgasm)) + GetSexlabExposure(actorRef, timePassed, bUpdateState);
+		float arousal = GetLastOrgasmArousal(actorRef) + GetSexlabExposure(actorRef, timePassed, bUpdateState);
 
 		return arousal;
 	}
@@ -134,5 +131,13 @@ namespace ArousalManager
 		} else {
 			return newExposure;
 		}
+	}
+
+	float GetLastOrgasmArousal(RE::Actor* actorRef)
+	{
+		float lastOrgasmTime = LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+		float daysSinceLastOrgasm = RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
+
+		return daysSinceLastOrgasm * GetActorTimeRate(actorRef, daysSinceLastOrgasm);
 	}
 }

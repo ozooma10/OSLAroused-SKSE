@@ -25,6 +25,7 @@ namespace Papyrus
 	float GetExposure(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	float GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
@@ -53,7 +54,7 @@ namespace Papyrus
 
 	namespace Events
 	{
-		void SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newVal);
+		void SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newExposure);
 
 		void SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked);
 	}

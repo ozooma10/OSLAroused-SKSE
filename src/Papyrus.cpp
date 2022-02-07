@@ -106,6 +106,11 @@ float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRe
 	return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
 }
 
+float Papyrus::GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return ArousalManager::GetLastOrgasmArousal(actorRef);
+}
+
 void Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
 {
 	if (!actorRef) {
@@ -206,7 +211,8 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	
 	vm->RegisterFunction("GetExposure", "OSLArousedNative", GetExposure);
 	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
-
+	vm->RegisterFunction("GetLastOrgasmFrustrationArousal", "OSLArousedNative", GetLastOrgasmFrustrationArousal);
+	
 	vm->RegisterFunction("SetTimeRate", "OSLArousedNative", SetTimeRate);
 	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
 
@@ -246,9 +252,9 @@ void SendModEvent(RE::BSFixedString eventName, float numArg, RE::TESForm* sender
 	modCallback->SendEvent(&modEvent);
 }
 
-void Papyrus::Events::SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newVal)
+void Papyrus::Events::SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newExposure)
 {
-	SendModEvent("OSLA_ActorArousalUpdated", newVal, actorRef);
+	SendModEvent("OSLA_ActorArousalUpdated", newExposure, actorRef);
 }
 
 void Papyrus::Events::SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked)
