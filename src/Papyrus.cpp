@@ -79,6 +79,14 @@ float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef)
 	return Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
 }
 
+float Papyrus::ModifyArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+{
+	float curMult = Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
+	float newVal = curMult + value;
+	Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, newVal);
+	return newVal;
+}
+
 float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
 	//If we are in sla mode get exposure, otherwise just return arousal
@@ -194,7 +202,8 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 
 	vm->RegisterFunction("SetArousalMultiplier", "OSLArousedNative", SetArousalMultiplier);
 	vm->RegisterFunction("GetArousalMultiplier", "OSLArousedNative", GetArousalMultiplier);
-
+	vm->RegisterFunction("ModifyArousalMultiplier", "OSLArousedNative", ModifyArousalMultiplier);
+	
 	vm->RegisterFunction("GetExposure", "OSLArousedNative", GetExposure);
 	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
 

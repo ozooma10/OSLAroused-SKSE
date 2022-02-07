@@ -20,6 +20,7 @@ namespace Papyrus
 
 	void SetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	float ModifyArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 
 	float GetExposure(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
