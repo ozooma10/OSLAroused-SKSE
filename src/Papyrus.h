@@ -44,6 +44,7 @@ namespace Papyrus
 
 	//Utilities
 	float GenerateRandomFloat(RE::StaticFunctionTag* base, float min, float max);
+	float ClampFloat(RE::StaticFunctionTag* base, float val, float min, float max);
 
 	//Debug Functions
 	void DumpArousalData(RE::StaticFunctionTag* base);

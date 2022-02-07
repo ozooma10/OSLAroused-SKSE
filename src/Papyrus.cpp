@@ -173,6 +173,11 @@ float Papyrus::GenerateRandomFloat(RE::StaticFunctionTag*, float min, float max)
 	return Utilities::GenerateRandomFloat(min, max);
 }
 
+float Papyrus::ClampFloat(RE::StaticFunctionTag*, float val, float min, float max)
+{
+	return val > max ? max : (val < min ? min : val);
+}
+
 void Papyrus::DumpArousalData(RE::StaticFunctionTag*)
 {
 	Debug::DumpAllArousalData();
