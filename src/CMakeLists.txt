@@ -34,6 +34,12 @@ configure_file(
 source_group("src" FILES "${VERSION_HEADER}")
 
 configure_file(
+	${ROOT_DIR}/cmake/Version.h.in
+	${CMAKE_CURRENT_BINARY_DIR}/src/Version.h
+	@ONLY
+)
+
+configure_file(
 	"${ROOT_DIR}/cmake/version.rc.in"
 	"${CMAKE_CURRENT_BINARY_DIR}/version.rc"
 	@ONLY
@@ -87,7 +93,14 @@ target_include_directories(
 		"${SOURCE_DIR}"
 )
 
-add_subdirectory("${ROOT_DIR}/external/CommonLibSSE" CommonLibSSE EXCLUDE_FROM_ALL)
+if (DEFINED CommonLibPath AND NOT ${CommonLibPath} STREQUAL "" AND IS_DIRECTORY ${CommonLibPath})
+	add_subdirectory(${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
+else ()
+	message(
+		FATAL_ERROR
+		"Variable ${CommonLibName}Path is not set."
+	)
+endif()
 
 target_link_libraries(
 	"${PROJECT_NAME}"

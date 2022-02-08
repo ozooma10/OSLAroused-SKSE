@@ -1,4 +1,4 @@
 build/
-external/CommonLibSSE/*
 .vs/
 External/CommonLibSSE/
+External/CommonLibSSE-po3/

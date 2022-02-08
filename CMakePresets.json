@@ -48,6 +48,24 @@
         "value": "x64"
       },
       "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /WX",
+        "BUILD_SKYRIMSSE": true
+      },
+      "generator": "Visual Studio 17 2022",
+      "inherits": [
+        "cmake-dev",
+        "vcpkg",
+        "windows"
+      ],
+      "name": "vs2022-windows-sse",
+      "toolset": "v143"
+    },
+    {
+      "architecture": {
+        "strategy": "set",
+        "value": "x64"
+      },
+      "cacheVariables": {
         "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /WX"
       },
       "generator": "Visual Studio 17 2022",
@@ -60,5 +78,5 @@
       "toolset": "v143"
     }
   ],
-  "version": 3
+  "version": 2
 }
