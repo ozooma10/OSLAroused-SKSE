@@ -89,7 +89,7 @@ private:
 	
 	float m_HourlyNudityArousalModifier = 20.f;
 
-	float m_HourlySceneParticipantArousalModifier = 20.f;
+	float m_HourlySceneParticipantArousalModifier = 40.f;
 	float m_HourlySceneViewerArousalModifier = 20.f;
 
 	float m_ScanDistance = 5120.f;

@@ -28,6 +28,7 @@ public:
 
 	void RegisterScene(SceneData scene);
 	void RemoveScene(SceneFramework framework, int sceneId);
+	void ClearScenes();
 
 	std::vector<SceneData> GetAllScenes() const;
 

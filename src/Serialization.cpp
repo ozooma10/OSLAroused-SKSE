@@ -1,7 +1,7 @@
-#include "C:/Users/jel-m/Documents/Projects/OSLAroused-SKSE/build/src/CMakeFiles/OSLAroused_SKSE.dir/Debug/cmake_pch.hxx"
 #include "Serialization.h"
-//This Serialization is based off how powerof3's did it in Afterlife
+#include "SceneManager.h"
 
+//This Serialization is based off how powerof3's did it in Afterlife
 namespace Serialization
 {
 	template <typename T>
@@ -279,8 +279,17 @@ namespace Serialization
 		arousalData->Clear();
 		auto multiplierData = MultiplierData::GetSingleton();
 		multiplierData->Clear();
+		auto timeRateData = TimeRateData::GetSingleton();
+		timeRateData->Clear();
 		auto lastCheckData = LastCheckTimeData::GetSingleton();
 		lastCheckData->Clear();
+		auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
+		lastOrgasmData->Clear();
+		auto armorKeywordData = ArmorKeywordData::GetSingleton();
+		armorKeywordData->Clear();
+
+		//End All Scenes as well
+		SceneManager::GetSingleton()->ClearScenes();
 
 		logger::info("Reverting Data State...");
 	}

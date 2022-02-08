@@ -103,7 +103,6 @@ void Utilities::Keywords::DistributeKeywords()
 			logger::info("Form is null");
 			continue;
 		}
-		logger::info("Form is found");
 
 		for (const auto subformId : subForms) {
 			auto keywordSubForm = subFormCache[subformId];
@@ -112,7 +111,6 @@ void Utilities::Keywords::DistributeKeywords()
 				if (!subForm) {
 					continue;
 				}
-				logger::info("subForm is found");
 
 				keywordSubForm = subForm->As<RE::BGSKeyword>();
 				if (!keywordSubForm) {
@@ -122,8 +120,6 @@ void Utilities::Keywords::DistributeKeywords()
 				subFormCache[subformId] = keywordSubForm;
 			}
 	
-			logger::info("keywordSubForm is found");
-
 			AddKeyword(form, keywordSubForm);
 		}
 	}

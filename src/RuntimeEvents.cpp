@@ -69,8 +69,12 @@ void WorldChecks::ArousalUpdateLoop()
 		return;
 	}
 
+	//logger::trace("participant Mod is: {}", Settings::GetSingleton()->GetHourlySceneParticipantArousalModifier());
+	//logger::trace("Hour Mod is: {}", Settings::GetSingleton()->GetHourlySceneViewerArousalModifier());
+	//logger::trace("Naked Mod is: {}", Settings::GetSingleton()->GetHourlyNudityArousalModifier());
+
 	const auto activeScenes = SceneManager::GetSingleton()->GetAllScenes();
-	logger::trace("ArousalUpdateLoop: Currently {} active scenes", activeScenes.size());
+	//logger::trace("ArousalUpdateLoop: Currently {} active scenes", activeScenes.size());
 	if (activeScenes.size() > 0) {
 		HandleAdultScenes(activeScenes, elapsedGameTimeSinceLastCheck);
 		//We dont want to run additional nudity checks if any active scenes, as checks and arousal propogation are done in scene handling

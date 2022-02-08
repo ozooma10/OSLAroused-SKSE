@@ -97,7 +97,7 @@ namespace ArousalManager
 
 	float GetSexlabArousal(RE::Actor* actorRef, float timePassed, bool bUpdateState)
 	{
-		logger::trace("GetSexlabArousal timePass {}", timePassed);
+		//logger::trace("GetSexlabArousal timePass {}", timePassed);
 
 		if (!actorRef) {
 			return -2;

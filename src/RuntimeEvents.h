@@ -32,7 +32,7 @@ namespace WorldChecks
 
 		static AurousalUpdateTicker* GetSingleton()
 		{
-			static AurousalUpdateTicker singleton(std::chrono::milliseconds(2000));
+			static AurousalUpdateTicker singleton(std::chrono::milliseconds(15000));
 			return &singleton;
 		}
 
