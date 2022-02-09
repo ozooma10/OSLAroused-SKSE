@@ -76,12 +76,13 @@ void Papyrus::ModifyArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<
 	}
 }
 
-void Papyrus::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
 {
 	//Just clamp between 0 and 100?
 	value = std::clamp(value, 0.0f, 100.f);
 
 	Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, value);
+	return value;
 }
 
 float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef)
@@ -128,6 +129,17 @@ void Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float val
 	}
 	value = std::clamp(value, 0.f, 100.f);
 	Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, value);
+}
+
+float Papyrus::ModifyTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+{
+	if (!actorRef) {
+		return 0.f;
+	}
+	float curRate = Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
+	float newVal = curRate + value;
+	Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, newVal);
+	return newVal;
 }
 
 float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
@@ -230,8 +242,9 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("GetLastOrgasmFrustrationArousal", "OSLArousedNative", GetLastOrgasmFrustrationArousal);
 	
 	vm->RegisterFunction("SetTimeRate", "OSLArousedNative", SetTimeRate);
+	vm->RegisterFunction("ModifyTimeRate", "OSLArousedNative", ModifyTimeRate);
 	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
-
+	
 	//Actor State
 	vm->RegisterFunction("IsActorNaked", "OSLArousedNative", IsActorNaked);
 

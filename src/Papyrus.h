@@ -20,7 +20,7 @@ namespace Papyrus
 	float ModifyArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	void ModifyArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs, float value);
 
-	void SetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
+	float SetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 	float ModifyArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 
@@ -30,6 +30,7 @@ namespace Papyrus
 	float GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
+	float ModifyTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	//Actor State
