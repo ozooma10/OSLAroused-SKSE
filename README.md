@@ -16,4 +16,7 @@ git submodule init
 git submodule update
 cmake --preset vs2022-windows
 cmake --build build --config Release
+
+For SSE Build:
+cmake --preset vs2022-windows-sse
 ```
