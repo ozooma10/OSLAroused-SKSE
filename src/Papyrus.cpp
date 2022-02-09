@@ -122,13 +122,14 @@ float Papyrus::GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag*, RE::Actor
 	return ArousalManager::GetLastOrgasmArousal(actorRef);
 }
 
-void Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
 {
 	if (!actorRef) {
-		return;
+		return 0.f;
 	}
 	value = std::clamp(value, 0.f, 100.f);
 	Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, value);
+	return value;
 }
 
 float Papyrus::ModifyTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)

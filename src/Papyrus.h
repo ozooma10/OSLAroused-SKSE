@@ -29,7 +29,7 @@ namespace Papyrus
 	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 	float GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
-	void SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
+	float SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float ModifyTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
