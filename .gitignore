@@ -2,5 +2,5 @@ build/
 .vs/
 External/CommonLibSSE/
 External/CommonLibSSE-po3/
-OSLAroused 0.1.1 FOMOD/00 Data/*
-OSLAroused 0.1.1 FOMOD/DLL/*
+OSLAroused FOMOD/00 Data/*
+OSLAroused FOMOD/DLL/*
