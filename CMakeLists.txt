@@ -20,32 +20,19 @@ macro(set_from_environment VARIABLE ENV_VAR)
 	endif()
 endmacro()
 
-macro(find_commonlib_path)
-	if (CommonLibName AND NOT ${CommonLibName} STREQUAL "")
-		# Check extern
-		find_path(CommonLibPath
-		include/REL/Relocation.h
-		PATHS external/${CommonLibName})
-		if (${CommonLibPath} STREQUAL "CommonLibPath-NOTFOUND")
-			#Check path
-			set_from_environment(${CommonLibName}Path)
-			set(CommonLibPath ${${CommonLibName}Path})
-		endif()
-	endif()
-endmacro()
-
 if(BUILD_SKYRIMSSE)
 	set_from_environment(Skyrim64Path SkyrimSE64Path)
 	add_compile_definitions(SKYRIMSSE)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 	set(SkyrimVersion "Skyrim SSE")
 	set(CommonLibName "CommonLibSSE-po3")
+	set(CommonLibPath "${ROOT_DIR}/external/CommonLibSSE-po3")
 else()
 	set_from_environment(Skyrim64Path Skyrim64Path)
 	set(SkyrimVersion "Skyrim AE")
 	set(CommonLibName "CommonLibSSE")
+	set(CommonLibPath "${ROOT_DIR}/external/CommonLibSSE")
 endif()
-find_commonlib_path()
 
 if(NOT DEFINED Skyrim64Path)
 	message(FATAL_ERROR "Skyrim64Path is not set")

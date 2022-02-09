@@ -93,12 +93,12 @@ target_include_directories(
 		"${SOURCE_DIR}"
 )
 
-if (DEFINED CommonLibPath AND NOT ${CommonLibPath} STREQUAL "" AND IS_DIRECTORY ${CommonLibPath})
-	add_subdirectory(${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
+if (DEFINED CommonLibPath AND NOT ${CommonLibPath} STREQUAL "" AND IS_DIRECTORY ${ROOT_DIR}${CommonLibPath})
+	add_subdirectory(${ROOT_DIR}${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
 else ()
 	message(
 		FATAL_ERROR
-		"Variable ${CommonLibName}Path is not set."
+		"Variable ${CommonLibPath} Path "${ROOT_DIR}/external/CommonLibSSE" is not set."
 	)
 endif()
 
@@ -131,7 +131,7 @@ install(
 add_custom_command(
 	TARGET "${PROJECT_NAME}"
 	POST_BUILD
-	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "${Skyrim64Path}/Data/SKSE/Plugins/"
-	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "${Skyrim64Path}/Data/SKSE/Plugins/"
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "D:/Skyrim/Mods/OSLAroused/SKSE/Plugins/"
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "D:/Skyrim/Mods/OSLAroused/SKSE/Plugins/"
 	VERBATIM
 )
