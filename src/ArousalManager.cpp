@@ -1,18 +1,19 @@
 #include "ArousalManager.h"
-#include "Serialization.h"
+#include "SavedDataManager.h"
 #include "Utilities.h"
 #include "Papyrus.h"
 #include "Settings.h"
 
-using namespace Serialization;
+using namespace SavedDataManager;
 
 namespace ArousalManager
 {
-	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState);
-	float GetSexlabArousal(RE::Actor* actorRef, float timePassed, bool bUpdateState);
-
 	float GetArousal(RE::Actor* actorRef, bool bUpdateState)
 	{
+		if (!actorRef) {
+			return -2.f;
+		}
+
 		RE::FormID actorFormId = actorRef->formID;
 
 		const auto LastCheckTimeData = LastCheckTimeData::GetSingleton();
@@ -26,7 +27,7 @@ namespace ArousalManager
 			LastCheckTimeData->SetData(actorFormId, curTime);
 		}
 
-		return GetSexlabArousal(actorRef, timePassed, bUpdateState);
+		return GetLastOrgasmArousal(actorRef) + GetSexlabExposure(actorRef, timePassed, bUpdateState);
 	}
 
 	float SetArousal(RE::Actor* actorRef, float value)
@@ -45,67 +46,26 @@ namespace ArousalManager
 		logger::trace("ModifyArousal: {}  by {}", actorRef->GetDisplayFullName(), modValue);
 
 		if (modValue > 0) {
-			modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
+			//modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
 		}
 
 		//If we are in sl mode operate on exposure rather then arousal
-		const auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+		const auto lastCheckTime = LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
 		modValue += GetSexlabExposure(actorRef, RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastCheckTime, false);
 
 		return SetArousal(actorRef, modValue);
 	}
 
-	float GetActorTimeRate(RE::Actor* actorRef, float timeSinceLastOrgasm)
+	float GetActorTimeRate(RE::Actor* /* actorRef*/, float)  //timeSinceLastOrgasm)
 	{
 		float decayRate = Settings::GetSingleton()->GetDecayRate();
 		if (decayRate <= 0.1) {
 			return 10.f;
 		}
 
-		float timeRate = TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.f);
-		timeRate *= std::pow(1.5f, -timeSinceLastOrgasm / decayRate);
-		return timeRate;
-	}
-
-	float GetOArousedArousal(RE::Actor* actorRef, float lastCheckTime, float timePassed, bool bUpdateState)
-	{
-		RE::FormID actorFormId = actorRef->formID;
-		//logger::trace("Get Arousal for {}  lastcheck: {}  timePass {}", actorRef->GetDisplayFullName(), lastCheckTime, timePassed);
-
-		float newArousal = 0.f;
-		//If never calc or old, regen
-		//NOTE: if bUpdateState is false (which should be rare), can cause wild fluctuations in npc arousal since randomized state is never commited to state.
-		if (lastCheckTime <= 0.0f || timePassed > 3.f) {
-			newArousal = Utilities::GenerateRandomFloat(0.f, 75.f);
-
-			if (lastCheckTime <= 0.0f) {
-				float randomMultiplier = Utilities::GenerateRandomFloat(0.75f, 1.25f);
-				MultiplierData::GetSingleton()->SetData(actorFormId, randomMultiplier);
-			}
-		} else {
-			float currentArousal = ArousalData::GetSingleton()->GetData(actorFormId, 0.f);
-			float arousalMultiplier = MultiplierData::GetSingleton()->GetData(actorFormId, 0.f);
-			newArousal = currentArousal + ((timePassed * 25.f) * arousalMultiplier);
-		}
-
-		if (bUpdateState) {
-			return SetArousal(actorRef, newArousal);
-		} else {
-			return newArousal;	
-		}
-	}
-
-	float GetSexlabArousal(RE::Actor* actorRef, float timePassed, bool bUpdateState)
-	{
-		//logger::trace("GetSexlabArousal timePass {}", timePassed);
-
-		if (!actorRef) {
-			return -2;
-		}
-
-		float arousal = GetLastOrgasmArousal(actorRef) + GetSexlabExposure(actorRef, timePassed, bUpdateState);
-
-		return arousal;
+		//float timeRate = TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.f);
+		//timeRate *= std::pow(1.5f, -timeSinceLastOrgasm / decayRate);
+		return 0.f;  //timeRate;
 	}
 
 	float GetSexlabExposure(RE::Actor* actorRef, float timePassed, bool bUpdateState)
@@ -133,11 +93,12 @@ namespace ArousalManager
 		}
 	}
 
-	float GetLastOrgasmArousal(RE::Actor* actorRef)
+	float GetLastOrgasmArousal(RE::Actor* /* actorRef*/)
 	{
-		float lastOrgasmTime = LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-		float daysSinceLastOrgasm = RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
+		//float lastOrgasmTime = LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+		//float daysSinceLastOrgasm = RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
 
-		return daysSinceLastOrgasm * GetActorTimeRate(actorRef, daysSinceLastOrgasm);
+		//return daysSinceLastOrgasm * GetActorTimeRate(actorRef, daysSinceLastOrgasm);
+		return 0.f;
 	}
 }

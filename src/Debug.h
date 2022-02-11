@@ -1,33 +1,20 @@
 #pragma once
 
-#include "Serialization.h"
+#include "SavedDataManager.h"
 
 namespace Debug
 {
 	void DumpAllArousalData()
 	{
-		Serialization::LastCheckTimeData::GetSingleton()->DumpToLog();
-		Serialization::ArousalData::GetSingleton()->DumpToLog();
-		Serialization::MultiplierData::GetSingleton()->DumpToLog();
-		Serialization::LastOrgasmTimeData::GetSingleton()->DumpToLog();
-		Serialization::TimeRateData::GetSingleton()->DumpToLog();
-	}
-
-	void ClearSecondaryArousalData()
-	{
-		Serialization::LastCheckTimeData::GetSingleton()->Clear();
-		Serialization::ArousalData::GetSingleton()->Clear();
-		Serialization::MultiplierData::GetSingleton()->Clear();
-		Serialization::LastOrgasmTimeData::GetSingleton()->Clear();
-		Serialization::TimeRateData::GetSingleton()->Clear();
+		SavedDataManager::ArousalData::GetSingleton()->DumpToLog();
+		SavedDataManager::BaseArousalData::GetSingleton()->DumpToLog();
+		SavedDataManager::LastCheckTimeData::GetSingleton()->DumpToLog();
 	}
 
 	void ClearAllArousalData()
 	{
-		Serialization::LastCheckTimeData::GetSingleton()->Clear();
-		Serialization::ArousalData::GetSingleton()->Clear();
-		Serialization::MultiplierData::GetSingleton()->Clear();
-		Serialization::LastOrgasmTimeData::GetSingleton()->Clear();
-		Serialization::TimeRateData::GetSingleton()->Clear();
+		SavedDataManager::ArousalData::GetSingleton()->Clear();
+		SavedDataManager::BaseArousalData::GetSingleton()->Clear();
+		SavedDataManager::LastCheckTimeData::GetSingleton()->Clear();
 	}
 }

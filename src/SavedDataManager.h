@@ -1,9 +1,8 @@
 #pragma once
-//This Serialization is based off how powerof3's did it in Afterlife 
-
-namespace Serialization
+namespace SavedDataManager
 {
 	template <typename T>
+	//BaseData is based off how powerof3's did it in Afterlife
 	class BaseData
 	{
 	public:
@@ -75,7 +74,7 @@ namespace Serialization
 		void RemoveData(RE::FormID formId, RE::FormID subFormId)
 		{
 			Locker locker(m_Lock);
-			
+
 			if (const auto it = m_Data.find(formId); it != m_Data.end()) {
 				it->second.erase(subFormId);
 			}
@@ -102,33 +101,18 @@ namespace Serialization
 		}
 	};
 
-	class MultiplierData final : public BaseFormFloat
+	class BaseArousalData final : public BaseFormFloat
 	{
 	public:
-		static MultiplierData* GetSingleton()
+		static BaseArousalData* GetSingleton()
 		{
-			static MultiplierData singleton;
+			static BaseArousalData singleton;
 			return &singleton;
 		}
 
 		const char* GetType() override
 		{
-			return "Multiplier";
-		}
-	};
-
-	class TimeRateData final : public BaseFormFloat
-	{
-	public:
-		static TimeRateData* GetSingleton()
-		{
-			static TimeRateData singleton;
-			return &singleton;
-		}
-
-		const char* GetType() override
-		{
-			return "TimeRate";
+			return "BaseArousal";
 		}
 	};
 
@@ -144,21 +128,6 @@ namespace Serialization
 		const char* GetType() override
 		{
 			return "LastCheckTime";
-		}
-	};
-
-	class LastOrgasmTimeData final : public BaseFormFloat
-	{
-	public:
-		static LastOrgasmTimeData* GetSingleton()
-		{
-			static LastOrgasmTimeData singleton;
-			return &singleton;
-		}
-
-		const char* GetType() override
-		{
-			return "LastOrgasmTime";
 		}
 	};
 
@@ -179,10 +148,8 @@ namespace Serialization
 
 	constexpr std::uint32_t kSerializationVersion = 1;
 	constexpr std::uint32_t kArousalDataKey = 'OSLA';
-	constexpr std::uint32_t kMultiplerDataKey = 'OSLM';
-	constexpr std::uint32_t kTimeRateDataKey = 'OSLT';
+	constexpr std::uint32_t kBaseArousalDataKey = 'OSLB';
 	constexpr std::uint32_t kLastCheckTimeDataKey = 'OSLC';
-	constexpr std::uint32_t kLastOrgasmTimeDataKey = 'OSLO';
 	constexpr std::uint32_t kArmorKeywordDataKey = 'OSLK';
 
 	std::string DecodeTypeCode(std::uint32_t typeCode);

@@ -1,6 +1,6 @@
 #include "Papyrus.h"
 #include "ArousalManager.h"
-#include "Serialization.h"
+#include "SavedDataManager.h"
 #include "RuntimeEvents.h"
 #include "Settings.h"
 #include "Debug.h"
@@ -76,45 +76,49 @@ void Papyrus::ModifyArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<
 	}
 }
 
-float Papyrus::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* /* actorRef*/, float value)
 {
 	//Just clamp between 0 and 100?
 	value = std::clamp(value, 0.0f, 100.f);
 
-	Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, value);
+	//SavedDataManager::MultiplierData::GetSingleton()->SetData(actorRef->formID, value);
 	return value;
 }
 
-float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef)
+float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* /* actorRef */)
 {
-	return Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
+	//return Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
+	return 0.f;
 }
 
-float Papyrus::ModifyArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::ModifyArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* /* actorRef*/,float /* float value*/)
 {
-	float curMult = Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
-	float newVal = curMult + value;
-	Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, newVal);
-	return newVal;
+	//float curMult = Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
+	//float newVal = curMult + value;
+	//Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, newVal);
+	//return newVal;
+	return 0.f;
 }
 
-float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* actorRef)
+float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* )
 {
 	//If we are in sla mode get exposure, otherwise just return arousal
-	float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
-	auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-	Serialization::LastCheckTimeData::GetSingleton()->SetData(actorRef->formID, curTime);
-	return ArousalManager::GetSexlabExposure(actorRef, curTime - lastCheckTime);
+	//float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
+	//auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+	//Serialization::LastCheckTimeData::GetSingleton()->SetData(actorRef->formID, curTime);
+	//return ArousalManager::GetSexlabExposure(actorRef, curTime - lastCheckTime);
+	return 0.f;
 }
 
-float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRef)
+float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* )
 {
-	float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-	if (lastOrgasmTime < 0) {
-		lastOrgasmTime = 0;
-	}
+	//float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
+	//if (lastOrgasmTime < 0) {
+		//lastOrgasmTime = 0;
+	//}
 
-	return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
+	//return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
+	return 0.f;
 }
 
 float Papyrus::GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
@@ -128,24 +132,26 @@ float Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float va
 		return 0.f;
 	}
 	value = std::clamp(value, 0.f, 100.f);
-	Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, value);
+	//Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, value);
 	return value;
 }
 
-float Papyrus::ModifyTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::ModifyTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float )//value)
 {
 	if (!actorRef) {
 		return 0.f;
 	}
-	float curRate = Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
-	float newVal = curRate + value;
-	Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, newVal);
-	return newVal;
+	//float curRate = Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
+	//float newVal = curRate + value;
+	//Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, newVal);
+	//return newVal;
+	return 0.f;
 }
 
-float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef)
+float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* )//actorRef)
 {
-	return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
+	//return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
+	return 0.f;
 }
 
 bool Papyrus::IsActorNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
@@ -168,9 +174,9 @@ void Papyrus::RemoveScene(RE::StaticFunctionTag*, bool bIsOstim, int sceneId)
 	SceneManager::GetSingleton()->RemoveScene(bIsOstim ? SceneManager::SceneFramework::kOStim : SceneManager::SceneFramework::kSexLab, sceneId);
 }
 
-void Papyrus::RegisterActorOrgasm(RE::StaticFunctionTag*, RE::Actor* actorRef)
+void Papyrus::RegisterActorOrgasm(RE::StaticFunctionTag*, RE::Actor* )//actorRef)
 {
-	Serialization::LastOrgasmTimeData::GetSingleton()->SetData(actorRef->formID, RE::Calendar::GetSingleton()->GetCurrentGameTime());
+	//Serialization::LastOrgasmTimeData::GetSingleton()->SetData(actorRef->formID, RE::Calendar::GetSingleton()->GetCurrentGameTime());
 }
 
 bool Papyrus::AddKeywordToForm(RE::StaticFunctionTag*, RE::TESForm* form, RE::BGSKeyword* keyword)
@@ -204,11 +210,6 @@ float Papyrus::ClampFloat(RE::StaticFunctionTag*, float val, float min, float ma
 void Papyrus::DumpArousalData(RE::StaticFunctionTag*)
 {
 	Debug::DumpAllArousalData();
-}
-
-void Papyrus::ClearSecondaryArousalData(RE::StaticFunctionTag*)
-{
-	Debug::ClearSecondaryArousalData();
 }
 
 void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
@@ -263,7 +264,6 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	
 	//Debug
 	vm->RegisterFunction("DumpArousalData", "OSLArousedNative", DumpArousalData);
-	vm->RegisterFunction("ClearSecondaryArousalData", "OSLArousedNative", ClearSecondaryArousalData);
 	vm->RegisterFunction("ClearAllArousalData", "OSLArousedNative", ClearAllArousalData);
 
 	return true;

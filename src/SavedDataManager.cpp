@@ -1,9 +1,9 @@
-#include "Serialization.h"
+#include "SavedDataManager.h"
 #include "SceneManager.h"
 
-//This Serialization is based off how powerof3's did it in Afterlife
-namespace Serialization
+namespace SavedDataManager
 {
+	//BaseData is based off how powerof3's did it in Afterlife
 	template <typename T>
 	bool BaseData<T>::Save(SKSE::SerializationInterface* serializationInterface, std::uint32_t type, std::uint32_t version)
 	{
@@ -11,7 +11,7 @@ namespace Serialization
 			logger::error("Failed to open record for Data Serialization!");
 			return false;
 		}
-		
+
 		return Save(serializationInterface);
 	}
 
@@ -45,7 +45,7 @@ namespace Serialization
 	bool BaseData<T>::Load(SKSE::SerializationInterface* serializationInterface)
 	{
 		assert(serializationInterface);
-		
+
 		std::size_t recordDataSize;
 		serializationInterface->ReadRecordData(recordDataSize);
 
@@ -54,7 +54,7 @@ namespace Serialization
 
 		RE::FormID formId;
 		T value;
-		
+
 		for (auto i = 0; i < recordDataSize; i++) {
 			serializationInterface->ReadRecordData(formId);
 			//Ensure form still exists
@@ -124,7 +124,6 @@ namespace Serialization
 	{
 		assert(serializationInterface);
 
-
 		std::size_t recordDataSize;
 		serializationInterface->ReadRecordData(recordDataSize);
 
@@ -172,24 +171,14 @@ namespace Serialization
 			logger::critical("Failed to save Arousal Data");
 		}
 
-		const auto multiplierData = MultiplierData::GetSingleton();
-		if (!multiplierData->Save(serializationInterface, kMultiplerDataKey, kSerializationVersion)) {
-			logger::critical("Failed to save Arousal Multipler Data");
-		}
-
-		const auto timeRateData = TimeRateData::GetSingleton();
-		if (!timeRateData->Save(serializationInterface, kTimeRateDataKey, kSerializationVersion)) {
-			logger::critical("Failed to save Time Rate Data");
+		const auto baseArousalData = BaseArousalData::GetSingleton();
+		if (!baseArousalData->Save(serializationInterface, kBaseArousalDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Base Arousal Data");
 		}
 
 		const auto lastCheckData = LastCheckTimeData::GetSingleton();
 		if (!lastCheckData->Save(serializationInterface, kLastCheckTimeDataKey, kSerializationVersion)) {
 			logger::critical("Failed to save Arousal Last Check Time Data");
-		}
-
-		const auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
-		if (!lastOrgasmData->Save(serializationInterface, kLastOrgasmTimeDataKey, kSerializationVersion)) {
-			logger::critical("Failed to save Last Orgasm Time Data");
 		}
 
 		const auto armorKeywordData = ArmorKeywordData::GetSingleton();
@@ -224,19 +213,11 @@ namespace Serialization
 					}
 				}
 				break;
-			case kMultiplerDataKey:
+			case kBaseArousalDataKey:
 				{
-					auto multiplierData = MultiplierData::GetSingleton();
-					if (!multiplierData->Load(serializationInterface)) {
-						logger::critical("Failed to Load Multipler Data"sv);
-					}
-				}
-				break;
-			case kTimeRateDataKey:
-				{
-					auto timeRateData = TimeRateData::GetSingleton();
-					if (!timeRateData->Load(serializationInterface)) {
-						logger::critical("Failed to Load TimeRate Data"sv);
+					auto baseArousalData = BaseArousalData::GetSingleton();
+					if (!baseArousalData->Load(serializationInterface)) {
+						logger::critical("Failed to Load Base Arousal Data"sv);
 					}
 				}
 				break;
@@ -245,14 +226,6 @@ namespace Serialization
 					auto lastCheckData = LastCheckTimeData::GetSingleton();
 					if (!lastCheckData->Load(serializationInterface)) {
 						logger::critical("Failed to Load LastCheckTime Data"sv);
-					}
-				}
-				break;
-			case kLastOrgasmTimeDataKey:
-				{
-					auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
-					if (!lastOrgasmData->Load(serializationInterface)) {
-						logger::critical("Failed to Load lastOrgasmData Data"sv);
 					}
 				}
 				break;
@@ -277,14 +250,10 @@ namespace Serialization
 	{
 		auto arousalData = ArousalData::GetSingleton();
 		arousalData->Clear();
-		auto multiplierData = MultiplierData::GetSingleton();
-		multiplierData->Clear();
-		auto timeRateData = TimeRateData::GetSingleton();
-		timeRateData->Clear();
+		auto baseArousalData = BaseArousalData::GetSingleton();
+		baseArousalData->Clear();
 		auto lastCheckData = LastCheckTimeData::GetSingleton();
 		lastCheckData->Clear();
-		auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
-		lastOrgasmData->Clear();
 		auto armorKeywordData = ArmorKeywordData::GetSingleton();
 		armorKeywordData->Clear();
 
