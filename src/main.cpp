@@ -2,7 +2,8 @@
 
 #include "RuntimeEvents.h"
 #include "Papyrus.h"
-#include "Utilities.h"
+#include "PapyrusInterface.h"
+#include "Utilities/Utils.h"
 #include "SavedDataManager.h"
 
 namespace
@@ -91,6 +92,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 
 	const auto papyrus = SKSE::GetPapyrusInterface();
 	papyrus->Register(Papyrus::RegisterFunctions);
+	papyrus->Register(PapyrusInterface::RegisterFunctions);
 
 	const auto serialization = SKSE::GetSerializationInterface();
 	serialization->SetUniqueID(SavedDataManager::kArousalDataKey);

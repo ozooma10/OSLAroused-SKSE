@@ -172,7 +172,7 @@ namespace SavedDataManager
 		}
 
 		const auto baseLibidoData = BaseLibidoData::GetSingleton();
-		if (!baseLibidoData->Save(serializationInterface, kBaseArousalDataKey, kSerializationVersion)) {
+		if (!baseLibidoData->Save(serializationInterface, kBaseLibidoDataKey, kSerializationVersion)) {
 			logger::critical("Failed to save Base Libido Data");
 		}
 

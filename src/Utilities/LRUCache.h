@@ -18,12 +18,13 @@ namespace Utilities
 			m_OnCacheMiss(onCacheMiss),
 			m_MaxCacheSize(maxCacheSize)
 		{
-			static_assert(m_MaxCacheSize > 0);
+			assert(m_MaxCacheSize > 0);
 		}
 
 		ValType operator()(const KeyType& key)
 		{
-			if (const auto it = m_CacheData.find(key) != m_CacheData.end()) {
+			const auto it = m_CacheData.find(key);
+			if (it != m_CacheData.end()) {
 				//In cache, update tracked by moving key to back
 				m_CacheKeyTracker.splice(m_CacheKeyTracker.end(), m_CacheKeyTracker, (*it).second.second);
 

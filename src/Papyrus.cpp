@@ -5,7 +5,7 @@
 #include "Settings.h"
 #include "Debug.h"
 #include "SceneManager.h"
-#include "Utilities.h"
+#include "Utilities/Utils.h"
 
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {

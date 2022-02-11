@@ -10,6 +10,8 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/RuntimeEvents.cpp"
 	"${SOURCE_DIR}/Papyrus.h"
 	"${SOURCE_DIR}/Papyrus.cpp"
+	"${SOURCE_DIR}/PapyrusInterface.h"
+	"${SOURCE_DIR}/PapyrusInterface.cpp"
 	"${SOURCE_DIR}/ArousalManager.h"
 	"${SOURCE_DIR}/ArousalManager.cpp"
 	"${SOURCE_DIR}/LibidoManager.h"
