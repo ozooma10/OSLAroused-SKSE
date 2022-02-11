@@ -1,5 +1,7 @@
 #pragma once
 
+#include "LibidoManager.h"
+
 namespace ArousalManager
 {
 	float GetArousal(RE::Actor* actorRef, bool bUpdateState = true);

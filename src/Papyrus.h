@@ -51,7 +51,6 @@ namespace Papyrus
 
 	//Debug Functions
 	void DumpArousalData(RE::StaticFunctionTag* base);
-	void ClearSecondaryArousalData(RE::StaticFunctionTag* base);
 	void ClearAllArousalData(RE::StaticFunctionTag* base);
 
 	bool RegisterFunctions(RE::BSScript::IVirtualMachine* vm);
@@ -59,6 +58,8 @@ namespace Papyrus
 	namespace Events
 	{
 		void SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newExposure);
+		void SendActorLibidoUpdatedEvent(RE::Actor* actorRef, float newLibido);
+
 
 		void SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked);
 	}

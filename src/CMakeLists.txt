@@ -18,10 +18,12 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/SceneManager.cpp"
 	"${SOURCE_DIR}/SavedDataManager.h"
 	"${SOURCE_DIR}/SavedDataManager.cpp"
-	"${SOURCE_DIR}/Utilities.h"
-	"${SOURCE_DIR}/Utilities.cpp"
 	"${SOURCE_DIR}/Settings.h"
 	"${SOURCE_DIR}/Debug.h"
+	"${SOURCE_DIR}/Utilities/LRUCache.h"
+	"${SOURCE_DIR}/Utilities/Ticker.h"
+	"${SOURCE_DIR}/Utilities/Utils.h"
+	"${SOURCE_DIR}/Utilities/Utils.cpp"
  )
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})

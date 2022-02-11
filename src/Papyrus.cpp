@@ -5,6 +5,7 @@
 #include "Settings.h"
 #include "Debug.h"
 #include "SceneManager.h"
+#include "Utilities.h"
 
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {
@@ -285,6 +286,11 @@ void SendModEvent(RE::BSFixedString eventName, float numArg, RE::TESForm* sender
 void Papyrus::Events::SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newExposure)
 {
 	SendModEvent("OSLA_ActorArousalUpdated", newExposure, actorRef);
+}
+
+void Papyrus::Events::SendActorLibidoUpdatedEvent(RE::Actor* actorRef, float newLibido)
+{
+	SendModEvent("OSLA_ActorLibidoUpdated", newLibido, actorRef);
 }
 
 void Papyrus::Events::SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked)

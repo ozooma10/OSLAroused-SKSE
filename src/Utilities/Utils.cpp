@@ -1,5 +1,5 @@
-#include "Utilities.h"
 #include "SavedDataManager.h"
+#include "Utils.h"
 
 //Keyword logic from powerof3's CommonLibSSE implementation
 bool Utilities::Keywords::AddKeyword(RE::TESForm* form, RE::BGSKeyword* newKeyword)
@@ -119,7 +119,7 @@ void Utilities::Keywords::DistributeKeywords()
 
 				subFormCache[subformId] = keywordSubForm;
 			}
-	
+
 			AddKeyword(form, keywordSubForm);
 		}
 	}

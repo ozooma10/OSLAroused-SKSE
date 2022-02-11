@@ -171,9 +171,9 @@ namespace SavedDataManager
 			logger::critical("Failed to save Arousal Data");
 		}
 
-		const auto baseArousalData = BaseArousalData::GetSingleton();
-		if (!baseArousalData->Save(serializationInterface, kBaseArousalDataKey, kSerializationVersion)) {
-			logger::critical("Failed to save Base Arousal Data");
+		const auto baseLibidoData = BaseLibidoData::GetSingleton();
+		if (!baseLibidoData->Save(serializationInterface, kBaseArousalDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Base Libido Data");
 		}
 
 		const auto lastCheckData = LastCheckTimeData::GetSingleton();
@@ -213,11 +213,11 @@ namespace SavedDataManager
 					}
 				}
 				break;
-			case kBaseArousalDataKey:
+			case kBaseLibidoDataKey:
 				{
-					auto baseArousalData = BaseArousalData::GetSingleton();
-					if (!baseArousalData->Load(serializationInterface)) {
-						logger::critical("Failed to Load Base Arousal Data"sv);
+					auto baseLibidoData = BaseLibidoData::GetSingleton();
+					if (!baseLibidoData->Load(serializationInterface)) {
+						logger::critical("Failed to Load Base Libido Data"sv);
 					}
 				}
 				break;
@@ -250,8 +250,8 @@ namespace SavedDataManager
 	{
 		auto arousalData = ArousalData::GetSingleton();
 		arousalData->Clear();
-		auto baseArousalData = BaseArousalData::GetSingleton();
-		baseArousalData->Clear();
+		auto baseLibidoData = BaseLibidoData::GetSingleton();
+		baseLibidoData->Clear();
 		auto lastCheckData = LastCheckTimeData::GetSingleton();
 		lastCheckData->Clear();
 		auto armorKeywordData = ArmorKeywordData::GetSingleton();

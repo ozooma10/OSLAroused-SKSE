@@ -4,6 +4,8 @@
 #include "Papyrus.h"
 #include "SceneManager.h"
 
+#include "Utilities.h"
+
 RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TESEquipEvent* equipEvent, RE::BSTEventSource<RE::TESEquipEvent>*)
 {
 	if (!equipEvent || !equipEvent->actor || !equipEvent->baseObject) {

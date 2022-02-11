@@ -101,18 +101,18 @@ namespace SavedDataManager
 		}
 	};
 
-	class BaseArousalData final : public BaseFormFloat
+	class BaseLibidoData final : public BaseFormFloat
 	{
 	public:
-		static BaseArousalData* GetSingleton()
+		static BaseLibidoData* GetSingleton()
 		{
-			static BaseArousalData singleton;
+			static BaseLibidoData singleton;
 			return &singleton;
 		}
 
 		const char* GetType() override
 		{
-			return "BaseArousal";
+			return "BaseLibido";
 		}
 	};
 
@@ -148,7 +148,7 @@ namespace SavedDataManager
 
 	constexpr std::uint32_t kSerializationVersion = 1;
 	constexpr std::uint32_t kArousalDataKey = 'OSLA';
-	constexpr std::uint32_t kBaseArousalDataKey = 'OSLB';
+	constexpr std::uint32_t kBaseLibidoDataKey = 'OSLB';
 	constexpr std::uint32_t kLastCheckTimeDataKey = 'OSLC';
 	constexpr std::uint32_t kArmorKeywordDataKey = 'OSLK';
 
