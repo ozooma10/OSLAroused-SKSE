@@ -1,7 +1,7 @@
+[submodule "external/CommonLibSSE-po3"]
+	path = external/CommonLibSSE-po3
+	url = https://github.com/ozooma10/CommonLibSSE
+	branch = dev
 [submodule "external/CommonLibSSE"]
 	path = external/CommonLibSSE
 	url = https://github.com/Ryan-rsm-McKenzie/CommonLibSSE
-
-[submodule "external/CommonLibSSE-po3"]
-	path = external/CommonLibSSE-po3
-	url = https://github.com/powerof3/CommonLibSSE/tree/dev
