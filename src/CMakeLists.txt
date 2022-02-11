@@ -12,6 +12,8 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Papyrus.cpp"
 	"${SOURCE_DIR}/ArousalManager.h"
 	"${SOURCE_DIR}/ArousalManager.cpp"
+	"${SOURCE_DIR}/LibidoManager.h"
+	"${SOURCE_DIR}/LibidoManager.cpp"
 	"${SOURCE_DIR}/SceneManager.h"
 	"${SOURCE_DIR}/SceneManager.cpp"
 	"${SOURCE_DIR}/SavedDataManager.h"
