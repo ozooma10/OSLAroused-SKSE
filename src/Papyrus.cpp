@@ -54,16 +54,17 @@ float Papyrus::GetArousalNoSideEffects(RE::StaticFunctionTag*, RE::Actor* actorR
 	return ArousalManager::GetArousal(actorRef, false);
 }
 
-float Papyrus::SetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+float Papyrus::SetArousal(RE::StaticFunctionTag*, RE::Actor*, float)
 {
-	return ArousalManager::SetArousal(actorRef, value);
+	return 0.f;
+	//return ArousalManager::SetArousal(actorRef, value);
 }
 
-void Papyrus::SetArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*> actorRefs, float value)
+void Papyrus::SetArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*>, float)
 {
-	for (const auto actorRef : actorRefs) {
-		ArousalManager::SetArousal(actorRef, value);
-	}
+	//for (const auto actorRef : actorRefs) {
+		//ArousalManager::SetArousal(actorRef, value);
+	//}
 }
 
 float Papyrus::ModifyArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
@@ -123,9 +124,10 @@ float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* )
 	return 0.f;
 }
 
-float Papyrus::GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
+float Papyrus::GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag*, RE::Actor*)
 {
-	return ArousalManager::GetLastOrgasmArousal(actorRef);
+	return 0.f;
+	//ArousalManager::GetLastOrgasmArousal(actorRef);
 }
 
 float Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)

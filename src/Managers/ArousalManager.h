@@ -12,5 +12,5 @@ namespace ArousalManager
 
 	float GetSexlabExposure(RE::Actor* actorRef, float timePassed, bool bUpdateState = true);
 
-	float GetLastOrgasmArousal(RE::Actor* actorRef);
+	float CalculateArousal(RE::Actor* actorRef, float timePassed);
 }

@@ -16,6 +16,7 @@ public:
 	LibidoManager() :
 		m_LibidoModifierCache(std::function<float(RE::Actor*)>(CalculateActorLibidoModifier), 100) {}
 	
+	float UpdateActorLibido(RE::Actor* actorRef, float gameHoursPassed, float targetLibido);
 
 	float GetBaselineArousal(RE::Actor* actorRef);
 
