@@ -1,10 +1,10 @@
 #include "RuntimeEvents.h"
 #include "Settings.h"
-#include "ArousalManager.h"
-#include "LibidoManager.h"
-#include "Papyrus.h"
-#include "SceneManager.h"
+#include "Managers/ArousalManager.h"
+#include "Managers/LibidoManager.h"
+#include "Managers/SceneManager.h"
 #include "Managers/ActorStateManager.h"
+#include "Papyrus.h"
 
 #include "Utilities/Utils.h"
 

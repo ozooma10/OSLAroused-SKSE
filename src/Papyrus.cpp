@@ -1,12 +1,12 @@
 #include "Papyrus.h"
-#include "ArousalManager.h"
 #include "SavedDataManager.h"
 #include "RuntimeEvents.h"
 #include "Settings.h"
 #include "Debug.h"
-#include "SceneManager.h"
 #include "Utilities/Utils.h"
 #include "Managers/ActorStateManager.h"
+#include "Managers/ArousalManager.h"
+#include "Managers/SceneManager.h"
 
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {

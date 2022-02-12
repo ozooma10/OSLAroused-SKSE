@@ -1,7 +1,7 @@
 #include "ActorStateManager.h"
 #include "Utilities/Utils.h"
 #include "Papyrus.h"
-#include "LibidoManager.h"
+#include "Managers/LibidoManager.h"
 
 bool IsActorNaked(RE::Actor* actorRef)
 {

@@ -1,6 +1,6 @@
 #include "PapyrusInterface.h"
 
-#include "LibidoManager.h"
+#include "Managers/LibidoManager.h"
 
 float PapyrusInterface::GetArousalBaseline(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {

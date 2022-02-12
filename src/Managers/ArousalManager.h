@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LibidoManager.h"
+#include "Managers/LibidoManager.h"
 
 namespace ArousalManager
 {
