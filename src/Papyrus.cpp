@@ -8,31 +8,6 @@
 #include "Managers/ArousalManager.h"
 #include "Managers/SceneManager.h"
 
-void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
-{
-	Settings::GetSingleton()->SetPlayerNudityCheckEnabled(newVal);
-}
-
-void Papyrus::UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag*, float newVal)
-{
-	Settings::GetSingleton()->SetHourlyNudityArousalModifier(newVal);
-}
-
-void Papyrus::UpdateDefaultArousalMultiplier(RE::StaticFunctionTag*, float newMultiplier)
-{
-	Settings::GetSingleton()->SetDefaultArousalMultiplier(newMultiplier);
-}
-
-void Papyrus::UpdateHourlySceneParticipantArousalModifier(RE::StaticFunctionTag*, float newVal)
-{
-	Settings::GetSingleton()->SetHourlySceneParticipantArousalModifier(newVal);
-}
-
-void Papyrus::UpdateHourlySceneViewerArousalModifier(RE::StaticFunctionTag*, float newVal)
-{
-	Settings::GetSingleton()->SetHourlySceneViewerArousalModifier(newVal);
-}
-
 float Papyrus::GetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
 	return ArousalManager::GetArousal(actorRef);
@@ -223,12 +198,6 @@ void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
 
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
-	//OSLAroused Settings
-	vm->RegisterFunction("UpdatePlayerNudityCheck", "OSLArousedNative", UpdatePlayerNudityCheck);
-	vm->RegisterFunction("UpdateHourlyNudityArousalModifier", "OSLArousedNative", UpdateHourlyNudityArousalModifier);
-	vm->RegisterFunction("UpdateHourlySceneParticipantArousalModifier", "OSLArousedNative", UpdateHourlySceneParticipantArousalModifier);
-	vm->RegisterFunction("UpdateHourlySceneViewerArousalModifier", "OSLArousedNative", UpdateHourlySceneViewerArousalModifier);
-	
 	//General State
 	vm->RegisterFunction("GetArousal", "OSLArousedNative", GetArousal);
 	vm->RegisterFunction("GetArousalMultiple", "OSLArousedNative", GetArousalMultiple);

@@ -34,11 +34,11 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 
 void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod, std::vector<RE::Actor*> blacklist = std::vector<RE::Actor*>());
 
-void HandleAdultScenes(std::vector<SceneManager::SceneData> activeScenes, float elapsedGameTime)
+void HandleAdultScenes(std::vector<SceneManager::SceneData> activeScenes, float )
 {
-	float scanDistance = Settings::GetSingleton()->GetScanDistance();
-	float participantHourMod = Settings::GetSingleton()->GetHourlySceneParticipantArousalModifier();
-	float viewerHourMod = Settings::GetSingleton()->GetHourlySceneViewerArousalModifier();
+	//float scanDistance = Settings::GetSingleton()->GetScanDistance();
+	//float participantHourMod = Settings::GetSingleton()->GetHourlySceneParticipantArousalModifier();
+	//float viewerHourMod = Settings::GetSingleton()->GetHourlySceneViewerArousalModifier();
 
 	for (const auto scene : activeScenes) {
 		if (scene.Participants.size() <= 0) {
@@ -47,13 +47,13 @@ void HandleAdultScenes(std::vector<SceneManager::SceneData> activeScenes, float 
 		}
 
 		//@TODO: Be more particular about active animation
-		float arousalMod = participantHourMod * elapsedGameTime;
-		for (const auto actorRef : scene.Participants) {
-			ArousalManager::ModifyArousal(actorRef, arousalMod);
-		}
+		//float arousalMod = participantHourMod * elapsedGameTime;
+		//for (const auto actorRef : scene.Participants) {
+		//	ArousalManager::ModifyArousal(actorRef, arousalMod);
+		//}
 
-		float viewerMod = viewerHourMod * elapsedGameTime;
-		ModifyArousalOfSpecators(scene.Participants[0], scanDistance, viewerMod, scene.Participants);
+		//float viewerMod = viewerHourMod * elapsedGameTime;
+		//ModifyArousalOfSpecators(scene.Participants[0], scanDistance, viewerMod, scene.Participants);
 	}
 }
 
@@ -81,7 +81,7 @@ void WorldChecks::ArousalUpdateLoop()
 		//We dont want to run additional nudity checks if any active scenes, as checks and arousal propogation are done in scene handling
 		return;
 	}
-
+	/*
 	//If nudity check not enabled return
 	if (!Settings::GetSingleton()->GetPlayerNudityCheckEnabled()) {
 		return;
@@ -99,7 +99,7 @@ void WorldChecks::ArousalUpdateLoop()
 	float arousalMod = Settings::GetSingleton()->GetHourlyNudityArousalModifier() * elapsedGameTimeSinceLastCheck;
 
 	//Increase the arousal of any nearby npcs
-	ModifyArousalOfSpecators(player, ScanDistance, arousalMod);
+	ModifyArousalOfSpecators(player, ScanDistance, arousalMod);*/
 }
 
 void ModifyArousalOfSpecators(RE::Actor* source, float radius, float arousalMod, std::vector<RE::Actor*> blacklist)

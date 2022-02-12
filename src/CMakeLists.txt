@@ -24,6 +24,8 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Utilities/Ticker.h"
 	"${SOURCE_DIR}/Utilities/Utils.h"
 	"${SOURCE_DIR}/Utilities/Utils.cpp"
+	"${SOURCE_DIR}/Papyrus/PapyrusConfig.h"
+	"${SOURCE_DIR}/Papyrus/PapyrusConfig.cpp"
 	"${SOURCE_DIR}/PersistedData.h"
 	"${SOURCE_DIR}/PersistedData.cpp"
 	"${SOURCE_DIR}/Settings.h"

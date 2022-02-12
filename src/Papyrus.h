@@ -2,13 +2,6 @@
 
 namespace Papyrus
 {
-	//OSLAroused Settings
-	void UpdatePlayerNudityCheck(RE::StaticFunctionTag* base, bool newVal);
-	void UpdateHourlyNudityArousalModifier(RE::StaticFunctionTag* base, float newVal);
-	void UpdateDefaultArousalMultiplier(RE::StaticFunctionTag* base, float newMultiplier);
-	void UpdateHourlySceneParticipantArousalModifier(RE::StaticFunctionTag* base, float newVal);
-	void UpdateHourlySceneViewerArousalModifier(RE::StaticFunctionTag* base, float newVal);
-
 	//General State
 	float GetArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 	std::vector<float> GetArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs);

@@ -11,46 +11,57 @@ public:
 		return &singleton;
 	}
 
-	void SetPlayerNudityCheckEnabled(bool newVal) { 
+	void SetNudeArousalBaseline(float newVal) { 
 		Locker locker(m_Lock);
-		m_EnablePlayerNudityCheck = newVal; 
+		m_IsNudeBaseline = newVal; 
 	}
-	bool GetPlayerNudityCheckEnabled() const { 
+	float GetNudeArousalBaseline() const { 
 		Locker locker(m_Lock);
-		return m_EnablePlayerNudityCheck;
+		return m_IsNudeBaseline;
 	}
 
-	void SetHourlyNudityArousalModifier(float newVal)
+	void SetNudeViewingBaseline(float newVal)
 	{
 		Locker locker(m_Lock);
-		m_HourlyNudityArousalModifier = newVal;
+		m_ViewingNudeBaseline = newVal;
 	}
 	float GetHourlyNudityArousalModifier() const
 	{
 		Locker locker(m_Lock);
-		return m_HourlyNudityArousalModifier;
+		return m_ViewingNudeBaseline;
 	}
 
-	void SetHourlySceneParticipantArousalModifier(float newVal)
+	void SetSceneParticipantBaseline(float newVal)
 	{
 		Locker locker(m_Lock);
-		m_HourlySceneParticipantArousalModifier = newVal;
+		m_SceneParticipateBaseline = newVal;
 	}
-	float GetHourlySceneParticipantArousalModifier() const
+	float GetSceneParticipantBaseline() const
 	{
 		Locker locker(m_Lock);
-		return m_HourlySceneParticipantArousalModifier;
+		return m_SceneParticipateBaseline;
 	}
 
-	void SetHourlySceneViewerArousalModifier(float newVal)
+	void SetSceneViewingBaseline(float newVal)
 	{
 		Locker locker(m_Lock);
-		m_HourlySceneViewerArousalModifier = newVal;
+		m_SceneViewingBaseline = newVal;
 	}
-	float GetHourlySceneViewerArousalModifier() const
+	float GetSceneViewingBaseline() const
 	{
 		Locker locker(m_Lock);
-		return m_HourlySceneViewerArousalModifier;
+		return m_SceneViewingBaseline;
+	}
+
+	void SetSceneVictimGainsArousal(bool newVal)
+	{
+		Locker locker(m_Lock);
+		m_SceneVictimGainsArousal = newVal;
+	}
+	bool GetSceneVictimGainsArousal() const
+	{
+		Locker locker(m_Lock);
+		return m_SceneVictimGainsArousal;
 	}
 
 	void SetScanDistance(float newVal)
@@ -63,41 +74,15 @@ public:
 		Locker locker(m_Lock);
 		return m_ScanDistance;
 	}
-
-	void SetDecayRate(float newRate) {
-		Locker locker(m_Lock);
-		m_DecayRate = newRate;
-	}
-	float GetDecayRate() const {
-		Locker locker(m_Lock);
-		return m_DecayRate;
-	}
-
-	void SetDefaultArousalMultiplier(float newRate)
-	{
-		Locker locker(m_Lock);
-		m_DefaultArousalMultiplier = newRate;
-	}
-	float GetDefaultArousalMultiplier() const
-	{
-		Locker locker(m_Lock);
-		return m_DefaultArousalMultiplier;
-	}
-
 private:
-	bool m_EnablePlayerNudityCheck = true;
-	
-	float m_HourlyNudityArousalModifier = 20.f;
+	float m_IsNudeBaseline = 30.f;
+	float m_ViewingNudeBaseline = 20.f;
 
-	float m_HourlySceneParticipantArousalModifier = 40.f;
-	float m_HourlySceneViewerArousalModifier = 20.f;
+	float m_SceneParticipateBaseline = 50.f;
+	float m_SceneViewingBaseline = 30.f;
+	bool m_SceneVictimGainsArousal = false;
 
 	float m_ScanDistance = 5120.f;
-
-	//In SLA mode, this is the number of days to remove 1/3rd of Exposure and time rate
-	float m_DecayRate = 2.f;
-
-	float m_DefaultArousalMultiplier = 2.f;
 
 	mutable Lock m_Lock;
 };
