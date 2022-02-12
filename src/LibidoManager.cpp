@@ -47,3 +47,8 @@ float LibidoManager::ModifyBaseLibido(RE::Actor* actorRef, float modVal)
 
 	return SetBaseLibido(actorRef, modVal);
 }
+
+void LibidoManager::ActorLibidoModifiersUpdated(RE::Actor* actorRef)
+{
+	m_LibidoModifierCache.PurgeItem(actorRef);
+}

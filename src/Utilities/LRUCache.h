@@ -53,9 +53,9 @@ namespace Utilities
 		{
 			const auto it = m_CacheData.find(key);
 			if (it != m_CacheData.end()) {
+				m_CacheKeyTracker.erase((*it).second.second);
 				m_CacheData.erase(it);
 			}
-			m_CacheKeyTracker.erase(key);
 		}
 
 	private:

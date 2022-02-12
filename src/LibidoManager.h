@@ -23,6 +23,8 @@ public:
 	float SetBaseLibido(RE::Actor* actorRef, float newVal);
 	float ModifyBaseLibido(RE::Actor* actorRef, float modVal);
 
+	void ActorLibidoModifiersUpdated(RE::Actor* actorRef);
+
 private:
 	
 	//Cache of additional Arousal values on top of actors base libido (Resulting in Baseline Arousal)
