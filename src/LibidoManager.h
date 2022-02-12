@@ -17,7 +17,7 @@ public:
 		m_LibidoModifierCache(std::function<float(RE::Actor*)>(CalculateActorLibidoModifier), 100) {}
 	
 
-	float GetTotalLibido(RE::Actor* actorRef);
+	float GetBaselineArousal(RE::Actor* actorRef);
 
 	float GetBaseLibido(RE::Actor* actorRef);
 	float SetBaseLibido(RE::Actor* actorRef, float newVal);
@@ -25,6 +25,6 @@ public:
 
 private:
 	
-	//Cache of additional Libido values on top of actors base libido
+	//Cache of additional Arousal values on top of actors base libido (Resulting in Baseline Arousal)
 	Utilities::LRUCache<RE::Actor*, float> m_LibidoModifierCache;
 };

@@ -2,13 +2,25 @@
 
 #include "LibidoManager.h"
 
-float PapyrusInterface::GetTotalLibido(RE::StaticFunctionTag*, RE::Actor* actorRef)
+float PapyrusInterface::GetArousalBaseline(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
-	return LibidoManager::GetSingleton()->GetTotalLibido(actorRef);
+	return LibidoManager::GetSingleton()->GetBaselineArousal(actorRef);
+}
+
+float PapyrusInterface::GetLibido(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return LibidoManager::GetSingleton()->GetBaseLibido(actorRef);
+}
+
+float PapyrusInterface::SetLibido(RE::StaticFunctionTag*, RE::Actor* actorRef, float newVal)
+{
+	return LibidoManager::GetSingleton()->SetBaseLibido(actorRef, newVal);
 }
 
 bool PapyrusInterface::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
-	vm->RegisterFunction("GetTotalLibido", "OSLArousedNative", GetTotalLibido);
+	vm->RegisterFunction("GetArousalBaseline", "OSLArousedNative", GetArousalBaseline);
+	vm->RegisterFunction("GetLibido", "OSLArousedNative", GetLibido);
+	vm->RegisterFunction("SetLibido", "OSLArousedNative", SetLibido);
 	return true;
 }

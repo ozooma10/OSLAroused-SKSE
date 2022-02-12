@@ -38,6 +38,26 @@ namespace Utilities
 			}
 		}
 
+		void UpdateItem(const KeyType& key, const ValType& val)
+		{
+			auto it = m_CacheData.find(key);
+			if (it != m_CacheData.end()) {
+				(*it).second.first = val;
+			} else {
+				AddToCache(key, val);
+			}
+		}
+
+		//Remove item from cache so it will be recalculated on next fetch
+		void PurgeItem(const KeyType& key)
+		{
+			const auto it = m_CacheData.find(key);
+			if (it != m_CacheData.end()) {
+				m_CacheData.erase(it);
+			}
+			m_CacheKeyTracker.erase(key);
+		}
+
 	private:
 		void AddToCache(const KeyType& key, const ValType& val)
 		{

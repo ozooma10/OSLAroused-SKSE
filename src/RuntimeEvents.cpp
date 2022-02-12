@@ -1,8 +1,10 @@
 #include "RuntimeEvents.h"
 #include "Settings.h"
 #include "ArousalManager.h"
+#include "LibidoManager.h"
 #include "Papyrus.h"
 #include "SceneManager.h"
+#include "Managers/ActorStateManager.h"
 
 #include "Utilities/Utils.h"
 
@@ -18,15 +20,12 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 		return RE::BSEventNotifyControl::kContinue;
 	}
 
-	bool changedBody = false;
-
 	//First we want to check for nudity status (And send event if changed)
 	if (equipmentForm->IsArmor()) {
 		const auto armor = equipmentForm->As<RE::TESObjectARMO>();
 		if (armor && armor->HasPartOf(RE::BGSBipedObjectForm::BipedObjectSlot::kBody)) {
-			changedBody = true;
 			//This is body armor so send Change of naked state based on if equipped or not
-			Papyrus::Events::SendActorNakedUpdatedEvent(static_cast<RE::Actor*>(equipEvent->actor.get()), !equipEvent->equipped);
+			ActorStateManager::GetSingleton()->ActorNakedStateChanged(static_cast<RE::Actor*>(equipEvent->actor.get()), !equipEvent->equipped);
 		}
 	}
 

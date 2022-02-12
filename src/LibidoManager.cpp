@@ -18,7 +18,7 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 	return libidoModifier;
 }
 
-float LibidoManager::GetTotalLibido(RE::Actor* actorRef)
+float LibidoManager::GetBaselineArousal(RE::Actor* actorRef)
 {
 	return m_LibidoModifierCache(actorRef) + GetBaseLibido(actorRef);
 }

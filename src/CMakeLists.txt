@@ -26,6 +26,8 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Utilities/Ticker.h"
 	"${SOURCE_DIR}/Utilities/Utils.h"
 	"${SOURCE_DIR}/Utilities/Utils.cpp"
+	"${SOURCE_DIR}/Managers/ActorStateManager.h"
+	"${SOURCE_DIR}/Managers/ActorStateManager.cpp"
  )
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})

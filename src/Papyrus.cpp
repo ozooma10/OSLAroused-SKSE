@@ -6,6 +6,7 @@
 #include "Debug.h"
 #include "SceneManager.h"
 #include "Utilities/Utils.h"
+#include "Managers/ActorStateManager.h"
 
 void Papyrus::UpdatePlayerNudityCheck(RE::StaticFunctionTag*, bool newVal)
 {
@@ -157,7 +158,7 @@ float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* )//actorRef)
 
 bool Papyrus::IsActorNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
-	return Utilities::Actor::IsNaked(actorRef);
+	return ActorStateManager::GetSingleton()->GetActorNaked(actorRef);
 }
 
 void Papyrus::RegisterSceneStart(RE::StaticFunctionTag*, bool bIsOstim, int sceneId, RE::reference_array<RE::Actor*> actorRefs)
