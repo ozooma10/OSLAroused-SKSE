@@ -1,7 +1,7 @@
-#include "SavedDataManager.h"
+#include "PersistedData.h"
 #include "Managers/SceneManager.h"
 
-namespace SavedDataManager
+namespace PersistedData
 {
 	//BaseData is based off how powerof3's did it in Afterlife
 	template <typename T>

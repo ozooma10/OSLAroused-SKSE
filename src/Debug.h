@@ -1,20 +1,20 @@
 #pragma once
 
-#include "SavedDataManager.h"
+#include "PersistedData.h"
 
 namespace Debug
 {
 	void DumpAllArousalData()
 	{
-		SavedDataManager::ArousalData::GetSingleton()->DumpToLog();
-		SavedDataManager::BaseLibidoData::GetSingleton()->DumpToLog();
-		SavedDataManager::LastCheckTimeData::GetSingleton()->DumpToLog();
+		PersistedData::ArousalData::GetSingleton()->DumpToLog();
+		PersistedData::BaseLibidoData::GetSingleton()->DumpToLog();
+		PersistedData::LastCheckTimeData::GetSingleton()->DumpToLog();
 	}
 
 	void ClearAllArousalData()
 	{
-		SavedDataManager::ArousalData::GetSingleton()->Clear();
-		SavedDataManager::BaseLibidoData::GetSingleton()->Clear();
-		SavedDataManager::LastCheckTimeData::GetSingleton()->Clear();
+		PersistedData::ArousalData::GetSingleton()->Clear();
+		PersistedData::BaseLibidoData::GetSingleton()->Clear();
+		PersistedData::LastCheckTimeData::GetSingleton()->Clear();
 	}
 }

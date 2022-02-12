@@ -1,4 +1,4 @@
-#include "SavedDataManager.h"
+#include "PersistedData.h"
 #include "Utils.h"
 
 //Keyword logic from powerof3's CommonLibSSE implementation
@@ -37,7 +37,7 @@ bool Utilities::Keywords::AddKeyword(RE::TESForm* form, RE::BGSKeyword* newKeywo
 	RE::free(oldData);
 
 	//Add keyword to saved keyword distribution
-	SavedDataManager::ArmorKeywordData::GetSingleton()->AppendData(form->formID, newKeyword->formID);
+	PersistedData::ArmorKeywordData::GetSingleton()->AppendData(form->formID, newKeyword->formID);
 
 	return true;
 }
@@ -83,14 +83,14 @@ bool Utilities::Keywords::RemoveKeyword(RE::TESForm* form, RE::BGSKeyword* keywo
 	RE::free(oldData);
 
 	//Remove keyword from saved keyword distribution if exists
-	SavedDataManager::ArmorKeywordData::GetSingleton()->RemoveData(form->formID, keyword->formID);
+	PersistedData::ArmorKeywordData::GetSingleton()->RemoveData(form->formID, keyword->formID);
 
 	return true;
 }
 
 void Utilities::Keywords::DistributeKeywords()
 {
-	const auto keywordData = SavedDataManager::ArmorKeywordData::GetSingleton()->GetData();
+	const auto keywordData = PersistedData::ArmorKeywordData::GetSingleton()->GetData();
 
 	logger::info("Trying To Distribute {} Keywords", keywordData.size());
 

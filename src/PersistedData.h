@@ -1,5 +1,5 @@
 #pragma once
-namespace SavedDataManager
+namespace PersistedData
 {
 	template <typename T>
 	//BaseData is based off how powerof3's did it in Afterlife

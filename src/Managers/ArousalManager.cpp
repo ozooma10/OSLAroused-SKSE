@@ -1,10 +1,10 @@
 #include "ArousalManager.h"
-#include "SavedDataManager.h"
+#include "PersistedData.h"
 #include "Utilities/Utils.h"
 #include "Papyrus.h"
 #include "Settings.h"
 
-using namespace SavedDataManager;
+using namespace PersistedData;
 
 namespace ArousalManager
 {
