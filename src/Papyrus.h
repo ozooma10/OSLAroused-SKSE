@@ -13,18 +13,7 @@ namespace Papyrus
 	float ModifyArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
 	void ModifyArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs, float value);
 
-	float SetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-	float GetArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef);
-	float ModifyArousalMultiplier(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-
-	float GetExposure(RE::StaticFunctionTag* base, RE::Actor* actorRef);
-
 	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
-	float GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
-
-	float SetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-	float ModifyTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-	float GetTimeRate(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	//Actor State
 	bool IsActorNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
@@ -52,7 +41,6 @@ namespace Papyrus
 	{
 		void SendActorArousalUpdatedEvent(RE::Actor* actorRef, float newExposure);
 		void SendActorLibidoUpdatedEvent(RE::Actor* actorRef, float newLibido);
-
 
 		void SendActorNakedUpdatedEvent(RE::Actor* actorRef, bool newNaked);
 	}

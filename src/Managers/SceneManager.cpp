@@ -4,6 +4,10 @@ void SceneManager::RegisterScene(SceneData scene)
 {
 	Locker locker(m_Lock);
 	m_Scenes.push_back(scene);
+
+	for(auto & partcipant : scene.Participants) {
+		m_SceneParticipantMap[partcipant] = true;
+	}
 }
 
 void SceneManager::RemoveScene(SceneFramework framework, int sceneId)
@@ -13,10 +17,17 @@ void SceneManager::RemoveScene(SceneFramework framework, int sceneId)
 		return scene.Framework == framework && scene.SceneId == sceneId;
 	});
 	if (scenesToRemove != m_Scenes.end()) {
+		for (auto it = scenesToRemove; it != m_Scenes.end(); it++) {
+			for (auto& partcipant : (*it).Participants) {
+				m_SceneParticipantMap[partcipant] = false;
+			}
+		}
+		
 		m_Scenes.erase(
 			scenesToRemove
 		);
 	}
+	
 }
 
 void SceneManager::ClearScenes()
@@ -25,8 +36,33 @@ void SceneManager::ClearScenes()
 	m_Scenes.clear();
 }
 
+bool SceneManager::IsActorParticipating(RE::Actor* actorRef)
+{
+	return m_SceneParticipantMap[actorRef];
+}
+
+bool SceneManager::IsActorViewing(RE::Actor* actorRef)
+{
+	if (const auto lastViewedGameTime = m_SceneViewingMap[actorRef]) {
+		//@TODO: Calculate time based off global update cycle [not just 0.72 game hours]
+		if (RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastViewedGameTime < 0.03f) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void SceneManager::UpdateSceneSpectators(std::vector<RE::Actor*> spectators)
+{
+	float currentTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
+	for (const auto spectator : spectators) {
+		m_SceneViewingMap[spectator] = currentTime;
+	}
+}
+
 std::vector<SceneManager::SceneData> SceneManager::GetAllScenes() const
 {
 	Locker locker(m_Lock);
 	return m_Scenes;
 }
+

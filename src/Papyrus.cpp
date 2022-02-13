@@ -54,40 +54,6 @@ void Papyrus::ModifyArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<
 	}
 }
 
-float Papyrus::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* /* actorRef*/, float value)
-{
-	//Just clamp between 0 and 100?
-	value = std::clamp(value, 0.0f, 100.f);
-
-	//SavedDataManager::MultiplierData::GetSingleton()->SetData(actorRef->formID, value);
-	return value;
-}
-
-float Papyrus::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* /* actorRef */)
-{
-	//return Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
-	return 0.f;
-}
-
-float Papyrus::ModifyArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* /* actorRef*/,float /* float value*/)
-{
-	//float curMult = Serialization::MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
-	//float newVal = curMult + value;
-	//Serialization::MultiplierData::GetSingleton()->SetData(actorRef->formID, newVal);
-	//return newVal;
-	return 0.f;
-}
-
-float Papyrus::GetExposure(RE::StaticFunctionTag*, RE::Actor* )
-{
-	//If we are in sla mode get exposure, otherwise just return arousal
-	//float curTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
-	//auto lastCheckTime = Serialization::LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-	//Serialization::LastCheckTimeData::GetSingleton()->SetData(actorRef->formID, curTime);
-	//return ArousalManager::GetSexlabExposure(actorRef, curTime - lastCheckTime);
-	return 0.f;
-}
-
 float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* )
 {
 	//float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
@@ -96,40 +62,6 @@ float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* )
 	//}
 
 	//return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
-	return 0.f;
-}
-
-float Papyrus::GetLastOrgasmFrustrationArousal(RE::StaticFunctionTag*, RE::Actor*)
-{
-	return 0.f;
-	//ArousalManager::GetLastOrgasmArousal(actorRef);
-}
-
-float Papyrus::SetTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
-{
-	if (!actorRef) {
-		return 0.f;
-	}
-	value = std::clamp(value, 0.f, 100.f);
-	//Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, value);
-	return value;
-}
-
-float Papyrus::ModifyTimeRate(RE::StaticFunctionTag*, RE::Actor* actorRef, float )//value)
-{
-	if (!actorRef) {
-		return 0.f;
-	}
-	//float curRate = Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
-	//float newVal = curRate + value;
-	//Serialization::TimeRateData::GetSingleton()->SetData(actorRef->formID, newVal);
-	//return newVal;
-	return 0.f;
-}
-
-float Papyrus::GetTimeRate(RE::StaticFunctionTag*, RE::Actor* )//actorRef)
-{
-	//return Serialization::TimeRateData::GetSingleton()->GetData(actorRef->formID, 10.0);
 	return 0.f;
 }
 
@@ -208,17 +140,7 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("ModifyArousal", "OSLArousedNative", ModifyArousal);
 	vm->RegisterFunction("ModifyArousalMultiple", "OSLArousedNative", ModifyArousalMultiple);
 
-	vm->RegisterFunction("SetArousalMultiplier", "OSLArousedNative", SetArousalMultiplier);
-	vm->RegisterFunction("GetArousalMultiplier", "OSLArousedNative", GetArousalMultiplier);
-	vm->RegisterFunction("ModifyArousalMultiplier", "OSLArousedNative", ModifyArousalMultiplier);
-	
-	vm->RegisterFunction("GetExposure", "OSLArousedNative", GetExposure);
 	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
-	vm->RegisterFunction("GetLastOrgasmFrustrationArousal", "OSLArousedNative", GetLastOrgasmFrustrationArousal);
-	
-	vm->RegisterFunction("SetTimeRate", "OSLArousedNative", SetTimeRate);
-	vm->RegisterFunction("ModifyTimeRate", "OSLArousedNative", ModifyTimeRate);
-	vm->RegisterFunction("GetTimeRate", "OSLArousedNative", GetTimeRate);
 	
 	//Actor State
 	vm->RegisterFunction("IsActorNaked", "OSLArousedNative", IsActorNaked);

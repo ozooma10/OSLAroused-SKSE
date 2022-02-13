@@ -25,7 +25,7 @@ public:
 		Locker locker(m_Lock);
 		m_ViewingNudeBaseline = newVal;
 	}
-	float GetHourlyNudityArousalModifier() const
+	float GetNudeViewingBaseline() const
 	{
 		Locker locker(m_Lock);
 		return m_ViewingNudeBaseline;

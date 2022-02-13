@@ -1,6 +1,7 @@
 #include "LibidoManager.h"
 #include "PersistedData.h"
 #include "Utilities/Utils.h"
+#include "Settings.h"
 
 float CalculateActorLibidoModifier(RE::Actor* actorRef)
 {
@@ -8,11 +9,21 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 	//Check if near scene
 	//Check Clothing
 	//Check Devices
+	const auto settings = Settings::GetSingleton();
 
 	float libidoModifier = 0.f;
-	if (Utilities::Actor::IsNaked(actorRef))
+	if (Utilities::Actor::IsNakedCached(actorRef))
 	{
-		libidoModifier += 50;
+		libidoModifier += settings->GetNudeArousalBaseline();
+	} else if (Utilities::Actor::IsViewingNaked(actorRef)) {
+		libidoModifier += settings->GetNudeViewingBaseline();
+	}
+
+	if (Utilities::Actor::IsParticipatingInScene(actorRef)) {
+		libidoModifier += settings->GetSceneParticipantBaseline();
+	}
+	else if (Utilities::Actor::IsViewingScene(actorRef)) {
+		libidoModifier += settings->GetSceneViewingBaseline();
 	}
 
 	return libidoModifier;

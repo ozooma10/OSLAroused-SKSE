@@ -20,7 +20,12 @@ public:
 	bool GetActorNaked(RE::Actor* actorRef);
 	void ActorNakedStateChanged(RE::Actor* actorRef, bool newNaked);
 
+	bool GetActorSpectatingNaked(RE::Actor* actorRef);
+	void UpdateActorsSpectating(std::vector<RE::Actor*> spectators);
+
 private:
 
 	Utilities::LRUCache<RE::Actor*, bool> m_ActorNakedStateCache;
+
+	std::map<RE::Actor*, float> m_NakedSpectatingMap;
 };

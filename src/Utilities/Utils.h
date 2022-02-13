@@ -1,6 +1,8 @@
 #pragma once
 
 #include <random>
+#include "Managers/SceneManager.h"
+#include "Managers/ActorStateManager.h"
 
 namespace Utilities
 {
@@ -27,6 +29,26 @@ namespace Utilities
 		inline bool IsNaked(RE::Actor* actorRef)
 		{
 			return actorRef->GetWornArmor(RE::BGSBipedObjectForm::BipedObjectSlot::kBody) == nullptr;
+		}
+
+		inline bool IsNakedCached(RE::Actor* actorRef)
+		{
+			return ActorStateManager::GetSingleton()->GetActorNaked(actorRef);
+		}
+
+		inline bool IsViewingNaked(RE::Actor* actorRef)
+		{
+			return ActorStateManager::GetSingleton()->GetActorSpectatingNaked(actorRef);
+		}
+
+		inline bool IsParticipatingInScene(RE::Actor* actorRef)
+		{
+			return SceneManager::GetSingleton()->IsActorParticipating(actorRef);
+		}
+
+		inline bool IsViewingScene(RE::Actor* actorRef)
+		{
+			return SceneManager::GetSingleton()->IsActorViewing(actorRef);
 		}
 	}
 }
