@@ -51,5 +51,10 @@ namespace Utilities
 			return SceneManager::GetSingleton()->IsActorViewing(actorRef);
 		}
 	}
+
+	namespace World
+	{
+		void ForEachReferenceInRange(RE::TESObjectREFR* origin, float radius, std::function<bool(RE::TESObjectREFR& ref)> callback);
+	}
 }
 #pragma once

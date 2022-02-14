@@ -26,7 +26,7 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 		libidoModifier += settings->GetSceneViewingBaseline();
 	}
 
-	return libidoModifier;
+	return std::clamp(libidoModifier, 0.f, 100.f);
 }
 
 float LibidoManager::UpdateActorLibido(RE::Actor* actorRef, float gameHoursPassed, float targetLibido)
@@ -38,14 +38,14 @@ float LibidoManager::UpdateActorLibido(RE::Actor* actorRef, float gameHoursPasse
 	//After 1 game hour, distance from curent to target is 10% closer 
 	float t = 1.f - pow(epsilon, gameHoursPassed);
 	float newVal = std::lerp(currentVal, targetLibido, t);
-	logger::trace("UpdateActorLibido: Lerped MOd from {} to {} DIFF: {}  t: {}", currentVal, newVal, newVal - currentVal, t);
+	//logger::trace("UpdateActorLibido: Lerped MOd from {} to {} DIFF: {}  t: {}", currentVal, newVal, newVal - currentVal, t);
 
 	return SetBaseLibido(actorRef, newVal);
 }
 
 float LibidoManager::GetBaselineArousal(RE::Actor* actorRef)
 {
-	return m_LibidoModifierCache(actorRef) + GetBaseLibido(actorRef);
+	return std::max(m_LibidoModifierCache(actorRef), GetBaseLibido(actorRef));
 }
 
 float LibidoManager::GetBaseLibido(RE::Actor* actorRef)

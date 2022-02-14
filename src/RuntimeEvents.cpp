@@ -91,14 +91,17 @@ std::vector<RE::Actor*> GetNakedActorsInCell(RE::Actor* source)
 		return nakedActors;
 	}
 
+	float scanDistance = Settings::GetSingleton()->GetScanDistance();
 	const auto actorStateManager = ActorStateManager::GetSingleton();
 
-	source->parentCell->ForEachReference([&](RE::TESObjectREFR& ref) {
+	Utilities::World::ForEachReferenceInRange(source, scanDistance, [&](RE::TESObjectREFR& ref) {
 		auto refBase = ref.GetBaseObject();
 		auto actor = ref.As<RE::Actor>();
-		if (actor && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC))) && actorStateManager->GetActorNaked(actor)) {
-			//If Actor is naked
-			nakedActors.push_back(actor);
+		if (actor && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC)))) {
+			if(actorStateManager->IsHumanoidActor(actor) && actorStateManager->GetActorNaked(actor)) {
+				//If Actor is naked
+				nakedActors.push_back(actor);
+			}
 		}
 		return true;
 	});
@@ -122,9 +125,8 @@ std::vector<RE::Actor*> GetNearbySpectatingActors(RE::Actor* source, float radiu
 	forceDetectDistance *= forceDetectDistance; 
 	radius *= radius;
 
-
-	auto sourceLocation = source->GetPosition();
-	source->parentCell->ForEachReferenceInRange(sourceLocation, radius, [&](RE::TESObjectREFR& ref) {
+	const auto sourceLocation = source->GetPosition();
+	Utilities::World::ForEachReferenceInRange(source, radius, [&](RE::TESObjectREFR& ref) {
 		auto refBase = ref.GetBaseObject();
 		auto actor = ref.As<RE::Actor>();
 		if (actor && actor != source && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC)))) {

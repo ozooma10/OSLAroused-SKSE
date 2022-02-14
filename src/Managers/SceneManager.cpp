@@ -1,4 +1,5 @@
 #include "Managers/SceneManager.h"
+#include "Managers/LibidoManager.h"
 
 void SceneManager::RegisterScene(SceneData scene)
 {
@@ -7,6 +8,7 @@ void SceneManager::RegisterScene(SceneData scene)
 
 	for(auto & partcipant : scene.Participants) {
 		m_SceneParticipantMap[partcipant] = true;
+		LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated(partcipant);
 	}
 }
 
@@ -20,6 +22,7 @@ void SceneManager::RemoveScene(SceneFramework framework, int sceneId)
 		for (auto it = scenesToRemove; it != m_Scenes.end(); it++) {
 			for (auto& partcipant : (*it).Participants) {
 				m_SceneParticipantMap[partcipant] = false;
+				LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated(partcipant);
 			}
 		}
 		
@@ -45,7 +48,7 @@ bool SceneManager::IsActorViewing(RE::Actor* actorRef)
 {
 	if (const auto lastViewedGameTime = m_SceneViewingMap[actorRef]) {
 		//@TODO: Calculate time based off global update cycle [not just 0.72 game hours]
-		if (RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastViewedGameTime < 0.03f) {
+		if (RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastViewedGameTime < 0.1f) {
 			return true;
 		}
 	}
@@ -57,6 +60,7 @@ void SceneManager::UpdateSceneSpectators(std::vector<RE::Actor*> spectators)
 	float currentTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
 	for (const auto spectator : spectators) {
 		m_SceneViewingMap[spectator] = currentTime;
+		LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated(spectator);
 	}
 }
 

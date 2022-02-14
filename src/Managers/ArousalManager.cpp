@@ -75,7 +75,7 @@ namespace ArousalManager
 		float epsilon = 0.5f;
 		float t = 1.f - std::pow(epsilon, gameHoursPassed);
 		float newArousal = std::lerp(currentArousal, currentArousalBaseline, t);
-		logger::trace("CalculateArousal: from: {} newArousal {} Diff: {}  t: {}", currentArousal, newArousal, newArousal - currentArousal, t);
+		//logger::trace("CalculateArousal: from: {} newArousal {} Diff: {}  t: {}", currentArousal, newArousal, newArousal - currentArousal, t);
 
 		return newArousal;
 	}
