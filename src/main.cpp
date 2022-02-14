@@ -2,10 +2,10 @@
 
 #include "RuntimeEvents.h"
 #include "Papyrus.h"
-#include "PapyrusInterface.h"
 #include "Utilities/Utils.h"
 #include "PersistedData.h"
 #include "Papyrus/PapyrusConfig.h"
+#include "Papyrus/PapyrusInterface.h"
 
 namespace
 {

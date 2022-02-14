@@ -2,18 +2,6 @@
 
 namespace Papyrus
 {
-	//General State
-	float GetArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef);
-	std::vector<float> GetArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs);
-	float GetArousalNoSideEffects(RE::StaticFunctionTag* base, RE::Actor* actorRef);
-
-	float SetArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-	void SetArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs, float value);
-
-	float ModifyArousal(RE::StaticFunctionTag* base, RE::Actor* actorRef, float value);
-	void ModifyArousalMultiple(RE::StaticFunctionTag* base, RE::reference_array<RE::Actor*> actorRefs, float value);
-
-	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
 	//Actor State
 	bool IsActorNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);

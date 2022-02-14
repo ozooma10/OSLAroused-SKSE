@@ -8,62 +8,7 @@
 #include "Managers/ArousalManager.h"
 #include "Managers/SceneManager.h"
 
-float Papyrus::GetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
-{
-	return ArousalManager::GetArousal(actorRef);
-}
 
-std::vector<float> Papyrus::GetArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*> actorRefs)
-{
-	std::vector<float> results;
-
-	for (const auto actorRef : actorRefs) {
-		results.push_back(ArousalManager::GetArousal(actorRef));
-	}
-
-	return results;
-}
-
-float Papyrus::GetArousalNoSideEffects(RE::StaticFunctionTag*, RE::Actor* actorRef)
-{
-	return ArousalManager::GetArousal(actorRef, false);
-}
-
-float Papyrus::SetArousal(RE::StaticFunctionTag*, RE::Actor*, float)
-{
-	return 0.f;
-	//return ArousalManager::SetArousal(actorRef, value);
-}
-
-void Papyrus::SetArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*>, float)
-{
-	//for (const auto actorRef : actorRefs) {
-		//ArousalManager::SetArousal(actorRef, value);
-	//}
-}
-
-float Papyrus::ModifyArousal(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
-{
-	return ArousalManager::ModifyArousal(actorRef, value);
-}
-
-void Papyrus::ModifyArousalMultiple(RE::StaticFunctionTag*, RE::reference_array<RE::Actor*> actorRefs, float value)
-{
-	for (const auto actorRef : actorRefs) {
-		ArousalManager::ModifyArousal(actorRef, value);
-	}
-}
-
-float Papyrus::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor* )
-{
-	//float lastOrgasmTime = Serialization::LastOrgasmTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-	//if (lastOrgasmTime < 0) {
-		//lastOrgasmTime = 0;
-	//}
-
-	//return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
-	return 0.f;
-}
 
 bool Papyrus::IsActorNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
@@ -131,16 +76,7 @@ void Papyrus::ClearAllArousalData(RE::StaticFunctionTag*)
 bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	//General State
-	vm->RegisterFunction("GetArousal", "OSLArousedNative", GetArousal);
-	vm->RegisterFunction("GetArousalMultiple", "OSLArousedNative", GetArousalMultiple);
-	vm->RegisterFunction("GetArousalNoSideEffects", "OSLArousedNative", GetArousalNoSideEffects);
 
-	vm->RegisterFunction("SetArousal", "OSLArousedNative", SetArousal);
-	vm->RegisterFunction("SetArousalMultiple", "OSLArousedNative", SetArousalMultiple);
-	vm->RegisterFunction("ModifyArousal", "OSLArousedNative", ModifyArousal);
-	vm->RegisterFunction("ModifyArousalMultiple", "OSLArousedNative", ModifyArousalMultiple);
-
-	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
 	
 	//Actor State
 	vm->RegisterFunction("IsActorNaked", "OSLArousedNative", IsActorNaked);

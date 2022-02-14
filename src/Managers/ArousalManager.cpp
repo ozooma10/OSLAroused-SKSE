@@ -45,20 +45,11 @@ namespace ArousalManager
 		return value;
 	}
 
-	float ModifyArousal(RE::Actor* , float modValue)
+	float ModifyArousal(RE::Actor* actorRef, float modValue)
 	{
-		//logger::trace("ModifyArousal: {}  by {}", actorRef->GetDisplayFullName(), modValue);
+		float currentArousal = GetArousal(actorRef, false);
 
-		if (modValue > 0) {
-			//modValue *= MultiplierData::GetSingleton()->GetData(actorRef->formID, Settings::GetSingleton()->GetDefaultArousalMultiplier());
-		}
-
-		//If we are in sl mode operate on exposure rather then arousal
-		//const auto lastCheckTime = LastCheckTimeData::GetSingleton()->GetData(actorRef->formID, 0.f);
-		//modValue += GetSexlabExposure(actorRef, RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastCheckTime, false);
-
-		return 0.f;
-		//return SetArousal(actorRef, modValue);
+		return SetArousal(actorRef, currentArousal + modValue);
 	}
 
 	float CalculateArousal(RE::Actor* actorRef, float gameHoursPassed)

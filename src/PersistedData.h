@@ -119,15 +119,31 @@ namespace PersistedData
 	class LastCheckTimeData final : public BaseFormFloat
 	{
 	public:
-		static ArousalData* GetSingleton()
+		static LastCheckTimeData* GetSingleton()
 		{
-			static ArousalData singleton;
+			static LastCheckTimeData singleton;
 			return &singleton;
 		}
 
 		const char* GetType() override
 		{
 			return "LastCheckTime";
+		}
+	};
+
+	
+	class LastOrgasmTimeData final : public BaseFormFloat
+	{
+	public:
+		static LastOrgasmTimeData* GetSingleton()
+		{
+			static LastOrgasmTimeData singleton;
+			return &singleton;
+		}
+
+		const char* GetType() override
+		{
+			return "LastOrgasmTime";
 		}
 	};
 
@@ -150,6 +166,7 @@ namespace PersistedData
 	constexpr std::uint32_t kArousalDataKey = 'OSLA';
 	constexpr std::uint32_t kBaseLibidoDataKey = 'OSLB';
 	constexpr std::uint32_t kLastCheckTimeDataKey = 'OSLC';
+	constexpr std::uint32_t kLastOrgasmTimeDataKey = 'OSLO';
 	constexpr std::uint32_t kArmorKeywordDataKey = 'OSLK';
 
 	std::string DecodeTypeCode(std::uint32_t typeCode);

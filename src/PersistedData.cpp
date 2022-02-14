@@ -181,6 +181,11 @@ namespace PersistedData
 			logger::critical("Failed to save Arousal Last Check Time Data");
 		}
 
+		const auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
+		if (!lastOrgasmData->Save(serializationInterface, kLastOrgasmTimeDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Last Orgasm Time Data");
+		}
+
 		const auto armorKeywordData = ArmorKeywordData::GetSingleton();
 		if (!armorKeywordData->Save(serializationInterface, kArmorKeywordDataKey, kSerializationVersion)) {
 			logger::critical("Failed to save Armor Keyword Data");
@@ -229,6 +234,14 @@ namespace PersistedData
 					}
 				}
 				break;
+			case kLastOrgasmTimeDataKey:
+				{
+					auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
+					if (!lastOrgasmData->Load(serializationInterface)) {
+						logger::critical("Failed to Load LastOrgasm Data"sv);
+					}
+				}
+				break;
 			case kArmorKeywordDataKey:
 				{
 					auto armorKeywordData = ArmorKeywordData::GetSingleton();
@@ -254,6 +267,8 @@ namespace PersistedData
 		baseLibidoData->Clear();
 		auto lastCheckData = LastCheckTimeData::GetSingleton();
 		lastCheckData->Clear();
+		auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();
+		lastOrgasmData->Clear();
 		auto armorKeywordData = ArmorKeywordData::GetSingleton();
 		armorKeywordData->Clear();
 
