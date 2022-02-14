@@ -3,6 +3,9 @@
 namespace PapyrusConfig
 {
 	//OSLAroused Settings
+	void SetArousalChangeRate(RE::StaticFunctionTag* base, float newVal);
+	void SetLibidoChangeRate(RE::StaticFunctionTag* base, float newVal);
+
 	void SetSceneParticipantBaseline(RE::StaticFunctionTag* base, float newVal);
 	void SetSceneViewingBaseline(RE::StaticFunctionTag* base, float newVal);
 	void SetSceneVictimGainsArousal(RE::StaticFunctionTag* base, bool newVal);

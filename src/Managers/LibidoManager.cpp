@@ -32,7 +32,7 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 float LibidoManager::UpdateActorLibido(RE::Actor* actorRef, float gameHoursPassed, float targetLibido)
 {
 	//Move base libido towards targetlibido
-	float epsilon = 0.9f;
+	float epsilon = Settings::GetSingleton()->GetLibidoChangeRate();
 	float currentVal = GetBaseLibido(actorRef);
 
 	//After 1 game hour, distance from curent to target is 10% closer 

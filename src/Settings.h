@@ -11,6 +11,28 @@ public:
 		return &singleton;
 	}
 
+	void SetArousalChangeRate(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_ArousalChangeRate = 1.f - (newVal / 100);
+	}
+	float GetArousalChangeRate() const
+	{
+		Locker locker(m_Lock);
+		return m_ArousalChangeRate;
+	}
+
+	void SetLibidoChangeRate(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_LibidoChangeRate = 1.f - (newVal / 100);
+	}
+	float GetLibidoChangeRate() const
+	{
+		Locker locker(m_Lock);
+		return m_LibidoChangeRate;
+	}
+
 	void SetNudeArousalBaseline(float newVal) { 
 		Locker locker(m_Lock);
 		m_IsNudeBaseline = newVal; 
@@ -75,6 +97,9 @@ public:
 		return m_ScanDistance;
 	}
 private:
+	float m_ArousalChangeRate = 0.5f;
+	float m_LibidoChangeRate = 0.1f;
+
 	float m_IsNudeBaseline = 30.f;
 	float m_ViewingNudeBaseline = 20.f;
 

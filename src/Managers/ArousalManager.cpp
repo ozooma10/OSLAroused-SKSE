@@ -72,7 +72,10 @@ namespace ArousalManager
 
 		float currentArousalBaseline = LibidoManager::GetSingleton()->GetBaselineArousal(actorRef);
 
-		float epsilon = 0.5f;
+		float epsilon = Settings::GetSingleton()->GetArousalChangeRate();
+		logger::trace("CalculateArousal: epsilon: {}", epsilon);
+
+
 		float t = 1.f - std::pow(epsilon, gameHoursPassed);
 		float newArousal = std::lerp(currentArousal, currentArousalBaseline, t);
 		//logger::trace("CalculateArousal: from: {} newArousal {} Diff: {}  t: {}", currentArousal, newArousal, newArousal - currentArousal, t);
