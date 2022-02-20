@@ -1,6 +1,18 @@
 #include "PersistedData.h"
 #include "Utils.h"
 
+RE::FormID Utilities::Forms::ResolveFormId(uint32_t modIndex, RE::FormID rawFormId)
+{
+	if (modIndex < 0xFF) {
+		//ESP/ESM format
+		return (rawFormId & 0x00FFFFFF) | (((uint32_t)modIndex) << 24);
+	} else if (modIndex > 0xFF) {
+		//ESL FLag
+		return (modIndex << 12) | (rawFormId & 0x00000FFF);
+	}
+	return 0;
+}
+
 //Keyword logic from powerof3's CommonLibSSE implementation
 bool Utilities::Keywords::AddKeyword(RE::TESForm* form, RE::BGSKeyword* newKeyword)
 {

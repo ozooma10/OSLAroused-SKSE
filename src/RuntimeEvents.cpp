@@ -6,6 +6,8 @@
 #include "Managers/ActorStateManager.h"
 #include "Papyrus.h"
 
+#include "Integrations/DevicesIntegration.h"
+
 #include "Utilities/Utils.h"
 
 RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TESEquipEvent* equipEvent, RE::BSTEventSource<RE::TESEquipEvent>*)
@@ -27,6 +29,9 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 			//This is body armor so send Change of naked state based on if equipped or not
 			ActorStateManager::GetSingleton()->ActorNakedStateChanged(static_cast<RE::Actor*>(equipEvent->actor.get()), !equipEvent->equipped);
 		}
+
+		//Changed equipped armor so update devices
+		DevicesIntegration::GetSingleton()->ActiveEquipmentChanged(static_cast<RE::Actor*>(equipEvent->actor.get()), equipmentForm, equipEvent->equipped);
 	}
 
 	return RE::BSEventNotifyControl::kContinue;

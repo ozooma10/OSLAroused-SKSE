@@ -2,6 +2,30 @@
 using Lock = std::recursive_mutex;
 using Locker = std::lock_guard<Lock>;
 
+struct DeviceArousalBaselineChange
+{
+	float Belt = 20;
+	float Collar = 5;
+	float LegCuffs = 5;
+	float ArmCuffs = 5;
+	float Bra = 10;
+	float Gag = 10;
+	float PiercingsNipple = 10;
+	float PiercingsVaginal = 10;
+	float Blindfold = 5;
+	float Harness = 10;
+	float PlugVaginal = 20;
+	float PlugAnal = 20;
+	float Corset = 10;
+	float Boots = 5;
+	float Gloves = 5;
+	float Hood = 20;
+	float Suit = 20;
+	float HeavyBondage = 10;
+	float BondageMittens = 10;
+};
+
+
 class Settings
 {
 public:
@@ -96,6 +120,18 @@ public:
 		Locker locker(m_Lock);
 		return m_ScanDistance;
 	}
+
+	void SetDeviceBaseline(DeviceArousalBaselineChange newVal)
+	{
+		Locker locker(m_Lock);
+		m_DeviceBaseline = newVal;
+	}
+	DeviceArousalBaselineChange GetDeviceBaseline() const
+	{
+		Locker locker(m_Lock);
+		return m_DeviceBaseline;
+	}
+
 private:
 	float m_ArousalChangeRate = 0.5f;
 	float m_LibidoChangeRate = 0.1f;
@@ -108,6 +144,8 @@ private:
 	bool m_SceneVictimGainsArousal = false;
 
 	float m_ScanDistance = 5120.f;
+
+	DeviceArousalBaselineChange m_DeviceBaseline;
 
 	mutable Lock m_Lock;
 };

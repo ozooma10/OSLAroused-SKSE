@@ -14,6 +14,11 @@ namespace Utilities
 		return dis(mt);
 	}
 
+	namespace Forms
+	{
+		RE::FormID ResolveFormId(uint32_t modIndex, RE::FormID rawFormId);
+	}
+
 	//Keyword logic based off powerof3's CommonLibSSE implementation
 	namespace Keywords
 	{

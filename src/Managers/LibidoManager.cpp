@@ -2,6 +2,7 @@
 #include "PersistedData.h"
 #include "Utilities/Utils.h"
 #include "Settings.h"
+#include "Integrations/DevicesIntegration.h"
 
 float CalculateActorLibidoModifier(RE::Actor* actorRef)
 {
@@ -26,6 +27,9 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 		libidoModifier += settings->GetSceneViewingBaseline();
 	}
 
+	float deviceGain = DevicesIntegration::GetSingleton()->GetArousalBaselineFromDevices(actorRef); 
+	libidoModifier += deviceGain;
+	logger::info("Device Gain: {}", deviceGain);
 	return std::clamp(libidoModifier, 0.f, 100.f);
 }
 
