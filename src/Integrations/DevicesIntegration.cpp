@@ -157,7 +157,6 @@ void DevicesIntegration::ActiveEquipmentChanged(RE::Actor* actorRef, RE::TESForm
 	const auto actorWornItems = GetWornDevices(actorRef, bEquipped ? nullptr : changedEquipment);
 	m_ActorWornDeviceCache.UpdateItem(actorRef, actorWornItems);
 	float updatedVal = GetArousalBaselineFromDevices(actorRef);
-	logger::trace("DeviceGain From {} to {}", existingValue, updatedVal);
 
 	if (existingValue != updatedVal) {
 		LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated(actorRef);
