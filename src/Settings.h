@@ -132,6 +132,23 @@ public:
 		return m_DeviceBaseline;
 	}
 
+	void SetEroticArmorBaseline(float newVal, RE::BGSKeyword* keyword)
+	{
+		Locker locker(m_Lock);
+		m_EroticArmorBaseline = newVal;
+		m_EroticArmorKeyword = keyword;
+	}
+	float GetEroticArmorBaseline() const
+	{
+		Locker locker(m_Lock);
+		return m_EroticArmorBaseline;
+	}
+	RE::BGSKeyword* GetEroticArmorKeyword() const
+	{
+		Locker locker(m_Lock);
+		return m_EroticArmorKeyword;
+	}
+
 private:
 	float m_ArousalChangeRate = 0.5f;
 	float m_LibidoChangeRate = 0.1f;
@@ -146,6 +163,9 @@ private:
 	float m_ScanDistance = 5120.f;
 
 	DeviceArousalBaselineChange m_DeviceBaseline;
+
+	float m_EroticArmorBaseline = 20.f;
+	RE::BGSKeyword* m_EroticArmorKeyword = nullptr;
 
 	mutable Lock m_Lock;
 };

@@ -55,6 +55,8 @@ namespace Utilities
 		{
 			return SceneManager::GetSingleton()->IsActorViewing(actorRef);
 		}
+
+		std::set<RE::FormID> GetWornKeywords(RE::Actor* actorRef);
 	}
 
 	namespace World

@@ -13,7 +13,8 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 	const auto settings = Settings::GetSingleton();
 
 	float libidoModifier = 0.f;
-	if (Utilities::Actor::IsNakedCached(actorRef))
+	bool isNaked = Utilities::Actor::IsNakedCached(actorRef);
+	if (isNaked)
 	{
 		libidoModifier += settings->GetNudeArousalBaseline();
 	} else if (Utilities::Actor::IsViewingNaked(actorRef)) {
@@ -27,9 +28,17 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 		libidoModifier += settings->GetSceneViewingBaseline();
 	}
 
+	if (!isNaked) {
+		if (const auto eroticKeyword = settings->GetEroticArmorKeyword()) {
+			const auto wornKeywords = Utilities::Actor::GetWornKeywords(actorRef);
+			if (wornKeywords.contains(eroticKeyword->formID)) {
+				libidoModifier += settings->GetEroticArmorBaseline();
+			}
+		}
+	}
+
 	float deviceGain = DevicesIntegration::GetSingleton()->GetArousalBaselineFromDevices(actorRef); 
 	libidoModifier += deviceGain;
-	logger::info("Device Gain: {}", deviceGain);
 	return std::clamp(libidoModifier, 0.f, 100.f);
 }
 

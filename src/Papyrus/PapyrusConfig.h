@@ -12,5 +12,7 @@ namespace PapyrusConfig
 	void SetBeingNudeBaseline(RE::StaticFunctionTag* base, float newVal);
 	void SetViewingNudeBaseline(RE::StaticFunctionTag* base, float newVal);
 
+	void SetEroticArmorBaseline(RE::StaticFunctionTag* base, float newVal, RE::BGSKeyword* keyword);
+
 	bool RegisterFunctions(RE::BSScript::IVirtualMachine* vm);
 }

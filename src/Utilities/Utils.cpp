@@ -184,3 +184,25 @@ void Utilities::World::ForEachReferenceInRange(RE::TESObjectREFR* origin, float 
 		//@TODO: Skycell needed?
 	}
 }
+
+std::set<RE::FormID> Utilities::Actor::GetWornKeywords(RE::Actor* actorRef)
+{
+	//Get Equipped items
+	const auto actorEquipment = actorRef->GetInventory([=](RE::TESBoundObject& a_object) {
+		return a_object.IsArmor();
+	});
+
+	//Get set of  keywords for worn items
+	std::set<RE::FormID> wornArmorKeywordIds;
+	for (const auto& [item, invData] : actorEquipment) {
+		const auto& [count, entry] = invData;
+		if (count > 0 && entry->IsWorn()) {
+			if (const auto keywordForm = item->As<RE::BGSKeywordForm>()) {
+				for (uint32_t i = 0; i < keywordForm->numKeywords; i++) {
+					wornArmorKeywordIds.insert(keywordForm->keywords[i]->formID);
+				}
+			}
+		}
+	}
+	return wornArmorKeywordIds;
+}
