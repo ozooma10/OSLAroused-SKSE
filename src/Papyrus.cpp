@@ -53,6 +53,28 @@ bool Papyrus::RemoveKeywordFromForm(RE::StaticFunctionTag*, RE::TESForm* form, R
 	return Utilities::Keywords::RemoveKeyword(form, keyword);
 }
 
+bool Papyrus::FormHasKeywordString(RE::StaticFunctionTag*, RE::TESForm* form, RE::BSFixedString keyword)
+{
+	logger::error("FormHasKeywordString: {}.", keyword);
+	if (!form) {
+		logger::error("FormHasKeywordString received none obj.");
+		return false;
+	}
+	RE::BGSKeywordForm* keywords = form->As<RE::BGSKeywordForm>();
+	if (!keywords) {
+		logger::error("Keywords cast failed.");
+		return false;
+	}
+	const char* p1 = keyword.data();
+	for (uint32_t i = 0; i < keywords->numKeywords; ++i) {
+		const char* p2 = keywords->keywords[i]->formEditorID.data();
+		logger::error("Keyword EditorId: {}.", p2);
+		if (strstr(p2, p1) != NULL)
+			return true;
+	}
+	return false;
+}
+
 float Papyrus::GenerateRandomFloat(RE::StaticFunctionTag*, float min, float max)
 {
 	return Utilities::GenerateRandomFloat(min, max);
@@ -89,7 +111,8 @@ bool Papyrus::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	//Keyword
 	vm->RegisterFunction("AddKeywordToForm", "OSLArousedNative", AddKeywordToForm);
 	vm->RegisterFunction("RemoveKeywordFromForm", "OSLArousedNative", RemoveKeywordFromForm);
-
+	vm->RegisterFunction("FormHasKeywordString", "OSLArousedNative", FormHasKeywordString);
+	
 	//Utilities
 	vm->RegisterFunction("GenerateRandomFloat", "OSLArousedNative", GenerateRandomFloat);
 	
