@@ -133,11 +133,9 @@ float DevicesIntegration::GetArousalBaselineFromDevices(RE::Actor* actorRef)
 		arousalBaselineGain += deviceConfig.PiercingsVaginal;
 	}
 	if (wornDevices.PlugAnal) {
-		logger::info("An Worn");
 		arousalBaselineGain += deviceConfig.PlugAnal;
 	}
 	if (wornDevices.PlugVaginal) {
-		logger::info("Vag Worn");
 		arousalBaselineGain += deviceConfig.PlugVaginal;
 	}
 	if (wornDevices.Suit) {

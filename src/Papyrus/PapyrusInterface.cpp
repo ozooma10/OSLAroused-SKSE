@@ -4,6 +4,8 @@
 #include "Managers/ArousalManager.h"
 #include "Managers/LibidoManager.h"
 #include "Utilities/Utils.h"
+#include <Settings.h>
+#include <Integrations/DevicesIntegration.h>
 
 float PapyrusInterface::GetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
@@ -85,6 +87,32 @@ bool PapyrusInterface::IsViewingNaked(RE::StaticFunctionTag*, RE::Actor* actorRe
 	return Utilities::Actor::IsViewingNaked(actorRef);
 }
 
+bool PapyrusInterface::IsInScene(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Utilities::Actor::IsParticipatingInScene(actorRef);
+}
+
+bool PapyrusInterface::IsViewingScene(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Utilities::Actor::IsViewingScene(actorRef);
+}
+
+bool PapyrusInterface::IsWearingEroticArmor(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	if (!Utilities::Actor::IsNakedCached(actorRef)) {
+		if (const auto eroticKeyword = Settings::GetSingleton()->GetEroticArmorKeyword()) {
+			const auto wornKeywords = Utilities::Actor::GetWornKeywords(actorRef);
+			return wornKeywords.contains(eroticKeyword->formID);
+		}
+	}
+	return false;
+}
+
+float PapyrusInterface::WornDeviceBaselineGain(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return DevicesIntegration::GetSingleton()->GetArousalBaselineFromDevices(actorRef);
+}
+
 bool PapyrusInterface::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	vm->RegisterFunction("GetArousal", "OSLArousedNative", GetArousal);
@@ -105,6 +133,10 @@ bool PapyrusInterface::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	//Explainer
 	vm->RegisterFunction("IsNaked", "OSLArousedNative", IsNaked);
 	vm->RegisterFunction("IsViewingNaked", "OSLArousedNative", IsViewingNaked);
+	vm->RegisterFunction("IsInScene", "OSLArousedNative", IsInScene);
+	vm->RegisterFunction("IsViewingScene", "OSLArousedNative", IsViewingScene);
+	vm->RegisterFunction("IsWearingEroticArmor", "OSLArousedNative", IsWearingEroticArmor);
+	vm->RegisterFunction("WornDeviceBaselineGain", "OSLArousedNative", WornDeviceBaselineGain);
 
 	return true;
 }

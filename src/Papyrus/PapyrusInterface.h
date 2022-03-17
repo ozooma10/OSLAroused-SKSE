@@ -24,6 +24,11 @@ namespace PapyrusInterface
 
 	bool IsNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 	bool IsViewingNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	bool IsInScene(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	bool IsViewingScene(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	bool IsWearingEroticArmor(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	float WornDeviceBaselineGain(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+
 
 	bool RegisterFunctions(RE::BSScript::IVirtualMachine* vm);
 }
