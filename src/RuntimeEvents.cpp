@@ -140,7 +140,6 @@ std::vector<RE::Actor*> GetNearbySpectatingActors(RE::Actor* source, float radiu
 		if (actor && actor != source && !actor->IsDisabled() && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC)))) {
 			//If Actor is super close or detects the source, increase arousal
 			if (sourceLocation.GetSquaredDistance(ref.GetPosition()) < forceDetectDistance || (actor->RequestDetectionLevel(source, RE::DETECTION_PRIORITY::kNormal) > 0) || actor->IsPlayer()) {
-				logger::warn("GetNearbySpectatingActors - {} is near {}", actor->GetDisplayFullName(), source->GetDisplayFullName());
 				nearbyActors.push_back(actor);
 			}
 		}

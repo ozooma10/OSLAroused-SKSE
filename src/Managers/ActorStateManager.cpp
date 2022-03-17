@@ -39,7 +39,6 @@ void ActorStateManager::UpdateActorsSpectating(std::set<RE::Actor*> spectators)
 	//Need to do this to purge libido modifier cache
 	for (auto itr = m_NakedSpectatingMap.begin(); itr != m_NakedSpectatingMap.end();) {
 		if (!spectators.contains((*itr).first)) {
-			logger::warn("{} Cleared from spec", (*itr).first->GetDisplayFullName());
 			LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated((*itr).first);
 			itr = m_NakedSpectatingMap.erase(itr);
 		} else {
