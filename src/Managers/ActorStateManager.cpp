@@ -33,8 +33,20 @@ bool ActorStateManager::GetActorSpectatingNaked(RE::Actor* actorRef)
 	return false;
 }
 
-void ActorStateManager::UpdateActorsSpectating(std::vector<RE::Actor*> spectators)
+void ActorStateManager::UpdateActorsSpectating(std::set<RE::Actor*> spectators)
 {
+	//Remove any old spectators from map who are not in spectators set
+	//Need to do this to purge libido modifier cache
+	for (auto itr = m_NakedSpectatingMap.begin(); itr != m_NakedSpectatingMap.end();) {
+		if (!spectators.contains((*itr).first)) {
+			logger::warn("{} Cleared from spec", (*itr).first->GetDisplayFullName());
+			LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated((*itr).first);
+			itr = m_NakedSpectatingMap.erase(itr);
+		} else {
+			itr++;
+		}
+	}
+
 	float currentTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
 	for (const auto spectator : spectators) {
 		m_NakedSpectatingMap[spectator] = currentTime;

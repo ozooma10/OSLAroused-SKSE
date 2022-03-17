@@ -3,6 +3,7 @@
 #include "PersistedData.h"
 #include "Managers/ArousalManager.h"
 #include "Managers/LibidoManager.h"
+#include "Utilities/Utils.h"
 
 float PapyrusInterface::GetArousal(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
@@ -74,6 +75,16 @@ float PapyrusInterface::GetDaysSinceLastOrgasm(RE::StaticFunctionTag*, RE::Actor
 	return RE::Calendar::GetSingleton()->GetCurrentGameTime() - lastOrgasmTime;
 }
 
+bool PapyrusInterface::IsNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Utilities::Actor::IsNakedCached(actorRef);
+}
+
+bool PapyrusInterface::IsViewingNaked(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return Utilities::Actor::IsViewingNaked(actorRef);
+}
+
 bool PapyrusInterface::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	vm->RegisterFunction("GetArousal", "OSLArousedNative", GetArousal);
@@ -90,5 +101,10 @@ bool PapyrusInterface::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("SetLibido", "OSLArousedNative", SetLibido);
 
 	vm->RegisterFunction("GetDaysSinceLastOrgasm", "OSLArousedNative", GetDaysSinceLastOrgasm);
+
+	//Explainer
+	vm->RegisterFunction("IsNaked", "OSLArousedNative", IsNaked);
+	vm->RegisterFunction("IsViewingNaked", "OSLArousedNative", IsViewingNaked);
+
 	return true;
 }

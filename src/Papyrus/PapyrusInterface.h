@@ -22,5 +22,8 @@ namespace PapyrusInterface
 	
 	float GetDaysSinceLastOrgasm(RE::StaticFunctionTag* base, RE::Actor* actorRef);
 
+	bool IsNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+	bool IsViewingNaked(RE::StaticFunctionTag* base, RE::Actor* actorRef);
+
 	bool RegisterFunctions(RE::BSScript::IVirtualMachine* vm);
 }

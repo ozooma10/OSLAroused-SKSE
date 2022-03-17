@@ -27,7 +27,7 @@ public:
 	void ActorNakedStateChanged(RE::Actor* actorRef, bool newNaked);
 
 	bool GetActorSpectatingNaked(RE::Actor* actorRef);
-	void UpdateActorsSpectating(std::vector<RE::Actor*> spectators);
+	void UpdateActorsSpectating(std::set<RE::Actor*> spectators);
 
 	//Returns true if actor is non-creature, non-animal npc
 	bool IsHumanoidActor(RE::Actor* actorRef);
