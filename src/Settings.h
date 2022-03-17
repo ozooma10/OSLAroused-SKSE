@@ -2,6 +2,29 @@
 using Lock = std::recursive_mutex;
 using Locker = std::lock_guard<Lock>;
 
+enum DeviceType
+{
+	Belt = 0,
+	Collar,
+	LegCuffs,
+	ArmCuffs,
+	Bra,
+	Gag,
+	PiercingsNipple,
+	PiercingsVaginal,
+	Blindfold,
+	Harness,
+	PlugVaginal,
+	PlugAnal,
+	Corset,
+	Boots,
+	Gloves,
+	Hood,
+	Suit,
+	HeavyBondage,
+	BondageMittens
+};
+
 struct DeviceArousalBaselineChange
 {
 	float Belt = 20;

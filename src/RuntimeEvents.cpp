@@ -106,7 +106,7 @@ std::vector<RE::Actor*> GetNakedActorsInCell(RE::Actor* source)
 	Utilities::World::ForEachReferenceInRange(source, scanDistance, [&](RE::TESObjectREFR& ref) {
 		auto refBase = ref.GetBaseObject();
 		auto actor = ref.As<RE::Actor>();
-		if (actor && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC)))) {
+		if (actor && !actor->IsDisabled() && (ref.Is(RE::FormType::NPC) || (refBase && refBase->Is(RE::FormType::NPC)))) {
 			if(actorStateManager->IsHumanoidActor(actor) && actorStateManager->GetActorNaked(actor)) {
 				//If Actor is naked
 				nakedActors.push_back(actor);

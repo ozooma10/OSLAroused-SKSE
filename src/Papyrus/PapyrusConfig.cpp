@@ -41,6 +41,102 @@ void PapyrusConfig::SetEroticArmorBaseline(RE::StaticFunctionTag*, float newVal,
 	Settings::GetSingleton()->SetEroticArmorBaseline(newVal, keyword);
 }
 
+void PapyrusConfig::SetDeviceTypesBaseline1(RE::StaticFunctionTag*, float belt, float collar, float legCuffs, float armCuffs, float bra, float gag, float piercingsNipple, float piercingsVaginal, float blindfold, float harness)
+{
+	DeviceArousalBaselineChange arousalBaselineConfig = Settings::GetSingleton()->GetDeviceBaseline();
+	arousalBaselineConfig.Belt = belt;
+	arousalBaselineConfig.Collar = collar;
+	arousalBaselineConfig.LegCuffs = legCuffs;
+	arousalBaselineConfig.ArmCuffs = armCuffs;
+	arousalBaselineConfig.Bra = bra;
+	arousalBaselineConfig.Gag = gag;
+	arousalBaselineConfig.PiercingsNipple = piercingsNipple;
+	arousalBaselineConfig.PiercingsVaginal = piercingsVaginal;
+	arousalBaselineConfig.Blindfold = blindfold;
+	arousalBaselineConfig.Harness = harness;
+	Settings::GetSingleton()->SetDeviceBaseline(arousalBaselineConfig);
+}
+
+void PapyrusConfig::SetDeviceTypesBaseline2(RE::StaticFunctionTag*, float plugVag, float plugAnal, float corset, float boots, float gloves, float hood, float suit, float heavyBondage, float bondageMittens)
+{
+	DeviceArousalBaselineChange arousalBaselineConfig = Settings::GetSingleton()->GetDeviceBaseline();
+	arousalBaselineConfig.PlugVaginal = plugVag;
+	arousalBaselineConfig.PlugAnal = plugAnal;
+	arousalBaselineConfig.Corset = corset;
+	arousalBaselineConfig.Boots = boots;
+	arousalBaselineConfig.Gloves = gloves;
+	arousalBaselineConfig.Hood = hood;
+	arousalBaselineConfig.Suit = suit;
+	arousalBaselineConfig.HeavyBondage = heavyBondage;
+	arousalBaselineConfig.BondageMittens = bondageMittens;
+	Settings::GetSingleton()->SetDeviceBaseline(arousalBaselineConfig);
+}
+
+void PapyrusConfig::SetDeviceTypeBaseline(RE::StaticFunctionTag*, int deviceTypeId, float newVal)
+{
+	DeviceArousalBaselineChange arousalBaselineConfig = Settings::GetSingleton()->GetDeviceBaseline();
+	switch (deviceTypeId) {
+	case DeviceType::Belt:
+		arousalBaselineConfig.Belt = newVal;
+		break;
+	case DeviceType::Collar:
+		arousalBaselineConfig.Belt = newVal;
+		break;
+	case DeviceType::LegCuffs:
+		arousalBaselineConfig.Belt = newVal;
+		break;
+	case DeviceType::ArmCuffs:
+		arousalBaselineConfig.Belt = newVal;
+		break;
+	case DeviceType::Bra:
+		arousalBaselineConfig.Belt = newVal;
+		break;
+	case DeviceType::Gag:
+		arousalBaselineConfig.Gag = newVal;
+		break;
+	case DeviceType::PiercingsNipple:
+		arousalBaselineConfig.PiercingsNipple = newVal;
+		break;
+	case DeviceType::PiercingsVaginal:
+		arousalBaselineConfig.PiercingsVaginal = newVal;
+		break;
+	case DeviceType::Blindfold:
+		arousalBaselineConfig.Blindfold = newVal;
+		break;
+	case DeviceType::Harness:
+		arousalBaselineConfig.Harness = newVal;
+		break;
+	case DeviceType::PlugVaginal:
+		arousalBaselineConfig.PlugVaginal = newVal;
+		break;
+	case DeviceType::PlugAnal:
+		arousalBaselineConfig.PlugAnal = newVal;
+		break;
+	case DeviceType::Corset:
+		arousalBaselineConfig.Corset = newVal;
+		break;
+	case DeviceType::Boots:
+		arousalBaselineConfig.Boots = newVal;
+		break;
+	case DeviceType::Gloves:
+		arousalBaselineConfig.Gloves = newVal;
+		break;
+	case DeviceType::Hood:
+		arousalBaselineConfig.Hood = newVal;
+		break;
+	case DeviceType::Suit:
+		arousalBaselineConfig.Suit = newVal;
+		break;
+	case DeviceType::HeavyBondage:
+		arousalBaselineConfig.HeavyBondage = newVal;
+		break;
+	case DeviceType::BondageMittens:
+		arousalBaselineConfig.BondageMittens = newVal;
+		break;
+	}
+	Settings::GetSingleton()->SetDeviceBaseline(arousalBaselineConfig);
+}
+
 bool PapyrusConfig::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
 	vm->RegisterFunction("SetArousalChangeRate", "OSLArousedNativeConfig", SetArousalChangeRate);
@@ -53,6 +149,10 @@ bool PapyrusConfig::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("SetViewingNudeBaseline", "OSLArousedNativeConfig", SetViewingNudeBaseline);
 
 	vm->RegisterFunction("SetEroticArmorBaseline", "OSLArousedNativeConfig", SetEroticArmorBaseline);
+
+	vm->RegisterFunction("SetDeviceTypesBaseline1", "OSLArousedNativeConfig", SetDeviceTypesBaseline1);
+	vm->RegisterFunction("SetDeviceTypesBaseline2", "OSLArousedNativeConfig", SetDeviceTypesBaseline2);
+	vm->RegisterFunction("SetDeviceTypeBaseline", "OSLArousedNativeConfig", SetDeviceTypeBaseline);
 	
 	return true;
 }
