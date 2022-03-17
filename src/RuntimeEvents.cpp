@@ -45,6 +45,7 @@ void HandleAdultScenes(std::vector<SceneManager::SceneData> activeScenes, float 
 {
 	float scanDistance = Settings::GetSingleton()->GetScanDistance();
 	
+	std::set<RE::Actor*> spectatingActors;
 	for (const auto scene : activeScenes) {
 		if (scene.Participants.size() <= 0) {
 			logger::warn("HandleAdultScenes: Skipping sceneid: {} no participants found", scene.SceneId);
@@ -52,8 +53,11 @@ void HandleAdultScenes(std::vector<SceneManager::SceneData> activeScenes, float 
 		}
 
 		const auto spectators = GetNearbySpectatingActors(scene.Participants[0], scanDistance);
-		SceneManager::GetSingleton()->UpdateSceneSpectators(spectators);
+		for (const auto spectator : spectators) {
+			spectatingActors.insert(spectator);
+		}
 	}
+	SceneManager::GetSingleton()->UpdateSceneSpectators(spectatingActors);
 }
 
 void WorldChecks::ArousalUpdateLoop()

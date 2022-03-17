@@ -55,8 +55,20 @@ bool SceneManager::IsActorViewing(RE::Actor* actorRef)
 	return false;
 }
 
-void SceneManager::UpdateSceneSpectators(std::vector<RE::Actor*> spectators)
+void SceneManager::UpdateSceneSpectators(std::set<RE::Actor*> spectators)
 {
+	//Remove any old spectators from map who are not in spectators set
+	//Need to do this to purge libido modifier cache
+	for (auto itr = m_SceneViewingMap.begin(); itr != m_SceneViewingMap.end();) {
+		if (!spectators.contains((*itr).first)) {
+			LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated((*itr).first);
+			logger::warn("{} Removed from Scene Spec", (*itr).first->GetDisplayFullName());
+			itr = m_SceneViewingMap.erase(itr);
+		} else {
+			itr++;
+		}
+	}
+
 	float currentTime = RE::Calendar::GetSingleton()->GetCurrentGameTime();
 	for (const auto spectator : spectators) {
 		m_SceneViewingMap[spectator] = currentTime;

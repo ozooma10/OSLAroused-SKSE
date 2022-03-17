@@ -34,7 +34,7 @@ public:
 	bool IsActorViewing(RE::Actor* actorRef);
 
 	//Updates timestamps for spectators in sceneviewingmap. 
-	void UpdateSceneSpectators(std::vector<RE::Actor*> spectators);
+	void UpdateSceneSpectators(std::set<RE::Actor*> spectators);
 
 	std::vector<SceneData> GetAllScenes() const;
 
