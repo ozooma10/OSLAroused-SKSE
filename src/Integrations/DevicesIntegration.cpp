@@ -60,7 +60,6 @@ WornDeviceField GetWornDevices(RE::Actor* actorRef, RE::TESForm* equipmentToIgno
 			wornDevices.PiercingsVaginal = true;
 		} else if (keywordFormId == DI->ToysAnal || keywordFormId == DI->DDPlugAnal) {
 			wornDevices.PlugAnal = true;
-			logger::info("AN found on device its true");
 		} else if (keywordFormId == DI->ToysVaginal || keywordFormId == DI->DDPlugVaginal) {
 			wornDevices.PlugVaginal = true;
 		} else if (keywordFormId == DI->DDSuit) {

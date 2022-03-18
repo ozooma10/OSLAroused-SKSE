@@ -62,7 +62,6 @@ void SceneManager::UpdateSceneSpectators(std::set<RE::Actor*> spectators)
 	for (auto itr = m_SceneViewingMap.begin(); itr != m_SceneViewingMap.end();) {
 		if (!spectators.contains((*itr).first)) {
 			LibidoManager::GetSingleton()->ActorLibidoModifiersUpdated((*itr).first);
-			logger::warn("{} Removed from Scene Spec", (*itr).first->GetDisplayFullName());
 			itr = m_SceneViewingMap.erase(itr);
 		} else {
 			itr++;
