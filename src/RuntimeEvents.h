@@ -1,5 +1,5 @@
 #pragma once
-#include <Utilities.h>
+#include "Utilities/Ticker.h"
 
 namespace RuntimeEvents
 {
@@ -32,7 +32,7 @@ namespace WorldChecks
 
 		static AurousalUpdateTicker* GetSingleton()
 		{
-			static AurousalUpdateTicker singleton(std::chrono::milliseconds(15000));
+			static AurousalUpdateTicker singleton(std::chrono::milliseconds(5000));
 			return &singleton;
 		}
 

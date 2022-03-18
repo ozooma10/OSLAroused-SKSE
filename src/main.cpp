@@ -2,8 +2,10 @@
 
 #include "RuntimeEvents.h"
 #include "Papyrus.h"
-#include "Serialization.h"
-#include "Utilities.h"
+#include "Utilities/Utils.h"
+#include "PersistedData.h"
+#include "Papyrus/PapyrusConfig.h"
+#include "Papyrus/PapyrusInterface.h"
 
 namespace
 {
@@ -91,12 +93,14 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 
 	const auto papyrus = SKSE::GetPapyrusInterface();
 	papyrus->Register(Papyrus::RegisterFunctions);
+	papyrus->Register(PapyrusInterface::RegisterFunctions);
+	papyrus->Register(PapyrusConfig::RegisterFunctions);
 
 	const auto serialization = SKSE::GetSerializationInterface();
-	serialization->SetUniqueID(Serialization::kArousalDataKey);
-	serialization->SetSaveCallback(Serialization::SaveCallback);
-	serialization->SetLoadCallback(Serialization::LoadCallback);
-	serialization->SetRevertCallback(Serialization::RevertCallback);
+	serialization->SetUniqueID(PersistedData::kArousalDataKey);
+	serialization->SetSaveCallback(PersistedData::SaveCallback);
+	serialization->SetLoadCallback(PersistedData::LoadCallback);
+	serialization->SetRevertCallback(PersistedData::RevertCallback);
 
 	auto messagingInterface = SKSE::GetMessagingInterface();
 	if (!messagingInterface->RegisterListener(MessageHandler)) {

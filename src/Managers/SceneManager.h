@@ -30,10 +30,20 @@ public:
 	void RemoveScene(SceneFramework framework, int sceneId);
 	void ClearScenes();
 
+	bool IsActorParticipating(RE::Actor* actorRef);
+	bool IsActorViewing(RE::Actor* actorRef);
+
+	//Updates timestamps for spectators in sceneviewingmap. 
+	void UpdateSceneSpectators(std::set<RE::Actor*> spectators);
+
 	std::vector<SceneData> GetAllScenes() const;
 
 private:
 	std::vector<SceneData> m_Scenes;
+
+	std::map<RE::Actor*, bool> m_SceneParticipantMap;
+	//ActorId, GameTime last in presence of scene
+	std::map<RE::Actor*, float> m_SceneViewingMap;
 
 	mutable Lock m_Lock;
 };

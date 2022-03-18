@@ -1,5 +1,17 @@
-#include "Utilities.h"
-#include "Serialization.h"
+#include "PersistedData.h"
+#include "Utils.h"
+
+RE::FormID Utilities::Forms::ResolveFormId(uint32_t modIndex, RE::FormID rawFormId)
+{
+	if (modIndex < 0xFF) {
+		//ESP/ESM format
+		return (rawFormId & 0x00FFFFFF) | (((uint32_t)modIndex) << 24);
+	} else if (modIndex > 0xFF) {
+		//ESL FLag
+		return (modIndex << 12) | (rawFormId & 0x00000FFF);
+	}
+	return 0;
+}
 
 //Keyword logic from powerof3's CommonLibSSE implementation
 bool Utilities::Keywords::AddKeyword(RE::TESForm* form, RE::BGSKeyword* newKeyword)
@@ -37,7 +49,7 @@ bool Utilities::Keywords::AddKeyword(RE::TESForm* form, RE::BGSKeyword* newKeywo
 	RE::free(oldData);
 
 	//Add keyword to saved keyword distribution
-	Serialization::ArmorKeywordData::GetSingleton()->AppendData(form->formID, newKeyword->formID);
+	PersistedData::ArmorKeywordData::GetSingleton()->AppendData(form->formID, newKeyword->formID);
 
 	return true;
 }
@@ -83,14 +95,14 @@ bool Utilities::Keywords::RemoveKeyword(RE::TESForm* form, RE::BGSKeyword* keywo
 	RE::free(oldData);
 
 	//Remove keyword from saved keyword distribution if exists
-	Serialization::ArmorKeywordData::GetSingleton()->RemoveData(form->formID, keyword->formID);
+	PersistedData::ArmorKeywordData::GetSingleton()->RemoveData(form->formID, keyword->formID);
 
 	return true;
 }
 
 void Utilities::Keywords::DistributeKeywords()
 {
-	const auto keywordData = Serialization::ArmorKeywordData::GetSingleton()->GetData();
+	const auto keywordData = PersistedData::ArmorKeywordData::GetSingleton()->GetData();
 
 	logger::info("Trying To Distribute {} Keywords", keywordData.size());
 
@@ -119,8 +131,78 @@ void Utilities::Keywords::DistributeKeywords()
 
 				subFormCache[subformId] = keywordSubForm;
 			}
-	
+
 			AddKeyword(form, keywordSubForm);
 		}
 	}
+}
+
+//Logic of this from PowerOf3 CommonLibSSE implementation
+void Utilities::World::ForEachReferenceInRange(RE::TESObjectREFR* origin, float radius, std::function<bool(RE::TESObjectREFR& ref)> callback)
+{
+	if (origin && radius > 0.f) {
+		const auto originPos = origin->GetPosition();
+		const auto radiusSqr = radius * radius;
+
+		const auto tes = RE::TES::GetSingleton();
+
+		if (tes->interiorCell) {
+			tes->interiorCell->ForEachReferenceInRange(originPos, radiusSqr, [&](RE::TESObjectREFR& ref) {
+				return callback(ref);
+			});
+		} else {
+			const auto gridLength = tes->gridCells ? tes->gridCells->length : 0;
+			if (gridLength > 0) {
+				const auto yPlus = originPos.y + radius;
+				const auto yMinus = originPos.y - radius;
+				const auto xPlus = originPos.x + radius;
+				const auto xMinus = originPos.x - radius;
+
+				std::uint32_t x = 0;
+				do {
+					std::uint32_t y = 0;
+					do {
+						auto cell = tes->gridCells->GetCell(x, y);
+						if (cell && cell->IsAttached()) {
+							const auto cellCoords = cell->GetCoordinates();
+							if (cellCoords) {
+								const RE::NiPoint2 worldPos{ cellCoords->worldX, cellCoords->worldY };
+								if (worldPos.x < xPlus && (worldPos.x + 4096.0f) > xMinus && worldPos.y < yPlus && (worldPos.y + 4096.f) > yMinus) {
+									cell->ForEachReferenceInRange(originPos, radiusSqr, [&](RE::TESObjectREFR& ref) {
+										return callback(ref);
+									});
+								}
+							}
+						}
+						y++;
+					} while (y < gridLength);
+					x++;
+				} while (x < gridLength);
+			}
+		}
+
+		//@TODO: Skycell needed?
+	}
+}
+
+std::set<RE::FormID> Utilities::Actor::GetWornKeywords(RE::Actor* actorRef)
+{
+	//Get Equipped items
+	const auto actorEquipment = actorRef->GetInventory([=](RE::TESBoundObject& a_object) {
+		return a_object.IsArmor();
+	});
+
+	//Get set of  keywords for worn items
+	std::set<RE::FormID> wornArmorKeywordIds;
+	for (const auto& [item, invData] : actorEquipment) {
+		const auto& [count, entry] = invData;
+		if (count > 0 && entry->IsWorn()) {
+			if (const auto keywordForm = item->As<RE::BGSKeywordForm>()) {
+				for (uint32_t i = 0; i < keywordForm->numKeywords; i++) {
+					wornArmorKeywordIds.insert(keywordForm->keywords[i]->formID);
+				}
+			}
+		}
+	}
+	return wornArmorKeywordIds;
 }

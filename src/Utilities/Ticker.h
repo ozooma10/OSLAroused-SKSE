@@ -1,17 +1,10 @@
 #pragma once
 
-#include <random>
+#include <functional>
+#include <chrono>
 
 namespace Utilities
 {
-	inline float GenerateRandomFloat(float min, float max)
-	{
-		std::random_device rd;
-		std::mt19937 mt(rd());
-		std::uniform_real_distribution<float> dis(min, max);
-		return dis(mt);
-	}
-
 	class Ticker
 	{
 	public:
@@ -22,7 +15,8 @@ namespace Utilities
 			m_ThreadActive(false)
 		{}
 
-		void Start() {
+		void Start()
+		{
 			if (m_Running) {
 				return;
 			}
@@ -34,18 +28,21 @@ namespace Utilities
 			}
 		}
 
-		void Stop() {
+		void Stop()
+		{
 			m_Running = false;
 		}
 
-		void UpdateInterval(std::chrono::milliseconds newInterval) {
+		void UpdateInterval(std::chrono::milliseconds newInterval)
+		{
 			m_IntervalMutex.lock();
 			m_Interval = newInterval;
 			m_IntervalMutex.unlock();
 		}
 
 	private:
-		void RunLoop() {
+		void RunLoop()
+		{
 			m_ThreadActive = true;
 			while (m_Running) {
 				std::thread runnerThread(m_OnTick);
@@ -67,21 +64,4 @@ namespace Utilities
 		std::mutex m_IntervalMutex;
 	};
 
-	
-	//Keyword logic based off powerof3's CommonLibSSE implementation
-	namespace Keywords
-	{
-		bool AddKeyword(RE::TESForm* form, RE::BGSKeyword* keyword);
-
-		bool RemoveKeyword(RE::TESForm* form, RE::BGSKeyword* keyword);
-
-		void DistributeKeywords();
-	}
-
-	namespace Actor
-	{
-		inline bool IsNaked(RE::Actor* actorRef) {
-			return actorRef->GetWornArmor(RE::BGSBipedObjectForm::BipedObjectSlot::kBody) == nullptr;
-		}
-	}
 }

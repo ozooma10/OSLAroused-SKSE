@@ -2,6 +2,53 @@
 using Lock = std::recursive_mutex;
 using Locker = std::lock_guard<Lock>;
 
+enum DeviceType
+{
+	Belt = 0,
+	Collar,
+	LegCuffs,
+	ArmCuffs,
+	Bra,
+	Gag,
+	PiercingsNipple,
+	PiercingsVaginal,
+	Blindfold,
+	Harness,
+	PlugVaginal,
+	PlugAnal,
+	Corset,
+	Boots,
+	Gloves,
+	Hood,
+	Suit,
+	HeavyBondage,
+	BondageMittens
+};
+
+struct DeviceArousalBaselineChange
+{
+	float Belt = 20;
+	float Collar = 5;
+	float LegCuffs = 5;
+	float ArmCuffs = 5;
+	float Bra = 10;
+	float Gag = 10;
+	float PiercingsNipple = 10;
+	float PiercingsVaginal = 10;
+	float Blindfold = 5;
+	float Harness = 10;
+	float PlugVaginal = 20;
+	float PlugAnal = 20;
+	float Corset = 10;
+	float Boots = 5;
+	float Gloves = 5;
+	float Hood = 20;
+	float Suit = 20;
+	float HeavyBondage = 10;
+	float BondageMittens = 10;
+};
+
+
 class Settings
 {
 public:
@@ -11,46 +58,79 @@ public:
 		return &singleton;
 	}
 
-	void SetPlayerNudityCheckEnabled(bool newVal) { 
+	void SetArousalChangeRate(float newVal)
+	{
 		Locker locker(m_Lock);
-		m_EnablePlayerNudityCheck = newVal; 
+		m_ArousalChangeRate = 1.f - (newVal / 100);
 	}
-	bool GetPlayerNudityCheckEnabled() const { 
+	float GetArousalChangeRate() const
+	{
 		Locker locker(m_Lock);
-		return m_EnablePlayerNudityCheck;
+		return m_ArousalChangeRate;
 	}
 
-	void SetHourlyNudityArousalModifier(float newVal)
+	void SetLibidoChangeRate(float newVal)
 	{
 		Locker locker(m_Lock);
-		m_HourlyNudityArousalModifier = newVal;
+		m_LibidoChangeRate = 1.f - (newVal / 100);
 	}
-	float GetHourlyNudityArousalModifier() const
+	float GetLibidoChangeRate() const
 	{
 		Locker locker(m_Lock);
-		return m_HourlyNudityArousalModifier;
-	}
-
-	void SetHourlySceneParticipantArousalModifier(float newVal)
-	{
-		Locker locker(m_Lock);
-		m_HourlySceneParticipantArousalModifier = newVal;
-	}
-	float GetHourlySceneParticipantArousalModifier() const
-	{
-		Locker locker(m_Lock);
-		return m_HourlySceneParticipantArousalModifier;
+		return m_LibidoChangeRate;
 	}
 
-	void SetHourlySceneViewerArousalModifier(float newVal)
-	{
+	void SetNudeArousalBaseline(float newVal) { 
 		Locker locker(m_Lock);
-		m_HourlySceneViewerArousalModifier = newVal;
+		m_IsNudeBaseline = newVal; 
 	}
-	float GetHourlySceneViewerArousalModifier() const
+	float GetNudeArousalBaseline() const { 
+		Locker locker(m_Lock);
+		return m_IsNudeBaseline;
+	}
+
+	void SetNudeViewingBaseline(float newVal)
 	{
 		Locker locker(m_Lock);
-		return m_HourlySceneViewerArousalModifier;
+		m_ViewingNudeBaseline = newVal;
+	}
+	float GetNudeViewingBaseline() const
+	{
+		Locker locker(m_Lock);
+		return m_ViewingNudeBaseline;
+	}
+
+	void SetSceneParticipantBaseline(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_SceneParticipateBaseline = newVal;
+	}
+	float GetSceneParticipantBaseline() const
+	{
+		Locker locker(m_Lock);
+		return m_SceneParticipateBaseline;
+	}
+
+	void SetSceneViewingBaseline(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_SceneViewingBaseline = newVal;
+	}
+	float GetSceneViewingBaseline() const
+	{
+		Locker locker(m_Lock);
+		return m_SceneViewingBaseline;
+	}
+
+	void SetSceneVictimGainsArousal(bool newVal)
+	{
+		Locker locker(m_Lock);
+		m_SceneVictimGainsArousal = newVal;
+	}
+	bool GetSceneVictimGainsArousal() const
+	{
+		Locker locker(m_Lock);
+		return m_SceneVictimGainsArousal;
 	}
 
 	void SetScanDistance(float newVal)
@@ -64,40 +144,51 @@ public:
 		return m_ScanDistance;
 	}
 
-	void SetDecayRate(float newRate) {
+	void SetDeviceBaseline(DeviceArousalBaselineChange newVal)
+	{
 		Locker locker(m_Lock);
-		m_DecayRate = newRate;
+		m_DeviceBaseline = newVal;
 	}
-	float GetDecayRate() const {
+	DeviceArousalBaselineChange GetDeviceBaseline() const
+	{
 		Locker locker(m_Lock);
-		return m_DecayRate;
+		return m_DeviceBaseline;
 	}
 
-	void SetDefaultArousalMultiplier(float newRate)
+	void SetEroticArmorBaseline(float newVal, RE::BGSKeyword* keyword)
 	{
 		Locker locker(m_Lock);
-		m_DefaultArousalMultiplier = newRate;
+		m_EroticArmorBaseline = newVal;
+		m_EroticArmorKeyword = keyword;
 	}
-	float GetDefaultArousalMultiplier() const
+	float GetEroticArmorBaseline() const
 	{
 		Locker locker(m_Lock);
-		return m_DefaultArousalMultiplier;
+		return m_EroticArmorBaseline;
+	}
+	RE::BGSKeyword* GetEroticArmorKeyword() const
+	{
+		Locker locker(m_Lock);
+		return m_EroticArmorKeyword;
 	}
 
 private:
-	bool m_EnablePlayerNudityCheck = true;
-	
-	float m_HourlyNudityArousalModifier = 20.f;
+	float m_ArousalChangeRate = 0.5f;
+	float m_LibidoChangeRate = 0.1f;
 
-	float m_HourlySceneParticipantArousalModifier = 40.f;
-	float m_HourlySceneViewerArousalModifier = 20.f;
+	float m_IsNudeBaseline = 30.f;
+	float m_ViewingNudeBaseline = 20.f;
+
+	float m_SceneParticipateBaseline = 50.f;
+	float m_SceneViewingBaseline = 30.f;
+	bool m_SceneVictimGainsArousal = false;
 
 	float m_ScanDistance = 5120.f;
 
-	//In SLA mode, this is the number of days to remove 1/3rd of Exposure and time rate
-	float m_DecayRate = 2.f;
+	DeviceArousalBaselineChange m_DeviceBaseline;
 
-	float m_DefaultArousalMultiplier = 2.f;
+	float m_EroticArmorBaseline = 20.f;
+	RE::BGSKeyword* m_EroticArmorKeyword = nullptr;
 
 	mutable Lock m_Lock;
 };

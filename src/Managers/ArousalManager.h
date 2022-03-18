@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Managers/LibidoManager.h"
+
 namespace ArousalManager
 {
 	float GetArousal(RE::Actor* actorRef, bool bUpdateState = true);
@@ -10,5 +12,5 @@ namespace ArousalManager
 
 	float GetSexlabExposure(RE::Actor* actorRef, float timePassed, bool bUpdateState = true);
 
-	float GetLastOrgasmArousal(RE::Actor* actorRef);
+	float CalculateArousal(RE::Actor* actorRef, float timePassed);
 }
