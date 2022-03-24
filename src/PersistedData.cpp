@@ -176,6 +176,11 @@ namespace PersistedData
 			logger::critical("Failed to save Base Libido Data");
 		}
 
+		const auto arousalMultiplierData = ArousalMultiplierData::GetSingleton();
+		if (!arousalMultiplierData->Save(serializationInterface, kAroualMultiplierDataKey, kSerializationVersion)) {
+			logger::critical("Failed to save Arousal Multiplier Data");
+		}
+
 		const auto lastCheckData = LastCheckTimeData::GetSingleton();
 		if (!lastCheckData->Save(serializationInterface, kLastCheckTimeDataKey, kSerializationVersion)) {
 			logger::critical("Failed to save Arousal Last Check Time Data");
@@ -226,6 +231,14 @@ namespace PersistedData
 					}
 				}
 				break;
+			case kAroualMultiplierDataKey:
+				{
+					auto arousalMultiplierData = ArousalMultiplierData::GetSingleton();
+					if (!arousalMultiplierData->Load(serializationInterface)) {
+						logger::critical("Failed to Load Arousal Multiplier Data"sv);
+					}
+				}
+				break;
 			case kLastCheckTimeDataKey:
 				{
 					auto lastCheckData = LastCheckTimeData::GetSingleton();
@@ -265,6 +278,8 @@ namespace PersistedData
 		arousalData->Clear();
 		auto baseLibidoData = BaseLibidoData::GetSingleton();
 		baseLibidoData->Clear();
+		auto arousalMultiplierData = ArousalMultiplierData::GetSingleton();
+		arousalMultiplierData->Clear();
 		auto lastCheckData = LastCheckTimeData::GetSingleton();
 		lastCheckData->Clear();
 		auto lastOrgasmData = LastOrgasmTimeData::GetSingleton();

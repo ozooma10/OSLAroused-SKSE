@@ -52,6 +52,27 @@ void PapyrusInterface::ModifyArousalMultiple(RE::StaticFunctionTag*, RE::referen
 	}
 }
 
+float PapyrusInterface::GetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef)
+{
+	return PersistedData::ArousalMultiplierData::GetSingleton()->GetData(actorRef->formID, 1.f);
+}
+
+float PapyrusInterface::SetArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+{
+	value = std::clamp(value, 0.0f, 100.f);
+
+	PersistedData::ArousalMultiplierData::GetSingleton()->SetData(actorRef->formID, value);
+	return value;
+}
+
+float PapyrusInterface::ModifyArousalMultiplier(RE::StaticFunctionTag*, RE::Actor* actorRef, float value)
+{
+	float curMult = PersistedData::ArousalMultiplierData::GetSingleton()->GetData(actorRef->formID, 1.f);
+	float newVal = curMult + value;
+	PersistedData::ArousalMultiplierData::GetSingleton()->SetData(actorRef->formID, newVal);
+	return newVal;
+}
+
 float PapyrusInterface::GetArousalBaseline(RE::StaticFunctionTag*, RE::Actor* actorRef)
 {
 	return LibidoManager::GetSingleton()->GetBaselineArousal(actorRef);
@@ -123,6 +144,10 @@ bool PapyrusInterface::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 	vm->RegisterFunction("SetArousalMultiple", "OSLArousedNative", SetArousalMultiple);
 	vm->RegisterFunction("ModifyArousal", "OSLArousedNative", ModifyArousal);
 	vm->RegisterFunction("ModifyArousalMultiple", "OSLArousedNative", ModifyArousalMultiple);
+
+	vm->RegisterFunction("SetArousalMultiplier", "OSLArousedNative", SetArousalMultiplier);
+	vm->RegisterFunction("GetArousalMultiplier", "OSLArousedNative", GetArousalMultiplier);
+	vm->RegisterFunction("ModifyArousalMultiplier", "OSLArousedNative", ModifyArousalMultiplier);
 
 	vm->RegisterFunction("GetArousalBaseline", "OSLArousedNative", GetArousalBaseline);
 	vm->RegisterFunction("GetLibido", "OSLArousedNative", GetLibido);

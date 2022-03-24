@@ -116,6 +116,21 @@ namespace PersistedData
 		}
 	};
 
+	class ArousalMultiplierData final : public BaseFormFloat
+	{
+	public:
+		static ArousalMultiplierData* GetSingleton()
+		{
+			static ArousalMultiplierData singleton;
+			return &singleton;
+		}
+
+		const char* GetType() override
+		{
+			return "ArousalMultiplier";
+		}
+	};
+
 	class LastCheckTimeData final : public BaseFormFloat
 	{
 	public:
@@ -165,6 +180,7 @@ namespace PersistedData
 	constexpr std::uint32_t kSerializationVersion = 1;
 	constexpr std::uint32_t kArousalDataKey = 'OSLA';
 	constexpr std::uint32_t kBaseLibidoDataKey = 'OSLB';
+	constexpr std::uint32_t kAroualMultiplierDataKey = 'OSLM';
 	constexpr std::uint32_t kLastCheckTimeDataKey = 'OSLC';
 	constexpr std::uint32_t kLastOrgasmTimeDataKey = 'OSLO';
 	constexpr std::uint32_t kArmorKeywordDataKey = 'OSLK';

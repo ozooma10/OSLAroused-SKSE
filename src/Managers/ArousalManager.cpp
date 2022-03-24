@@ -47,8 +47,9 @@ namespace ArousalManager
 
 	float ModifyArousal(RE::Actor* actorRef, float modValue)
 	{
-		float currentArousal = GetArousal(actorRef, false);
+		modValue *= PersistedData::ArousalMultiplierData::GetSingleton()->GetData(actorRef->formID, 1.f);
 
+		float currentArousal = GetArousal(actorRef, false);
 		return SetArousal(actorRef, currentArousal + modValue);
 	}
 
