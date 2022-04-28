@@ -72,7 +72,7 @@ target_compile_features(
 	PRIVATE
 		cxx_std_20
 )
-
+add_compile_definitions(SKYRIM_SUPPORT_AE)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	target_compile_options(
 		"${PROJECT_NAME}"
@@ -143,7 +143,7 @@ install(
 add_custom_command(
 	TARGET "${PROJECT_NAME}"
 	POST_BUILD
-	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "D:/Skyrim/Mods/OSLAroused/SKSE/Plugins/"
-	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "D:/Skyrim/Mods/OSLAroused/SKSE/Plugins/"
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "D:/Skyrim/MO2_New/mods/OSLAroused/SKSE/Plugins/"
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "D:/Skyrim/MO2_New/mods/OSLAroused/SKSE/Plugins/"
 	VERBATIM
 )
