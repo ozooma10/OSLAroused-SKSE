@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 project(
 	OSLAroused_SKSE
-	VERSION 2.0.5
+	VERSION 2.1.0
 	LANGUAGES CXX
 )
 
