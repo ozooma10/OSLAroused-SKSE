@@ -42,8 +42,8 @@ struct DeviceArousalBaselineChange
 	float Corset = 10;
 	float Boots = 5;
 	float Gloves = 5;
-	float Hood = 20;
-	float Suit = 20;
+	float Hood = 0;
+	float Suit = 5;
 	float HeavyBondage = 10;
 	float BondageMittens = 10;
 };
