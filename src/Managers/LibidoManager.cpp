@@ -68,7 +68,7 @@ float LibidoManager::GetBaseLibido(RE::Actor* actorRef)
 
 float LibidoManager::SetBaseLibido(RE::Actor* actorRef, float newVal)
 {
-	newVal = std::clamp(newVal, Settings::GetSingleton()->GetMinLibidoValue(), 100.f);
+	newVal = std::clamp(newVal, Settings::GetSingleton()->GetMinLibidoValue(actorRef->IsPlayerRef()), 100.f);
 	
 	PersistedData::BaseLibidoData::GetSingleton()->SetData(actorRef->formID, newVal);
 

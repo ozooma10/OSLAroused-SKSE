@@ -58,15 +58,19 @@ public:
 		return &singleton;
 	}
 
-	void SetMinLibidoValue(float newVal)
+	void SetMinLibidoValue(bool bPlayerVal, float newVal)
 	{
 		Locker locker(m_Lock);
-		m_MinLibidoValue = newVal;
+		if (bPlayerVal) {
+			m_PlayerMinLibidoValue = newVal;
+		} else {
+			m_NPCMinLibidoValue= newVal;
+		}
 	}
-	float GetMinLibidoValue() const
+	float GetMinLibidoValue(bool bPlayerVal) const
 	{
 		Locker locker(m_Lock);
-		return m_MinLibidoValue;
+		return bPlayerVal ? m_PlayerMinLibidoValue : m_NPCMinLibidoValue;
 	}
 
 	void SetArousalChangeRate(float newVal)
@@ -184,7 +188,8 @@ public:
 	}
 
 private:
-	float m_MinLibidoValue = 50.f;
+	float m_PlayerMinLibidoValue = 30.f;
+	float m_NPCMinLibidoValue = 80.f;
 	float m_ArousalChangeRate = 0.2f;
 	float m_LibidoChangeRate = 0.1f;
 

@@ -1,9 +1,9 @@
 #include "PapyrusConfig.h"
 #include "Settings.h"
 
-void PapyrusConfig::SetMinLibidoValue(RE::StaticFunctionTag*, float newVal)
+void PapyrusConfig::SetMinLibidoValue(RE::StaticFunctionTag*, bool bPlayerVal, float newVal)
 {
-	Settings::GetSingleton()->SetMinLibidoValue(newVal);
+	Settings::GetSingleton()->SetMinLibidoValue(bPlayerVal, newVal);
 }
 
 void PapyrusConfig::SetArousalChangeRate(RE::StaticFunctionTag*, float newVal)
