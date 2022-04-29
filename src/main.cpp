@@ -6,6 +6,7 @@
 #include "PersistedData.h"
 #include "Papyrus/PapyrusConfig.h"
 #include "Papyrus/PapyrusInterface.h"
+#include "Papyrus/PapyrusActor.h"
 
 namespace
 {
@@ -34,8 +35,6 @@ namespace
 		switch (message->type) {
 		case SKSE::MessagingInterface::kDataLoaded:
 			RuntimeEvents::OnEquipEvent::RegisterEvent();
-			logger::info("OnEquipEvent Registered...");
-
 			WorldChecks::AurousalUpdateTicker::GetSingleton()->Start();
 
 			break;
@@ -95,6 +94,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	papyrus->Register(Papyrus::RegisterFunctions);
 	papyrus->Register(PapyrusInterface::RegisterFunctions);
 	papyrus->Register(PapyrusConfig::RegisterFunctions);
+	papyrus->Register(PapyrusActor::RegisterFunctions);
 
 	const auto serialization = SKSE::GetSerializationInterface();
 	serialization->SetUniqueID(PersistedData::kArousalDataKey);

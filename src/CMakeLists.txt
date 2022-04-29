@@ -14,6 +14,8 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/Papyrus/PapyrusConfig.cpp"
 	"${SOURCE_DIR}/Papyrus/PapyrusInterface.h"
 	"${SOURCE_DIR}/Papyrus/PapyrusInterface.cpp"
+	"${SOURCE_DIR}/Papyrus/PapyrusActor.h"
+	"${SOURCE_DIR}/Papyrus/PapyrusActor.cpp"
 	"${SOURCE_DIR}/Managers/ArousalManager.h"
 	"${SOURCE_DIR}/Managers/ArousalManager.cpp"
 	"${SOURCE_DIR}/Managers/LibidoManager.h"

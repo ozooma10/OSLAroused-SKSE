@@ -7,62 +7,65 @@ WornDeviceField GetWornDevices(RE::Actor* actorRef, RE::TESForm* equipmentToIgno
 {
 	WornDeviceField wornDevices;
 
-	//Get Equipped items
-	const auto actorEquipment = actorRef->GetInventory([=](RE::TESBoundObject& a_object) {
-		return a_object.IsArmor();
-	});
+	const auto wornArmorKeywordIds = Utilities::Actor::GetWornArmorKeywords(actorRef, equipmentToIgnore);
 
-	//Get set of  keywords for worn items
-	std::set<RE::FormID> wornArmorKeywordIds;
-	for (const auto& [item, invData] : actorEquipment) {
-		const auto& [count, entry] = invData;
-		if (count > 0 && entry->IsWorn() && (!equipmentToIgnore || item->formID != equipmentToIgnore->formID)) {
-			if (const auto keywordForm = item->As<RE::BGSKeywordForm>()) {
-				for (uint32_t i = 0; i < keywordForm->numKeywords; i++) {
-					wornArmorKeywordIds.insert(keywordForm->keywords[i]->formID);
-				}
-			}
-		}
-	}
 	const auto DI = DevicesIntegration::GetSingleton();
 
 	for (const auto keywordFormId : wornArmorKeywordIds) {
 		//Soup World USA
 		if (keywordFormId == DI->ToysPelvis || keywordFormId == DI->DDBelt) {
+			logger::debug("{} Belt", actorRef->GetDisplayFullName());
 			wornDevices.Belt = true;
 		} else if (keywordFormId == DI->ToysArms || keywordFormId == DI->DDArmCuffs) {
+			logger::debug("{} ToysArms", actorRef->GetDisplayFullName());
 			wornDevices.ArmCuffs = true;
 		} else if (keywordFormId == DI->ToysEyes || keywordFormId == DI->DDBlindfold) {
+			logger::debug("{} ToysEyes", actorRef->GetDisplayFullName());
 			wornDevices.Blindfold = true;
 		} else if (keywordFormId == DI->DDBondageMittens) {
+			logger::debug("{} BondageMittens", actorRef->GetDisplayFullName());
 			wornDevices.BondageMittens = true;
 		} else if (keywordFormId == DI->ToysFeet || keywordFormId == DI->DDBoots) {
+			logger::debug("{} Boots", actorRef->GetDisplayFullName());
 			wornDevices.Boots = true;
 		} else if (keywordFormId == DI->ToysBreasts || keywordFormId == DI->DDBra) {
+			logger::debug("{} Bra", actorRef->GetDisplayFullName());
 			wornDevices.Bra = true;
 		} else if (keywordFormId == DI->ToysTorso || keywordFormId == DI->DDCorset) {
+			logger::debug("{} Corset", actorRef->GetDisplayFullName());
 			wornDevices.Corset = true;
 		} else if (keywordFormId == DI->ToysMouth || keywordFormId == DI->DDGag) {
+			logger::debug("{} Gag", actorRef->GetDisplayFullName());
 			wornDevices.Gag = true;
 		} else if (keywordFormId == DI->ToysHands || keywordFormId == DI->DDGloves) {
+			logger::debug("{} Gloves", actorRef->GetDisplayFullName());
 			wornDevices.Gloves = true;
 		} else if (keywordFormId == DI->DDHarness) {
+			logger::debug("{} Harness", actorRef->GetDisplayFullName());
 			wornDevices.Harness = true;
 		} else if (keywordFormId == DI->ToysWrists || keywordFormId == DI->DDHeavyBondage) {
+			logger::debug("{} HeavyBondage", actorRef->GetDisplayFullName());
 			wornDevices.HeavyBondage = true;
 		} else if (keywordFormId == DI->DDHood) {
+			logger::debug("{} Hood", actorRef->GetDisplayFullName());
 			wornDevices.Hood = true;
 		} else if (keywordFormId == DI->ToysLegs || keywordFormId == DI->DDLegCuffs) {
+			logger::debug("{} LegCuffs", actorRef->GetDisplayFullName());
 			wornDevices.LegCuffs = true;
 		} else if (keywordFormId == DI->ToysNipples || keywordFormId == DI->DDPiercingsNipple) {
+			logger::debug("{} PiercingsNipple", actorRef->GetDisplayFullName());
 			wornDevices.PiercingsNipple = true;
 		} else if (keywordFormId == DI->ToysGenital || keywordFormId == DI->DDPiercingsVaginal) {
+			logger::debug("{} PiercingsVaginal", actorRef->GetDisplayFullName());
 			wornDevices.PiercingsVaginal = true;
 		} else if (keywordFormId == DI->ToysAnal || keywordFormId == DI->DDPlugAnal) {
+			logger::debug("{} PlugAnal", actorRef->GetDisplayFullName());
 			wornDevices.PlugAnal = true;
 		} else if (keywordFormId == DI->ToysVaginal || keywordFormId == DI->DDPlugVaginal) {
+			logger::debug("{} PlugVaginal", actorRef->GetDisplayFullName());
 			wornDevices.PlugVaginal = true;
 		} else if (keywordFormId == DI->DDSuit) {
+			logger::debug("{} Suit", actorRef->GetDisplayFullName());
 			wornDevices.Suit = true;
 		}
 	}

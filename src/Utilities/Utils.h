@@ -56,7 +56,9 @@ namespace Utilities
 			return SceneManager::GetSingleton()->IsActorViewing(actorRef);
 		}
 
-		std::set<RE::FormID> GetWornKeywords(RE::Actor* actorRef);
+		std::vector<RE::TESForm*> GetWornArmor(RE::Actor* actorRef);
+
+		std::set<RE::FormID> GetWornArmorKeywords(RE::Actor* actorRef, RE::TESForm* armorToIgnore = nullptr);
 	}
 
 	namespace World

@@ -122,7 +122,7 @@ bool PapyrusInterface::IsWearingEroticArmor(RE::StaticFunctionTag*, RE::Actor* a
 {
 	if (!Utilities::Actor::IsNakedCached(actorRef)) {
 		if (const auto eroticKeyword = Settings::GetSingleton()->GetEroticArmorKeyword()) {
-			const auto wornKeywords = Utilities::Actor::GetWornKeywords(actorRef);
+			const auto wornKeywords = Utilities::Actor::GetWornArmorKeywords(actorRef);
 			return wornKeywords.contains(eroticKeyword->formID);
 		}
 	}

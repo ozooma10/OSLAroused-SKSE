@@ -30,7 +30,7 @@ float CalculateActorLibidoModifier(RE::Actor* actorRef)
 
 	if (!isNaked) {
 		if (const auto eroticKeyword = settings->GetEroticArmorKeyword()) {
-			const auto wornKeywords = Utilities::Actor::GetWornKeywords(actorRef);
+			const auto wornKeywords = Utilities::Actor::GetWornArmorKeywords(actorRef);
 			if (wornKeywords.contains(eroticKeyword->formID)) {
 				libidoModifier += settings->GetEroticArmorBaseline();
 			}

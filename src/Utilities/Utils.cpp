@@ -185,7 +185,26 @@ void Utilities::World::ForEachReferenceInRange(RE::TESObjectREFR* origin, float 
 	}
 }
 
-std::set<RE::FormID> Utilities::Actor::GetWornKeywords(RE::Actor* actorRef)
+std::vector<RE::TESForm*> Utilities::Actor::GetWornArmor(RE::Actor* actorRef)
+{
+	//Get Equipped items
+	const auto actorArmor = actorRef->GetInventory([=](RE::TESBoundObject& a_object) {
+		return a_object.IsArmor();
+	});
+
+	std::vector<RE::TESForm*> wornArmorForms;
+	//Get Set of Worn Armor
+	for (const auto& [item, invData] : actorArmor) {
+		const auto& [count, entry] = invData;
+		if (count > 0 && entry->IsWorn()) {
+			wornArmorForms.push_back(item);
+		}
+	}
+
+	return wornArmorForms;
+}
+
+std::set<RE::FormID> Utilities::Actor::GetWornArmorKeywords(RE::Actor* actorRef, RE::TESForm* armorToIgnore)
 {
 	//Get Equipped items
 	const auto actorEquipment = actorRef->GetInventory([=](RE::TESBoundObject& a_object) {
@@ -196,7 +215,7 @@ std::set<RE::FormID> Utilities::Actor::GetWornKeywords(RE::Actor* actorRef)
 	std::set<RE::FormID> wornArmorKeywordIds;
 	for (const auto& [item, invData] : actorEquipment) {
 		const auto& [count, entry] = invData;
-		if (count > 0 && entry->IsWorn()) {
+		if (count > 0 && entry->IsWorn() && (!armorToIgnore || item->formID != armorToIgnore->formID)) {
 			if (const auto keywordForm = item->As<RE::BGSKeywordForm>()) {
 				for (uint32_t i = 0; i < keywordForm->numKeywords; i++) {
 					wornArmorKeywordIds.insert(keywordForm->keywords[i]->formID);
