@@ -3,6 +3,7 @@
 namespace PapyrusConfig
 {
 	//OSLAroused Settings
+	void SetMinLibidoValue(RE::StaticFunctionTag* base, float newVal);
 	void SetArousalChangeRate(RE::StaticFunctionTag* base, float newVal);
 	void SetLibidoChangeRate(RE::StaticFunctionTag* base, float newVal);
 

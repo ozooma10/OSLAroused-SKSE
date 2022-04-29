@@ -1,6 +1,11 @@
 #include "PapyrusConfig.h"
 #include "Settings.h"
 
+void PapyrusConfig::SetMinLibidoValue(RE::StaticFunctionTag*, float newVal)
+{
+	Settings::GetSingleton()->SetMinLibidoValue(newVal);
+}
+
 void PapyrusConfig::SetArousalChangeRate(RE::StaticFunctionTag*, float newVal)
 {
 	Settings::GetSingleton()->SetArousalChangeRate(newVal);
@@ -139,6 +144,7 @@ void PapyrusConfig::SetDeviceTypeBaseline(RE::StaticFunctionTag*, int deviceType
 
 bool PapyrusConfig::RegisterFunctions(RE::BSScript::IVirtualMachine* vm)
 {
+	vm->RegisterFunction("SetMinLibidoValue", "OSLArousedNativeConfig", SetMinLibidoValue);
 	vm->RegisterFunction("SetArousalChangeRate", "OSLArousedNativeConfig", SetArousalChangeRate);
 	vm->RegisterFunction("SetLibidoChangeRate", "OSLArousedNativeConfig", SetLibidoChangeRate);
 

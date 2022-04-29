@@ -58,6 +58,17 @@ public:
 		return &singleton;
 	}
 
+	void SetMinLibidoValue(float newVal)
+	{
+		Locker locker(m_Lock);
+		m_MinLibidoValue = newVal;
+	}
+	float GetMinLibidoValue() const
+	{
+		Locker locker(m_Lock);
+		return m_MinLibidoValue;
+	}
+
 	void SetArousalChangeRate(float newVal)
 	{
 		Locker locker(m_Lock);
@@ -173,7 +184,8 @@ public:
 	}
 
 private:
-	float m_ArousalChangeRate = 0.5f;
+	float m_MinLibidoValue = 50.f;
+	float m_ArousalChangeRate = 0.2f;
 	float m_LibidoChangeRate = 0.1f;
 
 	float m_IsNudeBaseline = 30.f;
