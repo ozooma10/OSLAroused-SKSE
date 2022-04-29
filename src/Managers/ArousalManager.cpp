@@ -30,7 +30,7 @@ namespace ArousalManager
 
 			LibidoManager::GetSingleton()->UpdateActorLibido(actorRef, gameHoursPassed, newArousal);
 		}
-
+		//logger::debug("Got Arousal for {} val: {}", actorRef->GetDisplayFullName(), newArousal);
 		return newArousal;
 	}
 
@@ -60,6 +60,8 @@ namespace ArousalManager
 		//If never calculated, regen
 		if (currentArousal < -1) {
 			currentArousal = Utilities::GenerateRandomFloat(10.f, 50.f);
+			//logger::debug("Random Arousal: {} Val: {}", actorRef->GetDisplayFullName(), currentArousal);
+			return currentArousal;
 		}
 
 		float currentArousalBaseline = LibidoManager::GetSingleton()->GetBaselineArousal(actorRef);
@@ -70,7 +72,7 @@ namespace ArousalManager
 
 		float t = 1.f - std::pow(epsilon, gameHoursPassed);
 		float newArousal = std::lerp(currentArousal, currentArousalBaseline, t);
-		//logger::trace("CalculateArousal: from: {} newArousal {} Diff: {}  t: {}", currentArousal, newArousal, newArousal - currentArousal, t);
+		//logger::trace("CalculateArousal: {} from: {} newArousal {} Diff: {}  t: {}", actorRef->GetDisplayFullName(), currentArousal, newArousal, newArousal - currentArousal, t);
 
 		return newArousal;
 	}
