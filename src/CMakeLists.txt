@@ -151,7 +151,5 @@ add_custom_command(
 	POST_BUILD
 	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "${DLL_FOLDER}"
 	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "${DLL_FOLDER}"
-	COMMAND "${CMAKE_COMMAND}" -E copy_directory "${ROOT_DIR}/Scripts" "${MOD_FOLDER}/Scripts"
-	COMMAND "${CMAKE_COMMAND}" -E copy_directory "${ROOT_DIR}/Source" "${MOD_FOLDER}/Source"
 	VERBATIM
 )
