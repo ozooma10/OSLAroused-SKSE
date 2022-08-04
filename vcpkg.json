@@ -1,9 +1,10 @@
 {
-  "name": "example",
+  "name": "example-project",
   "version": "1",
   "dependencies": [
     "boost-stl-interfaces",
     "rsm-binary-io",
-    "spdlog"
+    "spdlog",
+    "gtest"
   ]
 }

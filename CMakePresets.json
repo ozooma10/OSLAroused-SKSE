@@ -1,7 +1,36 @@
 {
+  "version": 3,
   "configurePresets": [
     {
-      "binaryDir": "${sourceDir}/build",
+      "name": "base",
+      "description": "For more information: http://aka.ms/cmakepresetsvs",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "toolchainFile": "${sourceDir}/vcpkg/AE/scripts/buildsystems/vcpkg.cmake",
+      "environment": {
+        "VCPKG_FEATURE_FLAGS": "manifests,versions,binarycaching,registries"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "vcpkg",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "STRING",
+          "value": "${sourceDir}/vcpkg/AE/scripts/buildsystems/vcpkg.cmake"
+        }
+      },
+      "hidden": true
+    },
+    {
+      "name": "cmake-debug",
+      "binaryDir": "${sourceDir}/build/Debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": {
           "type": "STRING",
@@ -12,23 +41,31 @@
         "deprecated": true
       },
       "hidden": true,
-      "name": "cmake-dev",
       "warnings": {
         "deprecated": true,
         "dev": true
       }
     },
     {
+      "name": "cmake-release",
+      "binaryDir": "${sourceDir}/build/Release",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": {
+        "CMAKE_BUILD_TYPE": {
           "type": "STRING",
-          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+          "value": "RelWithDebInfo"
         }
       },
+      "errors": {
+        "deprecated": true
+      },
       "hidden": true,
-      "name": "vcpkg"
+      "warnings": {
+        "deprecated": true,
+        "dev": true
+      }
     },
     {
+      "name": "windows",
       "cacheVariables": {
         "CMAKE_MSVC_RUNTIME_LIBRARY": {
           "type": "STRING",
@@ -39,45 +76,57 @@
           "value": "x64-windows-static-md"
         }
       },
-      "hidden": true,
-      "name": "windows"
+      "hidden": true
     },
     {
+      "name": "vs2022-windows-debug",
       "architecture": {
         "strategy": "set",
         "value": "x64"
       },
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /WX",
-        "BUILD_SKYRIMSSE": true
+        "CMAKE_CXX_FLAGS": "/EHsc /MP /W4"
       },
       "generator": "Visual Studio 17 2022",
       "inherits": [
-        "cmake-dev",
+        "cmake-debug",
         "vcpkg",
         "windows"
       ],
-      "name": "vs2022-windows-sse",
+      "displayName": "vs2022-windows DEBUG",
       "toolset": "v143"
     },
     {
+      "name": "vs2022-windows-release",
       "architecture": {
         "strategy": "set",
         "value": "x64"
       },
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /WX",
-        "BUILD_SKYRIMSSE": false
+        "CMAKE_CXX_FLAGS": "/EHsc /MP /W4"
       },
       "generator": "Visual Studio 17 2022",
       "inherits": [
-        "cmake-dev",
+        "cmake-release",
         "vcpkg",
         "windows"
       ],
-      "name": "vs2022-windows",
+      "displayName": "vs2022-windows RELEASE",
       "toolset": "v143"
     }
   ],
-  "version": 2
+  "buildPresets": [
+    {
+      "name": "Release",
+      "displayName": "Release",
+      "configurePreset": "vs2022-windows-release",
+      "description": "Optimized release build with debug symbols."
+    },
+    {
+      "name": "Debug",
+      "displayName": "Debug",
+      "configurePreset": "vs2022-windows-debug",
+      "description": "Debug build for testing."
+    }
+  ]
 }

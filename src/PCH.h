@@ -7,8 +7,6 @@
 
 #include <spdlog/sinks/basic_file_sink.h>
 
-#pragma warning(pop)
-
 using namespace std::literals;
 
 namespace logger = SKSE::log;
@@ -21,4 +19,3 @@ namespace util
 #define DLLEXPORT __declspec(dllexport)
 
 #include "Plugin.h"
-#include "Version.h"

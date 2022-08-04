@@ -1,40 +1,12 @@
 set(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 set(SOURCE_DIR "${ROOT_DIR}/src")
-set(SOURCE_FILES
-	"${SOURCE_DIR}/main.cpp"
-	"${SOURCE_DIR}/PCH.h"
-	"${SOURCE_DIR}/Hooks.h"
-	"${SOURCE_DIR}/Hooks.cpp"
-	"${SOURCE_DIR}/RuntimeEvents.h"
-	"${SOURCE_DIR}/RuntimeEvents.cpp"
-	"${SOURCE_DIR}/Papyrus.h"
-	"${SOURCE_DIR}/Papyrus.cpp"
-	"${SOURCE_DIR}/Papyrus/PapyrusConfig.h"
-	"${SOURCE_DIR}/Papyrus/PapyrusConfig.cpp"
-	"${SOURCE_DIR}/Papyrus/PapyrusInterface.h"
-	"${SOURCE_DIR}/Papyrus/PapyrusInterface.cpp"
-	"${SOURCE_DIR}/Papyrus/PapyrusActor.h"
-	"${SOURCE_DIR}/Papyrus/PapyrusActor.cpp"
-	"${SOURCE_DIR}/Managers/ArousalManager.h"
-	"${SOURCE_DIR}/Managers/ArousalManager.cpp"
-	"${SOURCE_DIR}/Managers/LibidoManager.h"
-	"${SOURCE_DIR}/Managers/LibidoManager.cpp"
-	"${SOURCE_DIR}/Managers/SceneManager.h"
-	"${SOURCE_DIR}/Managers/SceneManager.cpp"
-	"${SOURCE_DIR}/Managers/ActorStateManager.h"
-	"${SOURCE_DIR}/Managers/ActorStateManager.cpp"
-	"${SOURCE_DIR}/Utilities/LRUCache.h"
-	"${SOURCE_DIR}/Utilities/Ticker.h"
-	"${SOURCE_DIR}/Utilities/Utils.h"
-	"${SOURCE_DIR}/Utilities/Utils.cpp"
-	"${SOURCE_DIR}/Integrations/DevicesIntegration.h"
-	"${SOURCE_DIR}/Integrations/DevicesIntegration.cpp"
-	"${SOURCE_DIR}/PersistedData.h"
-	"${SOURCE_DIR}/PersistedData.cpp"
-	"${SOURCE_DIR}/Settings.h"
-	"${SOURCE_DIR}/Debug.h"
- )
+file(GLOB SOURCE_FILES "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.h" 
+	"${SOURCE_DIR}/Papyrus/*.cpp" "${SOURCE_DIR}/Papyrus/*.h"
+	"${SOURCE_DIR}/Managers/*.cpp" "${SOURCE_DIR}/Managers/*.h"
+	"${SOURCE_DIR}/Utilities/*.cpp" "${SOURCE_DIR}/Utilities/*.h"
+	"${SOURCE_DIR}/Integrations/*.cpp" "${SOURCE_DIR}/Integrations/*.h"
+)
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})
 
@@ -44,14 +16,7 @@ configure_file(
 	"${VERSION_HEADER}"
 	@ONLY
 )
-
 source_group("src" FILES "${VERSION_HEADER}")
-
-configure_file(
-	${ROOT_DIR}/cmake/Version.h.in
-	${CMAKE_CURRENT_BINARY_DIR}/src/Version.h
-	@ONLY
-)
 
 configure_file(
 	"${ROOT_DIR}/cmake/version.rc.in"
@@ -72,9 +37,9 @@ add_library(
 target_compile_features(
 	"${PROJECT_NAME}"
 	PRIVATE
-		cxx_std_20
+		cxx_std_23
 )
-add_compile_definitions(SKYRIM_SUPPORT_AE)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	target_compile_options(
 		"${PROJECT_NAME}"
@@ -100,6 +65,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	)
 endif()
 
+# Default output directory for compiled files
 target_include_directories(
 	"${PROJECT_NAME}"
 	PRIVATE
@@ -107,45 +73,126 @@ target_include_directories(
 		"${SOURCE_DIR}"
 )
 
-if (DEFINED CommonLibPath AND NOT ${CommonLibPath} STREQUAL "" AND IS_DIRECTORY ${ROOT_DIR}${CommonLibPath})
-	add_subdirectory(${ROOT_DIR}${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
-else ()
-	message(
-		FATAL_ERROR
-		"Variable ${CommonLibPath} Path "${ROOT_DIR}/external/CommonLibSSE" is not set."
-	)
+# CommonLib
+if(${SKYRIM_AE})
+	add_subdirectory("${ROOT_DIR}/CommonLib/AE" CommonLibSSE EXCLUDE_FROM_ALL)
+    target_link_libraries(
+        "${PROJECT_NAME}"
+        PUBLIC
+            CommonLibSSE::CommonLibSSE
+    )
+elseif(${SKYRIM_SE})
+	add_subdirectory("${ROOT_DIR}/CommonLib/SE" CommonLibSSE EXCLUDE_FROM_ALL)
+    target_link_libraries(
+        "${PROJECT_NAME}"
+        PUBLIC
+            CommonLibSSE::CommonLibSSE
+    )
+elseif(${SKYRIM_VR})
+	add_subdirectory("${ROOT_DIR}/CommonLib/VR" CommonLibVR EXCLUDE_FROM_ALL)
+    target_link_libraries(
+        "${PROJECT_NAME}"
+        PUBLIC
+            CommonLibVR::CommonLibVR
+    )
 endif()
 
-target_link_libraries(
-	"${PROJECT_NAME}"
-	PRIVATE
-		CommonLibSSE::CommonLibSSE
-)
+# Include spdlog
+find_package(spdlog CONFIG REQUIRED)
+target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog)
 
+# Precompiled Headers (PCH)
 target_precompile_headers(
 	"${PROJECT_NAME}"
 	PRIVATE
 		"${SOURCE_DIR}/PCH.h"
 )
 
-install(
-	FILES
-		"$<TARGET_FILE:${PROJECT_NAME}>"
-	DESTINATION "SKSE/Plugins"
-	COMPONENT "main"
-)
+# Get output directory based on configured version of Skyrim
+if(${SKYRIM_AE})
+	if(DEFINED ENV{SKSE_SKYRIM_AE_DEV})
+		set(MOD_FOLDER $ENV{SKSE_SKYRIM_AE_DEV})
+	elseif(DEFINED ENV{SKYRIM_MODS})
+		set(MOD_FOLDER "$ENV{SKYRIM_MODS}/${PROJECT_NAME} - ${SKYRIM_VERSION}")
+	else()
+		set(MOD_FOLDER "${ROOT_DIR}/output/${SKYRIM_VERSION}")
+	endif()
+elseif(${SKYRIM_SE})
+	if(DEFINED ENV{SKSE_SKYRIM_SE_DEV})
+		set(MOD_FOLDER $ENV{SKSE_SKYRIM_SE_DEV})
+	elseif(DEFINED ENV{SKYRIM_MODS})
+		set(MOD_FOLDER "$ENV{SKYRIM_MODS}/${PROJECT_NAME} - ${SKYRIM_VERSION}")
+	else()
+		set(MOD_FOLDER "${ROOT_DIR}/output/${SKYRIM_VERSION}")
+	endif()
+elseif(${SKYRIM_VR})
+	if(DEFINED ENV{SKSE_SKYRIM_VR_DEV})
+		set(MOD_FOLDER $ENV{SKSE_SKYRIM_VR_DEV})
+	elseif(DEFINED ENV{SKYRIM_MODS})
+		set(MOD_FOLDER "$ENV{SKYRIM_MODS}/${PROJECT_NAME} - ${SKYRIM_VERSION}")
+	else()
+		set(MOD_FOLDER "${ROOT_DIR}/output/${SKYRIM_VERSION}")
+	endif()
+endif()
 
-install(
-	FILES
-		"$<TARGET_PDB_FILE:${PROJECT_NAME}>"
-	DESTINATION "/"
-	COMPONENT "pdbs"
-)
+set(DLL_FOLDER "${MOD_FOLDER}/SKSE/Plugins")
 
+# Create output directory if it does not exist
 add_custom_command(
 	TARGET "${PROJECT_NAME}"
 	POST_BUILD
-	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "D:/Skyrim/MO2_New/mods/OSLAroused/SKSE/Plugins/"
-	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "D:/Skyrim/MO2_New/mods/OSLAroused/SKSE/Plugins/"
+	COMMAND "${CMAKE_COMMAND}" -E make_directory "${DLL_FOLDER}"
 	VERBATIM
 )
+
+file(GLOB PLUGIN_FILES "${ROOT_DIR}/*.esp" "${ROOT_DIR}/*.esm" "${ROOT_DIR}/*.esl")
+
+message("PLUGIN FILES ${PLUGIN_FILES}")
+
+# Print the paths that files will be output to when the project is built
+message("Build will output .dll and .pdb to ${DLL_FOLDER}")
+if(EXISTS "${ROOT_DIR}/Scripts")
+	message("Build will output Papyrus scripts to ${MOD_FOLDER}")
+endif()
+if(PLUGIN_FILES)
+	message("Plugin files will be output to ${MOD_FOLDER}")
+endif()
+
+# Copy the output .dll and debug .pdb to the configured output directory
+add_custom_command(
+	TARGET "${PROJECT_NAME}"
+	POST_BUILD
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "${DLL_FOLDER}"
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "${DLL_FOLDER}"
+	COMMAND "${CMAKE_COMMAND}" -E copy_directory "${ROOT_DIR}/Scripts" "${MOD_FOLDER}/Scripts"
+	COMMAND "${CMAKE_COMMAND}" -E copy_directory "${ROOT_DIR}/Source" "${MOD_FOLDER}/Source"
+	VERBATIM
+)
+
+# Copy Scripts/ and/or Source/ if they are present (at prepare time)
+if(EXISTS "${ROOT_DIR}/Scripts")
+	add_custom_command(
+		TARGET "${PROJECT_NAME}"
+		POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E copy_directory "${ROOT_DIR}/Scripts" "${MOD_FOLDER}/Scripts"
+		VERBATIM
+	)
+endif()
+if(EXISTS "${ROOT_DIR}/Source")
+	add_custom_command(
+		TARGET "${PROJECT_NAME}"
+		POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E copy_directory "${ROOT_DIR}/Source" "${MOD_FOLDER}/Source"
+		VERBATIM
+	)
+endif()
+
+# Copy .esp .esm .esl files, if present (at prepare time)
+if(PLUGIN_FILES)
+	add_custom_command(
+		TARGET "${PROJECT_NAME}"
+		POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${PLUGIN_FILES} "${MOD_FOLDER}"
+		VERBATIM
+	)
+endif()

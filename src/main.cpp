@@ -19,15 +19,14 @@ namespace
 
 		*path /= fmt::format("{}.log"sv, Plugin::NAME);
 		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path->string(), true);
-
-		const auto level = spdlog::level::trace;
+		const auto level = spdlog::level::info;
 
 		auto log = std::make_shared<spdlog::logger>("global log"s, std::move(sink));
 		log->set_level(level);
 		log->flush_on(level);
 
 		spdlog::set_default_logger(std::move(log));
-		spdlog::set_pattern("[%H:%M:%S] [%^%l%$] %v"s);
+		spdlog::set_pattern("%g(%#): [%^%l%$] %v"s);
 	}
 
 	void MessageHandler(SKSE::MessagingInterface::Message* message)
@@ -47,29 +46,7 @@ namespace
 	}
 }
 
-#if defined(SKYRIMSSE)
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
-{
-	a_info->infoVersion = SKSE::PluginInfo::kVersion;
-	a_info->name = Version::PROJECT.data();
-	a_info->version = Version::MAJOR;
-
-	if (a_skse->IsEditor()) {
-		logger::critical("Loaded in editor, marking as incompatible"sv);
-		return false;
-	}
-
-	const auto ver = a_skse->RuntimeVersion();
-	if (ver <
-		SKSE::RUNTIME_1_5_39
-	) {
-		logger::critical(FMT_STRING("Unsupported runtime version {}"), ver.string());
-		return false;
-	}
-
-	return true;
-}
-#else
+#ifdef SKYRIM_AE
 extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
 	SKSE::PluginVersionData v;
 
@@ -103,7 +80,20 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	serialization->SetRevertCallback(PersistedData::RevertCallback);
 
 	auto messagingInterface = SKSE::GetMessagingInterface();
-	if (!messagingInterface->RegisterListener(MessageHandler)) {
+
+	SKSE::GetMessagingInterface()->RegisterListener(MessageHandler);
+
+	return true;
+}
+
+extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
+{
+	a_info->infoVersion = SKSE::PluginInfo::kVersion;
+	a_info->name = Plugin::NAME.data();
+	a_info->version = Plugin::VERSION.pack();
+
+	if (a_skse->IsEditor()) {
+		logger::critical("Loaded in editor, marking as incompatible"sv);
 		return false;
 	}
 
