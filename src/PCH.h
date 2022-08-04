@@ -1,5 +1,4 @@
 #pragma once
-#define SKYRIM_SUPPORT_AE
 
 #pragma warning(push)
 #include <RE/Skyrim.h>
