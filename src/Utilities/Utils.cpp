@@ -137,54 +137,6 @@ void Utilities::Keywords::DistributeKeywords()
 	}
 }
 
-//Logic of this from PowerOf3 CommonLibSSE implementation
-void Utilities::World::ForEachReferenceInRange(RE::TESObjectREFR* origin, float radius, std::function<bool(RE::TESObjectREFR& ref)> callback)
-{
-	if (origin && radius > 0.f) {
-		const auto originPos = origin->GetPosition();
-		const auto radiusSqr = radius * radius;
-
-		const auto tes = RE::TES::GetSingleton();
-
-		if (tes->interiorCell) {
-			tes->interiorCell->ForEachReferenceInRange(originPos, radiusSqr, [&](RE::TESObjectREFR& ref) {
-				return callback(ref);
-			});
-		} else {
-			const auto gridLength = tes->gridCells ? tes->gridCells->length : 0;
-			if (gridLength > 0) {
-				const auto yPlus = originPos.y + radius;
-				const auto yMinus = originPos.y - radius;
-				const auto xPlus = originPos.x + radius;
-				const auto xMinus = originPos.x - radius;
-
-				std::uint32_t x = 0;
-				do {
-					std::uint32_t y = 0;
-					do {
-						auto cell = tes->gridCells->GetCell(x, y);
-						if (cell && cell->IsAttached()) {
-							const auto cellCoords = cell->GetCoordinates();
-							if (cellCoords) {
-								const RE::NiPoint2 worldPos{ cellCoords->worldX, cellCoords->worldY };
-								if (worldPos.x < xPlus && (worldPos.x + 4096.0f) > xMinus && worldPos.y < yPlus && (worldPos.y + 4096.f) > yMinus) {
-									cell->ForEachReferenceInRange(originPos, radiusSqr, [&](RE::TESObjectREFR& ref) {
-										return callback(ref);
-									});
-								}
-							}
-						}
-						y++;
-					} while (y < gridLength);
-					x++;
-				} while (x < gridLength);
-			}
-		}
-
-		//@TODO: Skycell needed?
-	}
-}
-
 std::vector<RE::TESForm*> Utilities::Actor::GetWornArmor(RE::Actor* actorRef)
 {
 	//Get Equipped items

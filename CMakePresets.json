@@ -16,6 +16,9 @@
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "SKYRIM_SUPPORT_AE": "ON"
       }
     },
     {
