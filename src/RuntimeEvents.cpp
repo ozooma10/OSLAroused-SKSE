@@ -17,13 +17,21 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 		return RE::BSEventNotifyControl::kContinue;
 	}
 
+	auto equipActor = equipEvent->actor.get();
+
 	auto equipmentForm = RE::TESForm::LookupByID(equipEvent->baseObject);
-	if (!equipmentForm) {
+	if (!equipmentForm || !equipmentForm->IsArmor()) {
 		return RE::BSEventNotifyControl::kContinue;
 	}
 
-	//First we want to check for nudity status (And send event if changed)
-	if (equipmentForm->IsArmor()) {
+	auto player = RE::PlayerCharacter::GetSingleton();
+	if (!player) {
+		return RE::BSEventNotifyControl::kContinue;
+	}
+
+	//only send naked update events if actor is closeish to player
+	const float guardDist = 5024; //Only process gear change for actors within 5024 units
+	if (equipActor->IsPlayer() || player->GetPosition().GetSquaredDistance(equipActor->GetPosition()) < (guardDist * guardDist)) {
 		const auto armor = equipmentForm->As<RE::TESObjectARMO>();
 		if (armor && armor->HasPartOf(RE::BGSBipedObjectForm::BipedObjectSlot::kBody)) {
 			//This is body armor so send Change of naked state based on if equipped or not
@@ -33,7 +41,6 @@ RE::BSEventNotifyControl RuntimeEvents::OnEquipEvent::ProcessEvent(const RE::TES
 		//Changed equipped armor so update devices
 		DevicesIntegration::GetSingleton()->ActiveEquipmentChanged(static_cast<RE::Actor*>(equipEvent->actor.get()), equipmentForm, equipEvent->equipped);
 	}
-
 	return RE::BSEventNotifyControl::kContinue;
 }
 

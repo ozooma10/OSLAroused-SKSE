@@ -26,7 +26,7 @@ namespace
 		log->flush_on(level);
 
 		spdlog::set_default_logger(std::move(log));
-		spdlog::set_pattern("%g(%#): [%^%l%$] %v"s);
+		spdlog::set_pattern("[%T] [%^%l%$] %v"s);
 	}
 
 	void MessageHandler(SKSE::MessagingInterface::Message* message)
@@ -78,8 +78,6 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	serialization->SetSaveCallback(PersistedData::SaveCallback);
 	serialization->SetLoadCallback(PersistedData::LoadCallback);
 	serialization->SetRevertCallback(PersistedData::RevertCallback);
-
-	auto messagingInterface = SKSE::GetMessagingInterface();
 
 	SKSE::GetMessagingInterface()->RegisterListener(MessageHandler);
 
