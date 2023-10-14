@@ -53,6 +53,30 @@ namespace ArousalManager
 		return SetArousal(actorRef, currentArousal + modValue);
 	}
 
+	float GetArousalExt(RE::Actor* actorRef)
+	{
+		if (!actorRef) {
+			return -2.f;
+		}
+		float newArousal = CalculateArousal(actorRef, 0.0f);
+		return newArousal;
+	}
+
+	float SetArousalExt(RE::Actor* actorRef, float value)
+	{
+		value = std::clamp(value, 0.0f, 100.f);
+		ArousalData::GetSingleton()->SetData(actorRef->formID, value);
+		return value;
+	}
+
+	float ModifyArousalExt(RE::Actor* actorRef, float modValue)
+	{
+		modValue *= PersistedData::ArousalMultiplierData::GetSingleton()->GetData(actorRef->formID, 1.f);
+		float currentArousal = GetArousalExt(actorRef);
+		auto loc_res = SetArousalExt(actorRef, currentArousal + modValue);
+		return loc_res;
+	}
+
 	float CalculateArousal(RE::Actor* actorRef, float gameHoursPassed)
 	{
 		float currentArousal = ArousalData::GetSingleton()->GetData(actorRef->formID, -2.f);
